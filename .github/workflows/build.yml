@@ -33,7 +33,7 @@ jobs:
         run: west zephyr-export
 
       - name: Twister tests
-        run: west twister -T tests/smoke/native_sim -v --inline-logs -O twister-out
+        run: west twister -T tests/smoke/native_sim -T tests/config/native_sim -v --inline-logs -O twister-out
 
       - name: Upload Twister artifacts
         if: always()

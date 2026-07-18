@@ -1,0 +1,2 @@
+osource "drivers/Kconfig"
+osource "lib/Kconfig"

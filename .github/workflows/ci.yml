@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    name: Twister smoke + app build
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: altruist-zephyr-firmware
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Setup Zephyr project
+        uses: zephyrproject-rtos/action-zephyr-setup@v1
+        with:
+          app-path: altruist-zephyr-firmware
+          toolchains: riscv64-zephyr-elf
+          ccache-cache-key: ubuntu-22.04
+
+      - name: Twister smoke tests
+        working-directory: altruist-zephyr-firmware
+        run: west twister -T tests/smoke/native_sim -v --inline-logs
+
+      - name: Compile app for ESP32-C6
+        working-directory: altruist-zephyr-firmware
+        run: west build -b esp32c6_devkitc/esp32c6/hpcore app -p always

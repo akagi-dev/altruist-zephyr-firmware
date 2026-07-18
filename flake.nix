@@ -5,7 +5,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     # Customize the version of Zephyr used by the flake here
-    zephyr.url = "github:zephyrproject-rtos/zephyr/v4.0.0";
+    zephyr.url = "github:zephyrproject-rtos/zephyr/v3.7.0";
     zephyr.flake = false;
 
     zephyr-nix.url = "github:nix-community/zephyr-nix";

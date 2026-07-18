@@ -8,9 +8,10 @@ manifest:
   projects:
     - name: zephyr
       remote: zephyrproject-rtos
-      revision: v4.0.0
+      revision: v3.7.0
       import:
         path-prefix: modules
 
   self:
     path: .
+

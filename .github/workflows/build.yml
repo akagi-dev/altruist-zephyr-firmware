@@ -1,4 +1,4 @@
-name: CI
+name: Build
 
 on:
   push:
@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   tests:
-    name: Twister smoke tests
+    name: Twister tests
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
@@ -20,19 +20,19 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: 3.12
 
       - name: Setup Zephyr project
         uses: zephyrproject-rtos/action-zephyr-setup@v1
         with:
           app-path: .
           toolchains: x86_64-zephyr-elf
-          ccache-cache-key: v1-tests-${{ runner.os }}
+          ccache-cache-key: v1-tests-${{ runner.os }}-${{ hashFiles('tests/**/*') }}
 
       - name: Export Zephyr CMake package
         run: west zephyr-export
 
-      - name: Twister smoke tests
+      - name: Twister tests
         run: west twister -T tests/smoke/native_sim -v --inline-logs -O twister-out
 
       - name: Upload Twister artifacts
@@ -54,19 +54,15 @@ jobs:
           - board: esp32c6_devkitc
             build-dir: build-esp32c6
             extra-conf-file: ""
-            toolchain: riscv64-zephyr-elf
           - board: esp32c3_devkitm
             build-dir: build-urban-c3
             extra-conf-file: prj_urban_c3.conf
-            toolchain: riscv64-zephyr-elf
           - board: esp32c6_devkitc
             build-dir: build-urban-c6
             extra-conf-file: prj_urban_c6.conf
-            toolchain: riscv64-zephyr-elf
           - board: esp32c6_devkitc
             build-dir: build-insight-c6
             extra-conf-file: prj_insight_c6.conf
-            toolchain: riscv64-zephyr-elf
 
     steps:
       - name: Checkout
@@ -77,14 +73,14 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: 3.12
 
       - name: Setup Zephyr project
         uses: zephyrproject-rtos/action-zephyr-setup@v1
         with:
           app-path: .
-          toolchains: ${{ matrix.toolchain }}:xtensa-espressif_esp32_zephyr-elf
-          ccache-cache-key: v1-build-${{ runner.os }}-${{ matrix.board }}-${{ hashFiles('app/**/*.c', 'app/**/*.h', 'app/CMakeLists.txt', 'app/Kconfig*', 'app/prj*.conf') }}
+          toolchains: x86_64-zephyr-elf:riscv64-zephyr-elf:xtensa-espressif_esp32_zephyr-elf
+          ccache-cache-key: v1-build-${{ runner.os }}-${{ matrix.build-dir }}-${{ hashFiles('app/**/*.c', 'app/**/*.h', 'app/CMakeLists.txt', 'app/Kconfig*', 'app/prj*.conf') }}
 
       - name: Export Zephyr CMake package
         run: west zephyr-export

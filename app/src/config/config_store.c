@@ -143,19 +143,19 @@ static int cfg_read_u32(size_t len, settings_read_cb read_cb, void *cb_arg, uint
 	return 0;
 }
 
+static bool cfg_name_is_canonical_or_legacy(const char *name, const char *canonical,
+				    const char *legacy)
+{
+	return settings_name_steq(name, canonical, NULL) ||
+	       settings_name_steq(name, legacy, NULL);
+}
+
 static int cfg_write_bool(char *val, int val_len_max, bool src)
 {
 	uint8_t raw = src ? 1U : 0U;
 
 	if (val_len_max < (int)sizeof(raw)) {
 		return -ENOMEM;
-	}
-
-	static bool cfg_name_is_canonical_or_legacy(const char *name, const char *canonical,
-						    const char *legacy)
-	{
-		return settings_name_steq(name, canonical, NULL) ||
-		       settings_name_steq(name, legacy, NULL);
 	}
 
 	memcpy(val, &raw, sizeof(raw));

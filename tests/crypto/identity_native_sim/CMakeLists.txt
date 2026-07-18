@@ -9,5 +9,7 @@ target_include_directories(app PRIVATE
 
 target_sources(app PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/../../../app/src/crypto/identity.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../../app/src/crypto/monocypher/monocypher.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../../app/src/crypto/monocypher/monocypher-ed25519.c
   src/main.c
 )

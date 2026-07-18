@@ -1,0 +1,19 @@
+/ {
+	aliases {
+		altruist-status-led = &altruist_status_led;
+		altruist-user-button = &altruist_user_button;
+		altruist-sensor-main = &altruist_sensor_main;
+	};
+
+	altruist_status_led: altruist_status_led {
+		status = "okay";
+	};
+
+	altruist_user_button: altruist_user_button {
+		status = "okay";
+	};
+
+	altruist_sensor_main: altruist_sensor_main {
+		status = "okay";
+	};
+};

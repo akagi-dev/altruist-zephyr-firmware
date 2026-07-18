@@ -1,0 +1,26 @@
+choice ALTRUIST_VARIANT
+	prompt "Altruist product variant"
+	default ALTRUIST_VARIANT_URBAN
+
+config ALTRUIST_VARIANT_URBAN
+	bool "Altruist Urban"
+
+config ALTRUIST_VARIANT_INSIGHT
+	bool "Altruist Insight"
+endchoice
+
+config ALTRUIST_FEATURE_DISPLAY
+	bool "Enable display stack"
+	default y if ALTRUIST_VARIANT_INSIGHT
+
+config ALTRUIST_FEATURE_URBAN_AGGREGATION
+	bool "Enable aggregation of Urban devices"
+	default y if ALTRUIST_VARIANT_INSIGHT
+
+config ALTRUIST_FEATURE_MDNS_DISCOVERY
+	bool "Enable mDNS discovery"
+	default y
+
+config ALTRUIST_FEATURE_C3_REDUCED_PROFILE
+	bool "Enable reduced C3 profile"
+	default n

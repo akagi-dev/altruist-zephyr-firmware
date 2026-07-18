@@ -167,7 +167,7 @@ static void wifi_schedule_reconnect(void)
 		return;
 	}
 
-	/* If next > max/2, doubling would overflow/cross max; clamp directly. */
+	/* If next > max/2, doubling would overflow or cross max; clamp directly. */
 	if (next_backoff_ms > (max_backoff / 2U)) {
 		next_backoff_ms = max_backoff;
 		return;

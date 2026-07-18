@@ -6,7 +6,7 @@
 struct wifi_manager_credentials {
 	/* IEEE 802.11 SSID max 32 bytes + NUL terminator. */
 	char ssid[33];
-	/* WPA/WPA2-PSK max 64 bytes + NUL terminator. */
+	/* WPA/WPA2 key material max 64 chars + NUL terminator. */
 	char psk[65];
 };
 

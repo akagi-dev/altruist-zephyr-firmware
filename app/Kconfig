@@ -11,11 +11,12 @@ config ALTRUIST_IDENTITY
 	default y
 	select SETTINGS
 	select CSPRNG_NEEDED
+	select MBEDTLS
+	select MBEDTLS_PSA_CRYPTO_C
 	help
 	  Enables ED25519 device identity management using Zephyr settings storage.
-	  Ed25519 (RFC 8032) signing/verification is provided by the bundled
-	  Monocypher library, and key material is generated from the platform
-	  cryptographically secure random number generator.
+	  Ed25519 (RFC 8032) signing/verification is provided by PSA Crypto API,
+	  and key material is generated from the PSA cryptographic subsystem.
 
 source "Kconfig.variants"
 

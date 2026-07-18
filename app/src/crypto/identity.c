@@ -12,17 +12,11 @@
 #include <zephyr/sys/printk.h>
 #include <zephyr/toolchain.h>
 
-#include "monocypher/monocypher-ed25519.h"
+#include <psa/crypto.h>
 
 #define IDENTITY_SETTINGS_SUBTREE "altruist/identity"
 #define IDENTITY_SETTINGS_PRIVATE_KEY IDENTITY_SETTINGS_SUBTREE "/private_key"
 #define IDENTITY_SETTINGS_PUBLIC_KEY IDENTITY_SETTINGS_SUBTREE "/public_key"
-
-/* Monocypher's Ed25519 secret key is the 32-byte seed followed by the 32-byte
- * public key. The persisted private key is only the seed; the matching public
- * key half is recomputed on demand.
- */
-#define IDENTITY_ED25519_SECRET_KEY_SIZE 64U
 
 struct identity_state {
 	bool initialized;
@@ -43,29 +37,62 @@ K_MUTEX_DEFINE(identity_lock);
 
 static int identity_generate_keypair(uint8_t *private_key, uint8_t *public_key)
 {
-	uint8_t seed[ALTRUIST_IDENTITY_ED25519_PRIVATE_KEY_SIZE];
-	uint8_t secret_key[IDENTITY_ED25519_SECRET_KEY_SIZE];
-	int rc;
+	psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
+	psa_key_id_t key_id = 0;
+	psa_status_t status;
+	size_t exported_length;
+	int rc = 0;
 
 	if ((private_key == NULL) || (public_key == NULL)) {
 		return -EINVAL;
 	}
 
-	rc = sys_csrand_get(seed, sizeof(seed));
-	if (rc != 0) {
-		return rc;
+	/* Initialize PSA Crypto */
+	status = psa_crypto_init();
+	if (status != PSA_SUCCESS) {
+		return -EIO;
 	}
 
-	/* crypto_ed25519_key_pair() wipes the seed it is given, so keep an
-	 * authoritative copy in the private key output first.
-	 */
-	memcpy(private_key, seed, sizeof(seed));
-	crypto_ed25519_key_pair(secret_key, public_key, seed);
+	/* Configure key attributes for Ed25519 */
+	psa_set_key_usage_flags(&attributes, PSA_KEY_USAGE_SIGN_HASH | PSA_KEY_USAGE_VERIFY_HASH |
+						  PSA_KEY_USAGE_EXPORT);
+	psa_set_key_algorithm(&attributes, PSA_ALG_PURE_EDDSA);
+	psa_set_key_type(&attributes, PSA_KEY_TYPE_ECC_KEY_PAIR(PSA_ECC_FAMILY_TWISTED_EDWARDS));
+	psa_set_key_bits(&attributes, 255);
 
-	crypto_wipe(secret_key, sizeof(secret_key));
-	crypto_wipe(seed, sizeof(seed));
+	/* Generate the key pair */
+	status = psa_generate_key(&attributes, &key_id);
+	if (status != PSA_SUCCESS) {
+		psa_reset_key_attributes(&attributes);
+		return -EIO;
+	}
 
-	return 0;
+	/* Export the private key */
+	status = psa_export_key(key_id, private_key, ALTRUIST_IDENTITY_ED25519_PRIVATE_KEY_SIZE,
+				&exported_length);
+	if ((status != PSA_SUCCESS) ||
+	    (exported_length != ALTRUIST_IDENTITY_ED25519_PRIVATE_KEY_SIZE)) {
+		psa_destroy_key(key_id);
+		psa_reset_key_attributes(&attributes);
+		return -EIO;
+	}
+
+	/* Export the public key */
+	status = psa_export_public_key(key_id, public_key,
+				       ALTRUIST_IDENTITY_ED25519_PUBLIC_KEY_SIZE,
+				       &exported_length);
+	if ((status != PSA_SUCCESS) ||
+	    (exported_length != ALTRUIST_IDENTITY_ED25519_PUBLIC_KEY_SIZE)) {
+		psa_destroy_key(key_id);
+		psa_reset_key_attributes(&attributes);
+		return -EIO;
+	}
+
+	/* Destroy the volatile key handle */
+	psa_destroy_key(key_id);
+	psa_reset_key_attributes(&attributes);
+
+	return rc;
 }
 
 static int identity_settings_load_cb(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg,
@@ -193,9 +220,11 @@ int altruist_identity_sign_detached(const uint8_t *private_key, size_t private_k
 				    const uint8_t *message, size_t message_len,
 				    uint8_t *signature, size_t signature_len)
 {
-	uint8_t seed[ALTRUIST_IDENTITY_ED25519_PRIVATE_KEY_SIZE];
-	uint8_t secret_key[IDENTITY_ED25519_SECRET_KEY_SIZE];
-	uint8_t public_key[ALTRUIST_IDENTITY_ED25519_PUBLIC_KEY_SIZE];
+	psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
+	psa_key_id_t key_id = 0;
+	psa_status_t status;
+	size_t signature_length;
+	int rc = 0;
 
 	if ((private_key == NULL) ||
 	    (private_key_len != ALTRUIST_IDENTITY_ED25519_PRIVATE_KEY_SIZE) ||
@@ -204,24 +233,49 @@ int altruist_identity_sign_detached(const uint8_t *private_key, size_t private_k
 		return -EINVAL;
 	}
 
-	/* Reconstruct the full Ed25519 secret key (seed || public key) from the
-	 * persisted seed. crypto_ed25519_key_pair() wipes the seed it receives.
-	 */
-	memcpy(seed, private_key, sizeof(seed));
-	crypto_ed25519_key_pair(secret_key, public_key, seed);
+	/* Initialize PSA Crypto */
+	status = psa_crypto_init();
+	if (status != PSA_SUCCESS) {
+		return -EIO;
+	}
 
-	crypto_ed25519_sign(signature, secret_key, message, message_len);
+	/* Configure key attributes for Ed25519 */
+	psa_set_key_usage_flags(&attributes, PSA_KEY_USAGE_SIGN_HASH);
+	psa_set_key_algorithm(&attributes, PSA_ALG_PURE_EDDSA);
+	psa_set_key_type(&attributes, PSA_KEY_TYPE_ECC_KEY_PAIR(PSA_ECC_FAMILY_TWISTED_EDWARDS));
+	psa_set_key_bits(&attributes, 255);
 
-	crypto_wipe(secret_key, sizeof(secret_key));
-	crypto_wipe(seed, sizeof(seed));
+	/* Import the private key */
+	status = psa_import_key(&attributes, private_key, private_key_len, &key_id);
+	if (status != PSA_SUCCESS) {
+		psa_reset_key_attributes(&attributes);
+		return -EIO;
+	}
 
-	return 0;
+	/* Sign the message */
+	status = psa_sign_message(key_id, PSA_ALG_PURE_EDDSA, message, message_len,
+				  signature, signature_len, &signature_length);
+	if ((status != PSA_SUCCESS) ||
+	    (signature_length != ALTRUIST_IDENTITY_ED25519_SIGNATURE_SIZE)) {
+		rc = -EIO;
+	}
+
+	/* Destroy the volatile key handle */
+	psa_destroy_key(key_id);
+	psa_reset_key_attributes(&attributes);
+
+	return rc;
 }
 
 int altruist_identity_verify_detached(const uint8_t *public_key, size_t public_key_len,
 				      const uint8_t *message, size_t message_len,
 				      const uint8_t *signature, size_t signature_len)
 {
+	psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
+	psa_key_id_t key_id = 0;
+	psa_status_t status;
+	int rc = 0;
+
 	if ((public_key == NULL) ||
 	    (public_key_len != ALTRUIST_IDENTITY_ED25519_PUBLIC_KEY_SIZE) ||
 	    ((message == NULL) && (message_len > 0U)) || (signature == NULL) ||
@@ -229,11 +283,37 @@ int altruist_identity_verify_detached(const uint8_t *public_key, size_t public_k
 		return -EINVAL;
 	}
 
-	if (crypto_ed25519_check(signature, public_key, message, message_len) != 0) {
-		return -EINVAL;
+	/* Initialize PSA Crypto */
+	status = psa_crypto_init();
+	if (status != PSA_SUCCESS) {
+		return -EIO;
 	}
 
-	return 0;
+	/* Configure key attributes for Ed25519 public key */
+	psa_set_key_usage_flags(&attributes, PSA_KEY_USAGE_VERIFY_HASH);
+	psa_set_key_algorithm(&attributes, PSA_ALG_PURE_EDDSA);
+	psa_set_key_type(&attributes, PSA_KEY_TYPE_ECC_PUBLIC_KEY(PSA_ECC_FAMILY_TWISTED_EDWARDS));
+	psa_set_key_bits(&attributes, 255);
+
+	/* Import the public key */
+	status = psa_import_key(&attributes, public_key, public_key_len, &key_id);
+	if (status != PSA_SUCCESS) {
+		psa_reset_key_attributes(&attributes);
+		return -EIO;
+	}
+
+	/* Verify the signature */
+	status = psa_verify_message(key_id, PSA_ALG_PURE_EDDSA, message, message_len,
+				    signature, signature_len);
+	if (status != PSA_SUCCESS) {
+		rc = -EINVAL;
+	}
+
+	/* Destroy the volatile key handle */
+	psa_destroy_key(key_id);
+	psa_reset_key_attributes(&attributes);
+
+	return rc;
 }
 
 int altruist_identity_init(void)
@@ -332,7 +412,7 @@ int altruist_identity_reset(void)
 	k_mutex_lock(&identity_lock, K_FOREVER);
 	rc = altruist_identity_storage_reset();
 	if (rc == 0) {
-		crypto_wipe(state.private_key, sizeof(state.private_key));
+		(void)memset(state.private_key, 0, sizeof(state.private_key));
 		(void)memset(state.public_key, 0, sizeof(state.public_key));
 		state.initialized = false;
 	}
@@ -345,7 +425,7 @@ int altruist_identity_reset(void)
 void altruist_identity_test_reset_state(void)
 {
 	k_mutex_lock(&identity_lock, K_FOREVER);
-	crypto_wipe(state.private_key, sizeof(state.private_key));
+	(void)memset(state.private_key, 0, sizeof(state.private_key));
 	(void)memset(state.public_key, 0, sizeof(state.public_key));
 	state.initialized = false;
 	k_mutex_unlock(&identity_lock);

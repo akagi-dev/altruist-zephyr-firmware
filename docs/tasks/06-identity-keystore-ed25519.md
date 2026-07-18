@@ -58,7 +58,7 @@ The WP-06 implementation separates identity responsibilities into a focused cryp
 
 - **Public API (`app/include/altruist/identity.h`)**
   - `altruist_identity_init()`: initialize identity state by loading persisted keys or generating a new pair on first boot.
-  - `altruist_identity_sign()` / `altruist_identity_verify()`: runtime signing and verification helpers for higher-level report paths.
+  - `altruist_identity_sign()` and `altruist_identity_verify()`: runtime signing and verification helpers for higher-level report paths.
   - `altruist_identity_get_public_key()`: export current device public key for enrollment/verification flows.
   - `altruist_identity_reset()`: clear persisted identity so next init regenerates a new keypair.
   - Detached vector helpers (`*_detached`) are exposed for deterministic test coverage and module-level verification.

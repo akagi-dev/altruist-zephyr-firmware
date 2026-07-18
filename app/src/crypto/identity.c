@@ -372,7 +372,8 @@ int altruist_identity_init(void)
 
 	rc = settings_subsys_init();
 	if ((rc != 0) && (rc != -EALREADY)) {
-		printk("altruist_identity: settings_subsys_init failed: %d\n", rc);
+		printk("altruist_identity: settings_subsys_init failed (%d). "
+		       "Check Settings backend configuration and storage availability.\n", rc);
 		k_mutex_unlock(&identity_lock);
 		return rc;
 	}

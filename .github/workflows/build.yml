@@ -10,9 +10,45 @@ permissions:
   contents: read
 
 jobs:
-  build:
-    name: Build app and tests
+  tests:
+    name: Twister tests
     runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+
+      - name: Setup Zephyr project
+        uses: zephyrproject-rtos/action-zephyr-setup@v1
+        with:
+          app-path: .
+          toolchains: x86_64-zephyr-elf
+          ccache-cache-key: v1-${{ runner.os }}-${{ github.ref_name }}
+
+      - name: Export Zephyr CMake package
+        run: west zephyr-export
+
+      - name: Twister tests
+        run: west twister -T tests/smoke/native_sim -v --inline-logs -O twister-out
+
+      - name: Upload Twister artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: twister-out-${{ github.run_id }}
+          path: twister-out
+          if-no-files-found: warn
+
+  build:
+    name: Build app variants
+    runs-on: ubuntu-22.04
+    needs: tests
     strategy:
       fail-fast: false
       matrix:
@@ -51,9 +87,6 @@ jobs:
       - name: Export Zephyr CMake package
         run: west zephyr-export
 
-      - name: Twister tests
-        run: west twister -T tests/smoke/native_sim -v --inline-logs -O twister-out
-
       - name: Build firmware
         shell: bash
         run: |
@@ -63,10 +96,10 @@ jobs:
           fi
           west build -p always -b "${{ matrix.board }}" app -d "${{ matrix.build-dir }}" ${EXTRA_ARGS}
 
-      - name: Upload Twister artifacts
+      - name: Upload build artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: twister-out-${{ matrix.build-dir }}-${{ github.run_id }}
-          path: twister-out
+          name: ${{ matrix.build-dir }}-${{ github.run_id }}
+          path: ${{ matrix.build-dir }}
           if-no-files-found: warn

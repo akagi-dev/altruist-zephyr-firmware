@@ -6,7 +6,13 @@
 #include <stdbool.h>
 #include <string.h>
 
+#if __has_include(<psa/crypto.h>)
 #include <psa/crypto.h>
+#elif __has_include(<mbedtls/psa/crypto.h>)
+#include <mbedtls/psa/crypto.h>
+#else
+#error "No PSA Crypto header available"
+#endif
 
 #include <zephyr/kernel.h>
 #include <zephyr/settings/settings.h>

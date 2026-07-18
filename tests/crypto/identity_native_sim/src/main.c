@@ -98,7 +98,8 @@ ZTEST(identity_sign_verify, test_rfc8032_vector)
 
 ZTEST(identity_sign_verify, test_persistence_and_reset_lifecycle)
 {
-	static const uint8_t message[] = "altruist-identity-persistence";
+	const uint8_t *message = (const uint8_t *)"altruist-identity-persistence";
+	size_t message_len = strlen((const char *)message);
 	uint8_t public_key_first[ALTRUIST_IDENTITY_ED25519_PUBLIC_KEY_SIZE];
 	uint8_t public_key_second[ALTRUIST_IDENTITY_ED25519_PUBLIC_KEY_SIZE];
 	uint8_t public_key_after_reset[ALTRUIST_IDENTITY_ED25519_PUBLIC_KEY_SIZE];
@@ -120,11 +121,11 @@ ZTEST(identity_sign_verify, test_persistence_and_reset_lifecycle)
 	zassert_mem_equal(public_key_first, public_key_second, sizeof(public_key_first),
 			  "public key did not survive reboot simulation");
 
-	zassert_ok(altruist_identity_sign(message, sizeof(message) - 1U, signature_a, sizeof(signature_a)));
-	zassert_ok(altruist_identity_sign(message, sizeof(message) - 1U, signature_b, sizeof(signature_b)));
+	zassert_ok(altruist_identity_sign(message, message_len, signature_a, sizeof(signature_a)));
+	zassert_ok(altruist_identity_sign(message, message_len, signature_b, sizeof(signature_b)));
 	zassert_mem_equal(signature_a, signature_b, sizeof(signature_a),
 			  "ed25519 signature must be deterministic");
-	zassert_ok(altruist_identity_verify(message, sizeof(message) - 1U,
+	zassert_ok(altruist_identity_verify(message, message_len,
 					    signature_a, sizeof(signature_a)));
 
 	zassert_ok(altruist_identity_reset());

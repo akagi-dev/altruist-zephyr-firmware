@@ -14,7 +14,7 @@ int main(void)
 	if (IS_ENABLED(CONFIG_ALTRUIST_IDENTITY)) {
 		rc = altruist_identity_init();
 		if (rc != 0) {
-			printk("Identity initialization failed: %d\n", rc);
+			printk("Identity initialization failed (altruist_identity_init): %d\n", rc);
 		}
 	}
 

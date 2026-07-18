@@ -134,6 +134,18 @@ static int cfg_read_u32(size_t len, settings_read_cb read_cb, void *cb_arg, uint
 	return 0;
 }
 
+static int cfg_write_bool(char *val, int val_len_max, bool src)
+{
+	uint8_t raw = src ? 1U : 0U;
+
+	if (val_len_max < (int)sizeof(raw)) {
+		return -ENOMEM;
+	}
+
+	memcpy(val, &raw, sizeof(raw));
+	return sizeof(raw);
+}
+
 static int altruist_config_settings_set(const char *name, size_t len,
 					settings_read_cb read_cb, void *cb_arg)
 {
@@ -272,12 +284,7 @@ static int altruist_config_settings_get(const char *name, char *val, int val_len
 		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_WLANNOPWD, NULL)) {
-		if (val_len_max < (int)sizeof(g_cfg.wlannopwd)) {
-			rc = -ENOMEM;
-			goto out;
-		}
-		memcpy(val, &g_cfg.wlannopwd, sizeof(g_cfg.wlannopwd));
-		rc = sizeof(g_cfg.wlannopwd);
+		rc = cfg_write_bool(val, val_len_max, g_cfg.wlannopwd);
 		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_FS_SSID, NULL)) {
@@ -309,21 +316,11 @@ static int altruist_config_settings_get(const char *name, char *val, int val_len
 		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_SEND2ROBONOMICS, NULL)) {
-		if (val_len_max < (int)sizeof(g_cfg.send2robonomics)) {
-			rc = -ENOMEM;
-			goto out;
-		}
-		memcpy(val, &g_cfg.send2robonomics, sizeof(g_cfg.send2robonomics));
-		rc = sizeof(g_cfg.send2robonomics);
+		rc = cfg_write_bool(val, val_len_max, g_cfg.send2robonomics);
 		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_SEND2CSV, NULL)) {
-		if (val_len_max < (int)sizeof(g_cfg.send2csv)) {
-			rc = -ENOMEM;
-			goto out;
-		}
-		memcpy(val, &g_cfg.send2csv, sizeof(g_cfg.send2csv));
-		rc = sizeof(g_cfg.send2csv);
+		rc = cfg_write_bool(val, val_len_max, g_cfg.send2csv);
 		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_SENDING_INTERVAL_MS, NULL)) {
@@ -364,12 +361,7 @@ static int altruist_config_settings_get(const char *name, char *val, int val_len
 		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_STANDALONE, NULL)) {
-		if (val_len_max < (int)sizeof(g_cfg.standalone)) {
-			rc = -ENOMEM;
-			goto out;
-		}
-		memcpy(val, &g_cfg.standalone, sizeof(g_cfg.standalone));
-		rc = sizeof(g_cfg.standalone);
+		rc = cfg_write_bool(val, val_len_max, g_cfg.standalone);
 		goto out;
 	}
 
@@ -384,6 +376,7 @@ static int altruist_config_settings_export(int (*cb)(const char *name,
 						      size_t val_len))
 {
 	int rc;
+	uint8_t bool_raw;
 
 	k_mutex_lock(&g_cfg_lock, K_FOREVER);
 
@@ -407,8 +400,8 @@ static int altruist_config_settings_export(int (*cb)(const char *name,
 	if (rc) {
 		goto out;
 	}
-	rc = cb(EXPORT_KEY(CFG_KEY_WLANNOPWD), &g_cfg.wlannopwd,
-		sizeof(g_cfg.wlannopwd));
+	bool_raw = g_cfg.wlannopwd ? 1U : 0U;
+	rc = cb(EXPORT_KEY(CFG_KEY_WLANNOPWD), &bool_raw, sizeof(bool_raw));
 	if (rc) {
 		goto out;
 	}
@@ -450,13 +443,13 @@ static int altruist_config_settings_export(int (*cb)(const char *name,
 	if (rc) {
 		goto out;
 	}
-	rc = cb(EXPORT_KEY(CFG_KEY_SEND2ROBONOMICS), &g_cfg.send2robonomics,
-		sizeof(g_cfg.send2robonomics));
+	bool_raw = g_cfg.send2robonomics ? 1U : 0U;
+	rc = cb(EXPORT_KEY(CFG_KEY_SEND2ROBONOMICS), &bool_raw, sizeof(bool_raw));
 	if (rc) {
 		goto out;
 	}
-	rc = cb(EXPORT_KEY(CFG_KEY_SEND2CSV), &g_cfg.send2csv,
-		sizeof(g_cfg.send2csv));
+	bool_raw = g_cfg.send2csv ? 1U : 0U;
+	rc = cb(EXPORT_KEY(CFG_KEY_SEND2CSV), &bool_raw, sizeof(bool_raw));
 	if (rc) {
 		goto out;
 	}
@@ -481,8 +474,8 @@ static int altruist_config_settings_export(int (*cb)(const char *name,
 	if (rc) {
 		goto out;
 	}
-	rc = cb(EXPORT_KEY(CFG_KEY_STANDALONE), &g_cfg.standalone,
-		sizeof(g_cfg.standalone));
+	bool_raw = g_cfg.standalone ? 1U : 0U;
+	rc = cb(EXPORT_KEY(CFG_KEY_STANDALONE), &bool_raw, sizeof(bool_raw));
 out:
 	k_mutex_unlock(&g_cfg_lock);
 	return rc;

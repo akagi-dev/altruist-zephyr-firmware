@@ -25,7 +25,7 @@ ZTEST(config_settings, test_runtime_decode_and_encode)
 {
 	const struct altruist_config *cfg;
 	char value[64];
-	uint8_t flag = 1U;
+	uint8_t bool_as_uint8 = 1U;
 	uint32_t interval = 30000U;
 	int rc;
 
@@ -34,7 +34,8 @@ ZTEST(config_settings, test_runtime_decode_and_encode)
 	rc = settings_runtime_set("altruist/wlanssid", "LabNet", strlen("LabNet") + 1U);
 	zassert_equal(rc, 0, "runtime set ssid failed (%d)", rc);
 
-	rc = settings_runtime_set("altruist/send2robonomics", &flag, sizeof(flag));
+	rc = settings_runtime_set("altruist/send2robonomics", &bool_as_uint8,
+				  sizeof(bool_as_uint8));
 	zassert_equal(rc, 0, "runtime set bool failed (%d)", rc);
 
 	rc = settings_runtime_set("altruist/sending_interval_ms", &interval, sizeof(interval));
@@ -53,11 +54,12 @@ ZTEST(config_settings, test_runtime_decode_and_encode)
 ZTEST(config_settings, test_reset_to_defaults)
 {
 	const struct altruist_config *cfg;
-	uint8_t flag = 1U;
+	uint8_t bool_as_uint8 = 1U;
 	int rc;
 
 	(void)altruist_config_init();
-	rc = settings_runtime_set("altruist/send2csv", &flag, sizeof(flag));
+	rc = settings_runtime_set("altruist/send2csv", &bool_as_uint8,
+				  sizeof(bool_as_uint8));
 	zassert_equal(rc, 0, "runtime set bool failed (%d)", rc);
 
 	cfg = altruist_config_get();

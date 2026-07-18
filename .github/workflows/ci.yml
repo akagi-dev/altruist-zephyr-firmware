@@ -14,38 +14,26 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Nix
-        uses: cachix/install-nix-action@v31
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          extra_nix_config: |
-            experimental-features = nix-command flakes
+          python-version: "3.12"
 
-      - name: Cache west modules
-        uses: actions/cache@v4
+      - name: Setup Zephyr SDK + west workspace
+        uses: zephyrproject-rtos/action-zephyr-setup@v1
         with:
-          path: |
-            zephyr
-            modules
-            bootloader
-            tools
-          key: v1-${{ runner.os }}-west-${{ hashFiles('west.yml', 'flake.nix', 'flake.lock') }}
-          restore-keys: |
-            v1-${{ runner.os }}-west-
-
-      - name: Initialize workspace
-        run: nix develop --accept-flake-config --command west init -l .
-
-      - name: Update west modules
-        run: nix develop --accept-flake-config --command west update
+          app-path: .
+          toolchains: x86_64-zephyr-elf:riscv64-zephyr-elf:xtensa-espressif_esp32_zephyr-elf
+          ccache-cache-key: v1-${{ runner.os }}-${{ github.ref_name }}
 
       - name: Export Zephyr CMake package
-        run: nix develop --accept-flake-config --command west zephyr-export
+        run: west zephyr-export
 
       - name: Run Twister smoke tests
-        run: nix develop --accept-flake-config --command west twister -T tests/smoke/native_sim -O twister-out
+        run: west twister -T tests/smoke/native_sim -O twister-out
 
       - name: Build app for esp32c6_devkitc
-        run: nix develop --accept-flake-config --command west build -p always -b esp32c6_devkitc app -d build-esp32c6
+        run: west build -p always -b esp32c6_devkitc app -d build-esp32c6
 
       - name: Upload Twister artifacts
         if: always()

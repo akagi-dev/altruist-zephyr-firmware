@@ -43,7 +43,7 @@ This repository now contains a Zephyr `west.yml` workspace manifest pinned to Ze
 
 | WP | Title | Phase | Status |
 |---:|---|---|---|
-| 01 | West workspace and app bootstrap | 0 | Planned |
+| 01 | West workspace and app bootstrap | 0 | Done |
 | 02 | CI foundation (Zephyr SDK + Twister) | 0 | Planned |
 | 03 | Board and variant profiles | 0 | Planned |
 | 04 | Settings/config subsystem | 1 | Planned |

@@ -51,4 +51,4 @@ Implement key generation, persistent storage, and signing API.
 ## Handoff notes
 - Summarize design decisions and unresolved risks in the PR description.
 - Explicitly reference any assumptions about Zephyr ESP32 support status.
-- Developer-focused implementation details now live in [`docs/IDENTITY_ARCHITECTURE.md`](../IDENTITY_ARCHITECTURE.md).
+- Developer-focused implementation details now live in [`docs/development/identity.md`](../development/identity.md).

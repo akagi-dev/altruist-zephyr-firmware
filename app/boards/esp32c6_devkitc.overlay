@@ -1,3 +1,5 @@
+#include <zephyr/dt-bindings/gpio/gpio.h>
+
 / {
 	aliases {
 		altruist-status-led = &altruist_status_led;
@@ -5,15 +7,25 @@
 		altruist-sensor-main = &altruist_sensor_main;
 	};
 
-	altruist_status_led: altruist_status_led {
-		status = "okay";
+	leds {
+		compatible = "gpio-leds";
+
+		altruist_status_led: altruist_status_led {
+			gpios = <&gpio0 8 GPIO_ACTIVE_HIGH>;
+			label = "Altruist status LED";
+		};
 	};
 
-	altruist_user_button: altruist_user_button {
-		status = "okay";
+	buttons {
+		compatible = "gpio-keys";
+
+		altruist_user_button: altruist_user_button {
+			gpios = <&gpio0 9 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+			label = "Altruist user button";
+		};
 	};
 
 	altruist_sensor_main: altruist_sensor_main {
-		status = "okay";
+		compatible = "zephyr,user";
 	};
 };

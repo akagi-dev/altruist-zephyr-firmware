@@ -11,6 +11,7 @@
 #include "config_defaults.h"
 
 #include <errno.h>
+#include <limits.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -108,8 +109,10 @@ static int cfg_read_bool(size_t len, settings_read_cb read_cb, void *cb_arg, boo
 
 static int cfg_read_u32(size_t len, settings_read_cb read_cb, void *cb_arg, uint32_t *out)
 {
+	unsigned long parsed;
 	uint32_t raw = 0U;
 	char text[12];
+	char *endptr;
 	int rc;
 
 	if (out == NULL) {
@@ -130,7 +133,13 @@ static int cfg_read_u32(size_t len, settings_read_cb read_cb, void *cb_arg, uint
 		return rc;
 	}
 
-	*out = (uint32_t)strtoul(text, NULL, 10);
+	errno = 0;
+	parsed = strtoul(text, &endptr, 10);
+	if ((endptr == text) || (*endptr != '\0') || (errno == ERANGE) || (parsed > UINT32_MAX)) {
+		return -EINVAL;
+	}
+
+	*out = (uint32_t)parsed;
 	return 0;
 }
 

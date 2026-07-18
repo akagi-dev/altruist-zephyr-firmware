@@ -592,6 +592,19 @@ int altruist_config_replace(const struct altruist_config *new_cfg, bool persist)
 
 	k_mutex_lock(&g_cfg_lock, K_FOREVER);
 	memcpy(&g_cfg, new_cfg, sizeof(g_cfg));
+
+	/* Defensive: ensure all string fields are NUL-terminated. */
+	g_cfg.current_lang[sizeof(g_cfg.current_lang) - 1U] = '\0';
+	g_cfg.wlanssid[sizeof(g_cfg.wlanssid) - 1U] = '\0';
+	g_cfg.wlanpwd[sizeof(g_cfg.wlanpwd) - 1U] = '\0';
+	g_cfg.fs_ssid[sizeof(g_cfg.fs_ssid) - 1U] = '\0';
+	g_cfg.fs_pwd[sizeof(g_cfg.fs_pwd) - 1U] = '\0';
+	g_cfg.rws_owner[sizeof(g_cfg.rws_owner) - 1U] = '\0';
+	g_cfg.robonomics_public_node[sizeof(g_cfg.robonomics_public_node) - 1U] = '\0';
+	g_cfg.robonomics_connectivity_host[sizeof(g_cfg.robonomics_connectivity_host) - 1U] = '\0';
+	g_cfg.robonomics_connectivity_hosts[sizeof(g_cfg.robonomics_connectivity_hosts) - 1U] = '\0';
+	g_cfg.private_key[sizeof(g_cfg.private_key) - 1U] = '\0';
+
 	k_mutex_unlock(&g_cfg_lock);
 	if (!persist) {
 		return 0;

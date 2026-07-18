@@ -623,6 +623,7 @@ int altruist_config_set_migration_hook(altruist_config_migrate_cb_t hook)
 
 const struct altruist_config *altruist_config_get(void)
 {
+	/* TODO(akru): replace pointer-return API with caller-provided output buffer for thread-safe snapshots. */
 	k_mutex_lock(&g_cfg_lock, K_FOREVER);
 	if (!g_initialized) {
 		altruist_config_apply_defaults(&g_cfg);

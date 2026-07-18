@@ -1,0 +1,9 @@
+menu "Altruist Zephyr Firmware"
+
+config ALTRUIST_BOOT_MESSAGE
+	string "Boot message"
+	default "Altruist Zephyr bootstrap ready"
+	help
+	  Message printed during boot.
+
+endmenu

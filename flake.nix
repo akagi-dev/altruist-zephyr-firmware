@@ -5,7 +5,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     # Customize the version of Zephyr used by the flake here
-    zephyr.url = "github:zephyrproject-rtos/zephyr/v3.7.0";
+    zephyr.url = "github:zephyrproject-rtos/zephyr/v4.0.0";
     zephyr.flake = false;
 
     zephyr-nix.url = "github:nix-community/zephyr-nix";
@@ -19,7 +19,12 @@
   in {
     devShells.x86_64-linux.default = with pkgs; mkShell {
       packages = [
-        (zephyr.sdk.override {targets = ["xtensa-espressif_esp32s3_zephyr-elf"];})
+        (zephyr.sdk.override {
+          targets = [
+            "riscv64-zephyr-elf"
+            "x86_64-zephyr-elf"
+          ];
+        })
         zephyr.pythonEnv
         # Use zephyr.hosttools-nix to use nixpkgs built tooling instead of official Zephyr binaries
         zephyr.hosttools

@@ -1,0 +1,14 @@
+tests:
+  altruist.wp01.smoke.native_sim:
+    tags:
+      - smoke
+      - wp01
+    platform_allow:
+      - native_sim
+    integration_platforms:
+      - native_sim
+    harness: console
+    harness_config:
+      type: one_line
+      regex:
+        - "ALTRUIST_SMOKE_OK"

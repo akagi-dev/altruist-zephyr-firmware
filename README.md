@@ -9,6 +9,36 @@ Planning repository for porting Altruist environmental sensor station firmware f
 - [Master implementation plan](docs/IMPLEMENTATION_PLAN.md)
 - [Agent-ready work packages](docs/tasks/)
 
+## Zephyr workspace bootstrap (Nix flake)
+
+This repository now contains a Zephyr `west.yml` workspace manifest pinned to Zephyr `v4.0.0`, matching the pin in `flake.nix`.
+
+1. Enter the development shell:
+
+   ```sh
+   nix develop
+   ```
+
+2. Initialize west from this repository and fetch Zephyr/modules:
+
+   ```sh
+   west init -l .
+   west update
+   west zephyr-export
+   ```
+
+3. Build the baseline app:
+
+   ```sh
+   west build -b esp32c6_devkitc app
+   ```
+
+4. Run smoke tests on `native_sim`:
+
+   ```sh
+   west twister -T tests/smoke/native_sim
+   ```
+
 ## Work package status
 
 | WP | Title | Phase | Status |

@@ -1,0 +1,6 @@
+# West workspace artifacts (fetched by `west update`)
+/.west/
+/zephyr/
+/modules/
+/bootloader/
+/tools/

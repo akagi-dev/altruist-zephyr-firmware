@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <string.h>
 
 #include <zephyr/net/wifi_mgmt.h>
@@ -18,8 +19,8 @@ bool altruist_config_get_wifi_credentials(struct wifi_manager_credentials *out)
 		return false;
 	}
 
-	strcpy(out->ssid, "ssid");
-	strcpy(out->psk, "psk");
+	snprintf(out->ssid, sizeof(out->ssid), "%s", "ssid");
+	snprintf(out->psk, sizeof(out->psk), "%s", "psk");
 	return true;
 }
 

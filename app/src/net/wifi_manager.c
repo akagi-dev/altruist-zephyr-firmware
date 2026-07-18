@@ -111,7 +111,7 @@ static void wifi_net_event_callback(struct net_mgmt_event_callback *cb,
 }
 #endif
 
-static uint32_t wifi_initial_backoff_ms(void)
+static uint32_t wifi_bounded_initial_backoff_ms(void)
 {
 	return MIN(CONFIG_ALTRUIST_WIFI_RECONNECT_INITIAL_BACKOFF_MS,
 		   CONFIG_ALTRUIST_WIFI_RECONNECT_MAX_BACKOFF_MS);
@@ -119,7 +119,7 @@ static uint32_t wifi_initial_backoff_ms(void)
 
 static void wifi_reset_backoff(void)
 {
-	next_backoff_ms = wifi_initial_backoff_ms();
+	next_backoff_ms = wifi_bounded_initial_backoff_ms();
 }
 
 static void wifi_cancel_reconnect(void)
@@ -147,6 +147,7 @@ static void wifi_schedule_reconnect(void)
 		return;
 	}
 
+	/* Avoid overflow before doubling and cap directly at max. */
 	if (next_backoff_ms > (max_backoff / 2U)) {
 		next_backoff_ms = max_backoff;
 		return;

@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  zephyr:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+
+      - name: Cache west modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            zephyr
+            modules
+            bootloader
+            tools
+          key: v1-${{ runner.os }}-west-${{ hashFiles('west.yml', 'flake.nix', 'flake.lock') }}
+          restore-keys: |
+            v1-${{ runner.os }}-west-
+
+      - name: Initialize workspace
+        run: nix develop --accept-flake-config --command west init -l .
+
+      - name: Update west modules
+        run: nix develop --accept-flake-config --command west update
+
+      - name: Export Zephyr CMake package
+        run: nix develop --accept-flake-config --command west zephyr-export
+
+      - name: Run Twister smoke tests
+        run: nix develop --accept-flake-config --command west twister -T tests/smoke/native_sim -O twister-out
+
+      - name: Build app for esp32c6_devkitc
+        run: nix develop --accept-flake-config --command west build -p always -b esp32c6_devkitc app -d build-esp32c6
+
+      - name: Upload Twister artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: twister-out-${{ github.run_id }}
+          path: twister-out
+          if-no-files-found: warn

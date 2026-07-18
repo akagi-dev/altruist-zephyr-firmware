@@ -10,6 +10,8 @@ config ALTRUIST_IDENTITY
 	bool "Enable Altruist device identity/keystore"
 	default y
 	select SETTINGS
+	select MBEDTLS
+	select MBEDTLS_PSA_CRYPTO_C
 	help
 	  Enables ED25519 device identity management using Zephyr settings storage.
 

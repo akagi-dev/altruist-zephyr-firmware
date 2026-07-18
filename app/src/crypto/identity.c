@@ -66,12 +66,12 @@ static int identity_psa_init_once(void)
 {
 	int rc = 0;
 
-	if (!state.psa_initialized) {
+	if (!__atomic_load_n(&state.psa_initialized, __ATOMIC_ACQUIRE)) {
 		psa_status_t status = psa_crypto_init();
 
 		rc = identity_psa_status_to_errno(status);
 		if (rc == 0) {
-			state.psa_initialized = true;
+			__atomic_store_n(&state.psa_initialized, true, __ATOMIC_RELEASE);
 		}
 	}
 
@@ -188,8 +188,8 @@ static int identity_settings_load_cb(const char *key, size_t len, settings_read_
 		}
 
 		bytes_read = read_cb(cb_arg, ctx->private_key, len);
-		if (bytes_read < 0) {
-			ctx->read_error = (int)bytes_read;
+		if (bytes_read != (ssize_t)len) {
+			ctx->read_error = (bytes_read < 0) ? (int)bytes_read : -EIO;
 			return 0;
 		}
 
@@ -204,8 +204,8 @@ static int identity_settings_load_cb(const char *key, size_t len, settings_read_
 		}
 
 		bytes_read = read_cb(cb_arg, ctx->public_key, len);
-		if (bytes_read < 0) {
-			ctx->read_error = (int)bytes_read;
+		if (bytes_read != (ssize_t)len) {
+			ctx->read_error = (bytes_read < 0) ? (int)bytes_read : -EIO;
 			return 0;
 		}
 

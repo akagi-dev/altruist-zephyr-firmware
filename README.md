@@ -11,7 +11,7 @@ Planning repository for porting Altruist environmental sensor station firmware f
 
 ## Zephyr workspace bootstrap (Nix flake)
 
-This repository now contains a Zephyr `west.yml` workspace manifest pinned to Zephyr `v4.0.0`, matching the pin in `flake.nix`.
+This repository now contains a Zephyr `west.yml` workspace manifest pinned to Zephyr `v3.7.0`, matching the pin in `flake.nix`.
 
 1. Enter the development shell:
 

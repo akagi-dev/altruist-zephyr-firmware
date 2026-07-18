@@ -4,9 +4,9 @@ tests:
       - smoke
       - wp01
     platform_allow:
-      - native_sim
+      - native_sim/native/64
     integration_platforms:
-      - native_sim
+      - native_sim/native/64
     harness: console
     harness_config:
       type: one_line

@@ -1,5 +1,12 @@
 menu "Altruist Zephyr Firmware"
 
+config ALTRUIST_CONFIG
+	bool "Enable Altruist config subsystem"
+	default y
+	select SETTINGS
+	help
+	  Enables persistent Altruist settings/config management.
+
 config ALTRUIST_BOOT_MESSAGE
 	string "Boot message"
 	default "Altruist Zephyr bootstrap ready"

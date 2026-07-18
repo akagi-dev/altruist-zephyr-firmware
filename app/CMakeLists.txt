@@ -4,3 +4,12 @@ find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
 project(altruist_zephyr_bootstrap)
 
 target_sources(app PRIVATE src/main.c)
+
+if(CONFIG_ALTRUIST_CONFIG)
+  target_sources(app PRIVATE
+    src/config/config_defaults.c
+    src/config/config_store.c
+  )
+endif()
+
+target_include_directories(app PRIVATE include)

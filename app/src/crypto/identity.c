@@ -47,12 +47,6 @@ static int identity_generate_keypair(uint8_t *private_key, uint8_t *public_key)
 		return -EINVAL;
 	}
 
-	/* Initialize PSA Crypto */
-	status = psa_crypto_init();
-	if (status != PSA_SUCCESS) {
-		return -EIO;
-	}
-
 	/* Configure key attributes for Ed25519 */
 	psa_set_key_usage_flags(&attributes, PSA_KEY_USAGE_SIGN_MESSAGE | PSA_KEY_USAGE_VERIFY_MESSAGE |
 						  PSA_KEY_USAGE_EXPORT);
@@ -319,12 +313,22 @@ int altruist_identity_verify_detached(const uint8_t *public_key, size_t public_k
 int altruist_identity_init(void)
 {
 	int rc;
+	psa_status_t status;
 
 	k_mutex_lock(&identity_lock, K_FOREVER);
 
 	if (state.initialized) {
 		k_mutex_unlock(&identity_lock);
 		return 0;
+	}
+
+	/* Initialize PSA Crypto subsystem */
+	status = psa_crypto_init();
+	if (status != PSA_SUCCESS) {
+		printk("altruist_identity: PSA Crypto initialization failed with status %d\n",
+		       (int)status);
+		k_mutex_unlock(&identity_lock);
+		return -EIO;
 	}
 
 	rc = settings_subsys_init();

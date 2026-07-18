@@ -1,0 +1,11 @@
+tests:
+  altruist.wp05.wifi_manager.native_sim:
+    tags:
+      - wifi
+      - wp05
+      - net
+    platform_allow:
+      - native_sim/native/64
+    integration_platforms:
+      - native_sim/native/64
+    harness: ztest

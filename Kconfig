@@ -1,1 +1,3 @@
 # Module Kconfig entry point for altruist-zephyr-firmware.
+
+source "app/Kconfig"

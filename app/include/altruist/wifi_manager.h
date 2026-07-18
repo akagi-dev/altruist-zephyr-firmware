@@ -4,7 +4,9 @@
 #include <stdint.h>
 
 struct wifi_manager_credentials {
+	/* IEEE 802.11 SSID max 32 bytes + NUL terminator. */
 	char ssid[33];
+	/* WPA/WPA2-PSK max 64 bytes + NUL terminator. */
 	char psk[65];
 };
 

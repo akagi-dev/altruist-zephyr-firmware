@@ -11,6 +11,8 @@ static bool test_has_credentials;
 static bool test_force_provisioning;
 static int test_connect_attempts;
 static int test_connect_result;
+static const char TEST_SSID[] = "ssid";
+static const char TEST_PSK[] = "psk";
 
 bool altruist_config_get_wifi_credentials(struct wifi_manager_credentials *out)
 {
@@ -19,8 +21,8 @@ bool altruist_config_get_wifi_credentials(struct wifi_manager_credentials *out)
 	}
 
 	memset(out, 0, sizeof(*out));
-	memcpy(out->ssid, "ssid", sizeof("ssid"));
-	memcpy(out->psk, "psk", sizeof("psk"));
+	memcpy(out->ssid, TEST_SSID, sizeof(TEST_SSID));
+	memcpy(out->psk, TEST_PSK, sizeof(TEST_PSK));
 	return true;
 }
 

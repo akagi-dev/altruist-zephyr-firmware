@@ -1,0 +1,5 @@
+2026-07-18 12:32:50,735 - twister - INFO - Using Ninja..
+2026-07-18 12:32:50,837 - twister - INFO - Zephyr version: v3.7.0
+2026-07-18 12:32:50,840 - twister - DEBUG - Running cmake script /home/runner/work/altruist-zephyr-firmware/modules/zephyr/cmake/verify-toolchain.cmake
+2026-07-18 12:32:50,840 - twister - DEBUG - Calling cmake: /usr/local/bin/cmake -DFORMAT=json -P /home/runner/work/altruist-zephyr-firmware/modules/zephyr/cmake/verify-toolchain.cmake
+2026-07-18 12:32:51,722 - twister - ERROR - Cmake script failure: /home/runner/work/altruist-zephyr-firmware/modules/zephyr/cmake/verify-toolchain.cmake

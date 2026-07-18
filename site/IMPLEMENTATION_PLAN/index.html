@@ -1,0 +1,2066 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../ARCHITECTURE/">
+      
+      
+        <link rel="next" href="../ZEPHYR_ARCHITECTURE/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.30">
+    
+    
+      
+        <title>Zephyr Port Master Implementation Plan - Altruist Zephyr Firmware</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.3cba04c6.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#zephyr-port-master-implementation-plan" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Altruist Zephyr Firmware" class="md-header__button md-logo" aria-label="Altruist Zephyr Firmware" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Altruist Zephyr Firmware
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Zephyr Port Master Implementation Plan
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Altruist Zephyr Firmware" class="md-nav__button md-logo" aria-label="Altruist Zephyr Firmware" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Altruist Zephyr Firmware
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Altruist Zephyr Firmware
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ARCHITECTURE/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Altruist ESP32 Firmware Architecture (Source Baseline)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Zephyr Port Master Implementation Plan
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Zephyr Port Master Implementation Plan
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conventions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-0-scaffolding" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 0 — Scaffolding
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 0 — Scaffolding">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wp-01-west-workspace-and-zephyr-app-bootstrap" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-01 — West workspace and Zephyr app bootstrap
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-02-ci-foundation-zephyr-sdk-twister" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-02 — CI foundation (Zephyr SDK + Twister)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-03-boardvariant-configuration-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-03 — Board/variant configuration baseline
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-1-core-platform" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 1 — Core platform
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 1 — Core platform">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wp-04-settingsconfig-subsystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-04 — Settings/config subsystem
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-05-wifi-manager-provisioning-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-05 — WiFi manager + provisioning baseline
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-06-identitykeystore-ed25519-signing" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-06 — Identity/keystore + ED25519 signing
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-2-sensor-framework-and-individual-sensor-packages" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 2 — Sensor framework and individual sensor packages
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 2 — Sensor framework and individual sensor packages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wp-07-sensor-framework-core" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-07 — Sensor framework core
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-08-sds011-driver-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-08 — SDS011 driver package
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-09-bmx280-driver-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-09 — BMx280 driver package
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-10-bme680-driver-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-10 — BME680 driver package
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-11-scd4x-driver-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-11 — SCD4x driver package
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-12-radsens-driver-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-12 — RadSens driver package
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-13-i2s-noise-sensor-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-13 — I2S noise sensor package
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-14-gps-neo-6m-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-14 — GPS (Neo-6M) package
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-15-ags3871-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-15 — AGS3871 package
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-16-zmod4510-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-16 — ZMOD4510 package
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-3-networking-apis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 3 — Networking APIs
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 3 — Networking APIs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wp-17-connectivity-http-post-api-server-pool-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-17 — Connectivity HTTP POST API + server pool selection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-18-substrate-datalog-api-scaleextrinsic-module" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-18 — Substrate datalog API + SCALE/extrinsic module
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-19-mdns-http-altruist-aggregation-sensor" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-19 — mDNS + HTTP Altruist aggregation sensor
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-4-web-configuration-ui-and-i18n" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 4 — Web configuration UI and i18n
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 4 — Web configuration UI and i18n">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wp-20-configuration-http-api-and-pages" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-20 — Configuration HTTP API and pages
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-21-i18n-baseline-enru" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-21 — i18n baseline (EN/RU)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-5-ota-ledsbuttons-sd-card" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 5 — OTA, LEDs/buttons, SD card
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 5 — OTA, LEDs/buttons, SD card">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wp-22-otadfu-with-mcuboot-and-channel-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-22 — OTA/DFU with MCUboot and channel policy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-23-ledsbuttonsreset-semantics" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-23 — LEDs/buttons/reset semantics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-24-sd-card-logging-and-retention" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-24 — SD card logging and retention
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-6-insight-variant" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 6 — Insight variant
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 6 — Insight variant">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wp-25-insight-display-stack-fontsqrscreens" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-25 — Insight display stack (fonts/QR/screens)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-26-insight-urban-aggregation-analytics-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-26 — Insight Urban aggregation + analytics integration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#suggested-parallelization-graph" class="md-nav__link">
+    <span class="md-ellipsis">
+      Suggested parallelization graph
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#source-baseline-index-non-exhaustive" class="md-nav__link">
+    <span class="md-ellipsis">
+      Source baseline index (non-exhaustive)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gpl-30-note" class="md-nav__link">
+    <span class="md-ellipsis">
+      GPL-3.0 note
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ZEPHYR_ARCHITECTURE/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Target Zephyr Architecture (Zephyr 4.4)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Tasks
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Tasks
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tasks/01-west-workspace-and-app-bootstrap/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WP-01: West workspace and app bootstrap
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tasks/02-ci-foundation-zephyr-sdk-twister/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WP-02: CI foundation (Zephyr SDK + Twister)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tasks/03-board-and-variant-profiles/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WP-03: Board and variant profiles
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tasks/04-settings-config-subsystem/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WP-04: Settings/config subsystem
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tasks/05-wifi-manager-and-provisioning-baseline/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WP-05: WiFi manager and provisioning baseline
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tasks/06-identity-keystore-ed25519/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WP-06: Identity/keystore ED25519
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tasks/07-sensor-framework-core/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WP-07: Sensor framework core
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tasks/08-sensor-sds011/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WP-08: Sensor SDS011
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tasks/09-sensor-bmx280/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WP-09: Sensor BMx280
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tasks/10-sensor-bme680/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WP-10: Sensor BME680
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tasks/11-sensor-scd4x/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WP-11: Sensor SCD4x
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tasks/12-sensor-radsens/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WP-12: Sensor RadSens
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tasks/13-sensor-i2s-noise/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WP-13: Sensor I2S noise
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tasks/14-sensor-gps-neo-6m/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WP-14: Sensor GPS Neo-6M
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tasks/15-sensor-ags3871/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WP-15: Sensor AGS3871
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tasks/16-sensor-zmod4510/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WP-16: Sensor ZMOD4510
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tasks/17-connectivity-http-api-65-and-server-pool/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WP-17: Connectivity HTTP API (:65) and server pool
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tasks/18-substrate-datalog-scale-codec/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WP-18: Substrate datalog + SCALE codec
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tasks/19-mdns-and-http-altruist-aggregation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WP-19: mDNS and HTTP Altruist aggregation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tasks/20-web-configuration-api-and-pages/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WP-20: Web configuration API and pages
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tasks/21-i18n-en-ru-baseline/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WP-21: i18n EN/RU baseline
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tasks/22-ota-with-mcuboot-channels/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WP-22: OTA with MCUboot channels
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tasks/23-leds-buttons-reset-semantics/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WP-23: LEDs, buttons, reset semantics
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tasks/24-sd-card-logging-and-retention/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WP-24: SD card logging and retention
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tasks/25-insight-display-fonts-qr-screens/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WP-25: Insight display, fonts, QR, screens
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tasks/26-insight-aggregation-and-analytics-integration/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WP-26: Insight aggregation and analytics integration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conventions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-0-scaffolding" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 0 — Scaffolding
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 0 — Scaffolding">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wp-01-west-workspace-and-zephyr-app-bootstrap" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-01 — West workspace and Zephyr app bootstrap
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-02-ci-foundation-zephyr-sdk-twister" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-02 — CI foundation (Zephyr SDK + Twister)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-03-boardvariant-configuration-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-03 — Board/variant configuration baseline
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-1-core-platform" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 1 — Core platform
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 1 — Core platform">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wp-04-settingsconfig-subsystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-04 — Settings/config subsystem
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-05-wifi-manager-provisioning-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-05 — WiFi manager + provisioning baseline
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-06-identitykeystore-ed25519-signing" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-06 — Identity/keystore + ED25519 signing
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-2-sensor-framework-and-individual-sensor-packages" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 2 — Sensor framework and individual sensor packages
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 2 — Sensor framework and individual sensor packages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wp-07-sensor-framework-core" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-07 — Sensor framework core
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-08-sds011-driver-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-08 — SDS011 driver package
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-09-bmx280-driver-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-09 — BMx280 driver package
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-10-bme680-driver-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-10 — BME680 driver package
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-11-scd4x-driver-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-11 — SCD4x driver package
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-12-radsens-driver-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-12 — RadSens driver package
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-13-i2s-noise-sensor-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-13 — I2S noise sensor package
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-14-gps-neo-6m-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-14 — GPS (Neo-6M) package
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-15-ags3871-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-15 — AGS3871 package
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-16-zmod4510-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-16 — ZMOD4510 package
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-3-networking-apis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 3 — Networking APIs
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 3 — Networking APIs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wp-17-connectivity-http-post-api-server-pool-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-17 — Connectivity HTTP POST API + server pool selection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-18-substrate-datalog-api-scaleextrinsic-module" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-18 — Substrate datalog API + SCALE/extrinsic module
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-19-mdns-http-altruist-aggregation-sensor" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-19 — mDNS + HTTP Altruist aggregation sensor
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-4-web-configuration-ui-and-i18n" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 4 — Web configuration UI and i18n
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 4 — Web configuration UI and i18n">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wp-20-configuration-http-api-and-pages" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-20 — Configuration HTTP API and pages
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-21-i18n-baseline-enru" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-21 — i18n baseline (EN/RU)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-5-ota-ledsbuttons-sd-card" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 5 — OTA, LEDs/buttons, SD card
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 5 — OTA, LEDs/buttons, SD card">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wp-22-otadfu-with-mcuboot-and-channel-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-22 — OTA/DFU with MCUboot and channel policy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-23-ledsbuttonsreset-semantics" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-23 — LEDs/buttons/reset semantics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-24-sd-card-logging-and-retention" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-24 — SD card logging and retention
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-6-insight-variant" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 6 — Insight variant
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 6 — Insight variant">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wp-25-insight-display-stack-fontsqrscreens" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-25 — Insight display stack (fonts/QR/screens)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wp-26-insight-urban-aggregation-analytics-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      WP-26 — Insight Urban aggregation + analytics integration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#suggested-parallelization-graph" class="md-nav__link">
+    <span class="md-ellipsis">
+      Suggested parallelization graph
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#source-baseline-index-non-exhaustive" class="md-nav__link">
+    <span class="md-ellipsis">
+      Source baseline index (non-exhaustive)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gpl-30-note" class="md-nav__link">
+    <span class="md-ellipsis">
+      GPL-3.0 note
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="zephyr-port-master-implementation-plan">Zephyr Port Master Implementation Plan</h1>
+<p>This plan splits work into independent packages sized for one Copilot coding-agent session each.</p>
+<h2 id="conventions">Conventions</h2>
+<ul>
+<li><strong>In scope / Out of scope</strong> listed per package.</li>
+<li><strong>Dependencies</strong> are strict prerequisites.</li>
+<li><strong>Tests</strong> prefer Twister (<code>native_sim</code> for pure logic, board/HIL where hardware is required).</li>
+<li>Source baseline references are from <code>airalab/altruist-firmware</code> branch <code>esp32</code>.</li>
+</ul>
+<hr />
+<h2 id="phase-0-scaffolding">Phase 0 — Scaffolding</h2>
+<h3 id="wp-01-west-workspace-and-zephyr-app-bootstrap">WP-01 — West workspace and Zephyr app bootstrap</h3>
+<ul>
+<li><strong>Goal:</strong> Create buildable Zephyr app skeleton.</li>
+<li><strong>In scope:</strong> <code>west.yml</code>, <code>app/</code> CMake/Kconfig/prj, hello/blinky smoke app.</li>
+<li><strong>Out:</strong> Product logic.</li>
+<li><strong>Files:</strong> <code>west.yml</code>, <code>app/CMakeLists.txt</code>, <code>app/prj.conf</code>, <code>app/src/main.c</code>.</li>
+<li><strong>Deps:</strong> none.</li>
+<li><strong>Acceptance:</strong> <code>west build</code> succeeds for <code>esp32c6_devkitc</code>; app boots.</li>
+<li><strong>Tests:</strong> Twister smoke on <code>native_sim</code>; board build CI.</li>
+</ul>
+<h3 id="wp-02-ci-foundation-zephyr-sdk-twister">WP-02 — CI foundation (Zephyr SDK + Twister)</h3>
+<ul>
+<li><strong>Goal:</strong> Add CI for lint/build/test on docs and code skeleton.</li>
+<li><strong>In scope:</strong> workflow with Zephyr SDK toolchain setup and Twister subset.</li>
+<li><strong>Out:</strong> Hardware-in-loop.</li>
+<li><strong>Files:</strong> <code>.github/workflows/ci.yml</code> (or repo CI equivalent), <code>tests/smoke/*</code>.</li>
+<li><strong>Deps:</strong> WP-01.</li>
+<li><strong>Acceptance:</strong> CI runs formatting/build/twister subset and reports artifacts.</li>
+<li><strong>Tests:</strong> Twister <code>native_sim</code> + compile-only board matrix.</li>
+</ul>
+<h3 id="wp-03-boardvariant-configuration-baseline">WP-03 — Board/variant configuration baseline</h3>
+<ul>
+<li><strong>Goal:</strong> Introduce Urban C3/C6 and Insight C6 board configs/Kconfig profiles.</li>
+<li><strong>In scope:</strong> board overlays, Kconfig options, devicetree aliases.</li>
+<li><strong>Out:</strong> full driver implementation.</li>
+<li><strong>Files:</strong> <code>app/boards/*</code>, <code>app/Kconfig.variants</code>, <code>app/prj_*.conf</code>.</li>
+<li><strong>Deps:</strong> WP-01.</li>
+<li><strong>Acceptance:</strong> each profile compiles with distinct feature toggles.</li>
+<li><strong>Tests:</strong> compile matrix for all variants.</li>
+</ul>
+<hr />
+<h2 id="phase-1-core-platform">Phase 1 — Core platform</h2>
+<h3 id="wp-04-settingsconfig-subsystem">WP-04 — Settings/config subsystem</h3>
+<ul>
+<li><strong>Goal:</strong> Port config lifecycle from SPIFFS JSON to Zephyr Settings.</li>
+<li><strong>In scope:</strong> schema keys, load/save defaults, migration hooks.</li>
+<li><strong>Out:</strong> full web UI forms.</li>
+<li><strong>Files:</strong> <code>app/src/config/*</code>, <code>app/include/altruist/config.h</code>.</li>
+<li><strong>Deps:</strong> WP-03.</li>
+<li><strong>Source refs:</strong> <code>config_manager/config_helpers.cpp</code>, <code>config_manager/airrohr-cfg.h</code>.</li>
+<li><strong>Acceptance:</strong> config persists reboot and supports reset operations.</li>
+<li><strong>Tests:</strong> unit tests on settings encode/decode (<code>native_sim</code>).</li>
+</ul>
+<h3 id="wp-05-wifi-manager-provisioning-baseline">WP-05 — WiFi manager + provisioning baseline</h3>
+<ul>
+<li><strong>Goal:</strong> Implement STA management, reconnect policy, and provisioning entrypoints.</li>
+<li><strong>In scope:</strong> <code>net_mgmt</code> events, reconnect backoff, AP/provisioning mode hooks.</li>
+<li><strong>Out:</strong> full HTML UI.</li>
+<li><strong>Files:</strong> <code>app/src/net/wifi_manager.c</code>, <code>app/src/provisioning/*</code>.</li>
+<li><strong>Deps:</strong> WP-04.</li>
+<li><strong>Source refs:</strong> <code>wifi_manager.cpp</code>, <code>improv/improv_serial.cpp</code>.</li>
+<li><strong>Acceptance:</strong> reliable connect/disconnect recovery and provisioning state transitions.</li>
+<li><strong>Tests:</strong> mocked net event tests (<code>native_sim</code>) + board compile checks.</li>
+</ul>
+<h3 id="wp-06-identitykeystore-ed25519-signing">WP-06 — Identity/keystore + ED25519 signing</h3>
+<ul>
+<li><strong>Goal:</strong> Generate/persist keypair and provide signing API used by both report paths.</li>
+<li><strong>In scope:</strong> key generation on first boot, secure storage, sign/verify helper API.</li>
+<li><strong>Out:</strong> full Substrate extrinsic sender.</li>
+<li><strong>Files:</strong> <code>app/src/crypto/*</code>, <code>app/include/altruist/identity.h</code>.</li>
+<li><strong>Deps:</strong> WP-04.</li>
+<li><strong>Source refs:</strong> <code>apis/robonomics_datalog_api.cpp</code>, <code>config_manager/config_helpers.cpp</code>.</li>
+<li><strong>Acceptance:</strong> deterministic signing API, key survives reboot; reset behavior documented.</li>
+<li><strong>Tests:</strong> vector-based sign/verify tests (<code>native_sim</code>).</li>
+</ul>
+<hr />
+<h2 id="phase-2-sensor-framework-and-individual-sensor-packages">Phase 2 — Sensor framework and individual sensor packages</h2>
+<h3 id="wp-07-sensor-framework-core">WP-07 — Sensor framework core</h3>
+<ul>
+<li><strong>Goal:</strong> Build common sensor interface, scheduler, and snapshot data model.</li>
+<li><strong>In scope:</strong> sensor registry/factory, polling cadence, shared payload model.</li>
+<li><strong>Out:</strong> individual hardware drivers.</li>
+<li><strong>Files:</strong> <code>app/src/sensors/core/*</code>, <code>app/include/altruist/sensors.h</code>.</li>
+<li><strong>Deps:</strong> WP-03, WP-04.</li>
+<li><strong>Source refs:</strong> <code>sensors/sensor.h</code>, <code>sensors/sensor_factory.h</code>, <code>airrohr-firmware.ino</code>.</li>
+<li><strong>Acceptance:</strong> virtual/test sensors can register and publish measurements.</li>
+<li><strong>Tests:</strong> framework unit tests (<code>native_sim</code>).</li>
+</ul>
+<h3 id="wp-08-sds011-driver-package">WP-08 — SDS011 driver package</h3>
+<ul>
+<li><strong>Goal:</strong> Port SDS011 UART PM driver.</li>
+<li><strong>In scope:</strong> UART protocol parse, PM2.5/PM10 output.</li>
+<li><strong>Out:</strong> unrelated sensors.</li>
+<li><strong>Files:</strong> <code>app/src/sensors/sds011/*</code>.</li>
+<li><strong>Deps:</strong> WP-07.</li>
+<li><strong>Source refs:</strong> <code>sensors/sds011_sensor.cpp</code>.</li>
+<li><strong>Acceptance:</strong> produces PM metrics in standard snapshot schema.</li>
+<li><strong>Tests:</strong> parser unit tests (<code>native_sim</code>) + compile on ESP targets.</li>
+</ul>
+<h3 id="wp-09-bmx280-driver-package">WP-09 — BMx280 driver package</h3>
+<ul>
+<li><strong>Goal:</strong> Port BMx280 temperature/humidity/pressure sensor support.</li>
+<li><strong>In scope:</strong> I2C init/read + schema mapping.</li>
+<li><strong>Out:</strong> BME680/SCD4x.</li>
+<li><strong>Files:</strong> <code>app/src/sensors/bmx280/*</code>.</li>
+<li><strong>Deps:</strong> WP-07.</li>
+<li><strong>Source refs:</strong> <code>sensors/bmx280i2c_sensor.cpp</code>.</li>
+<li><strong>Acceptance:</strong> stable periodic readings with units mapping.</li>
+<li><strong>Tests:</strong> mocked sensor backend tests (<code>native_sim</code>).</li>
+</ul>
+<h3 id="wp-10-bme680-driver-package">WP-10 — BME680 driver package</h3>
+<ul>
+<li><strong>Goal:</strong> Port BME680 support (Insight-focused).</li>
+<li><strong>In scope:</strong> gas + environmental values.</li>
+<li><strong>Out:</strong> analytics logic.</li>
+<li><strong>Files:</strong> <code>app/src/sensors/bme680/*</code>.</li>
+<li><strong>Deps:</strong> WP-07.</li>
+<li><strong>Source refs:</strong> <code>sensors/bmx680i2c_sensor.cpp</code>.</li>
+<li><strong>Acceptance:</strong> values map correctly and feature-gated by Kconfig.</li>
+<li><strong>Tests:</strong> compile + unit conversion tests.</li>
+</ul>
+<h3 id="wp-11-scd4x-driver-package">WP-11 — SCD4x driver package</h3>
+<ul>
+<li><strong>Goal:</strong> Port SCD40/41 CO2 sensor support.</li>
+<li><strong>In scope:</strong> CO2/temp/humidity polling and timeout handling.</li>
+<li><strong>Out:</strong> cross-sensor blending policy.</li>
+<li><strong>Files:</strong> <code>app/src/sensors/scd4x/*</code>.</li>
+<li><strong>Deps:</strong> WP-07.</li>
+<li><strong>Source refs:</strong> <code>sensors/scd4x_sensor.cpp</code>.</li>
+<li><strong>Acceptance:</strong> valid CO2/temp/humidity values in snapshot model.</li>
+<li><strong>Tests:</strong> driver logic unit tests.</li>
+</ul>
+<h3 id="wp-12-radsens-driver-package">WP-12 — RadSens driver package</h3>
+<ul>
+<li><strong>Goal:</strong> Port radiation sensor support.</li>
+<li><strong>In scope:</strong> I2C read and CPM reporting.</li>
+<li><strong>Out:</strong> AQI logic.</li>
+<li><strong>Files:</strong> <code>app/src/sensors/radsens/*</code>.</li>
+<li><strong>Deps:</strong> WP-07.</li>
+<li><strong>Source refs:</strong> <code>sensors/radsens_sensor.cpp</code>.</li>
+<li><strong>Acceptance:</strong> CPM exported and feature-gated.</li>
+<li><strong>Tests:</strong> compile + basic mocked read tests.</li>
+</ul>
+<h3 id="wp-13-i2s-noise-sensor-package">WP-13 — I2S noise sensor package</h3>
+<ul>
+<li><strong>Goal:</strong> Port I2S microphone dBA measurement path.</li>
+<li><strong>In scope:</strong> I2S capture pipeline + max/avg calculation.</li>
+<li><strong>Out:</strong> display graphs.</li>
+<li><strong>Files:</strong> <code>app/src/sensors/noise_i2s/*</code>.</li>
+<li><strong>Deps:</strong> WP-07.</li>
+<li><strong>Source refs:</strong> <code>sensors/i2s_noise_sensor.cpp</code>.</li>
+<li><strong>Acceptance:</strong> noiseAvg/noiseMax exported with bounded CPU usage.</li>
+<li><strong>Tests:</strong> algorithm unit tests on sample buffers (<code>native_sim</code>).</li>
+</ul>
+<h3 id="wp-14-gps-neo-6m-package">WP-14 — GPS (Neo-6M) package</h3>
+<ul>
+<li><strong>Goal:</strong> Port UART GPS ingestion and coordinate reporting.</li>
+<li><strong>In scope:</strong> NMEA parser integration + lat/lon fields.</li>
+<li><strong>Out:</strong> map URL rendering.</li>
+<li><strong>Files:</strong> <code>app/src/sensors/gps/*</code>.</li>
+<li><strong>Deps:</strong> WP-07.</li>
+<li><strong>Source refs:</strong> <code>sensors/tiny_gps_sensor.cpp</code>.</li>
+<li><strong>Acceptance:</strong> valid coordinates when NMEA stream provided.</li>
+<li><strong>Tests:</strong> parser replay tests (<code>native_sim</code>).</li>
+</ul>
+<h3 id="wp-15-ags3871-package">WP-15 — AGS3871 package</h3>
+<ul>
+<li><strong>Goal:</strong> Port AGS3871 support.</li>
+<li><strong>In scope:</strong> driver integration and data mapping.</li>
+<li><strong>Out:</strong> policy/UI logic.</li>
+<li><strong>Files:</strong> <code>app/src/sensors/ags3871/*</code>.</li>
+<li><strong>Deps:</strong> WP-07.</li>
+<li><strong>Source refs:</strong> <code>sensors/ags3871_sensor.cpp</code>.</li>
+<li><strong>Acceptance:</strong> sensor compiles and reports expected fields.</li>
+<li><strong>Tests:</strong> compile + mocked transaction tests.</li>
+</ul>
+<h3 id="wp-16-zmod4510-package">WP-16 — ZMOD4510 package</h3>
+<ul>
+<li><strong>Goal:</strong> Port ZMOD4510 support (NO2/O3/AQI fields).</li>
+<li><strong>In scope:</strong> driver wrapper and schema mapping.</li>
+<li><strong>Out:</strong> non-ZMOD sensors.</li>
+<li><strong>Files:</strong> <code>app/src/sensors/zmod4510/*</code>.</li>
+<li><strong>Deps:</strong> WP-07.</li>
+<li><strong>Source refs:</strong> <code>sensors/zmod4510_sensor.cpp</code>, <code>sensors/drivers/zmod4510/*</code>.</li>
+<li><strong>Acceptance:</strong> o3/no2/aqi fields available under feature flag.</li>
+<li><strong>Tests:</strong> compile + mapping tests.</li>
+</ul>
+<hr />
+<h2 id="phase-3-networking-apis">Phase 3 — Networking APIs</h2>
+<h3 id="wp-17-connectivity-http-post-api-server-pool-selection">WP-17 — Connectivity HTTP POST API + server pool selection</h3>
+<ul>
+<li><strong>Goal:</strong> Implement signed map reporting every 30s with pool selection semantics.</li>
+<li><strong>In scope:</strong> host pool parsing, least-load/registered selection, POST :65.</li>
+<li><strong>Out:</strong> on-chain extrinsics.</li>
+<li><strong>Files:</strong> <code>app/src/api/connectivity/*</code>.</li>
+<li><strong>Deps:</strong> WP-05, WP-06, WP-07.</li>
+<li><strong>Source refs:</strong> <code>apis/robonomics_http_api.cpp</code>, <code>robonomics_servers.h</code>.</li>
+<li><strong>Acceptance:</strong> retry/selection behavior mirrors source logic.</li>
+<li><strong>Tests:</strong> <code>native_sim</code> tests for parsing/selection + mocked HTTP.</li>
+</ul>
+<h3 id="wp-18-substrate-datalog-api-scaleextrinsic-module">WP-18 — Substrate datalog API + SCALE/extrinsic module</h3>
+<ul>
+<li><strong>Goal:</strong> Implement 10-minute datalog extrinsic pipeline.</li>
+<li><strong>In scope:</strong> SCALE codec module, extrinsic builder, RPC submission wrapper.</li>
+<li><strong>Out:</strong> UI management.</li>
+<li><strong>Files:</strong> <code>app/src/substrate/*</code>, <code>app/src/api/datalog/*</code>.</li>
+<li><strong>Deps:</strong> WP-06, WP-07.</li>
+<li><strong>Source refs:</strong> <code>apis/robonomics_datalog_api.cpp</code>, <code>apis/helpers/message_formatter.cpp</code>.</li>
+<li><strong>Acceptance:</strong> signed payload created and submission path integrated.</li>
+<li><strong>Tests:</strong> vector tests for SCALE encoding (<code>native_sim</code>).</li>
+</ul>
+<h3 id="wp-19-mdns-http-altruist-aggregation-sensor">WP-19 — mDNS + HTTP Altruist aggregation sensor</h3>
+<ul>
+<li><strong>Goal:</strong> Port Insight discovery of nearby Urban devices and local HTTP aggregation.</li>
+<li><strong>In scope:</strong> mDNS query/announce + Urban data ingestion.</li>
+<li><strong>Out:</strong> display rendering.</li>
+<li><strong>Files:</strong> <code>app/src/net/mdns_*</code>, <code>app/src/sensors/http_altruist/*</code>.</li>
+<li><strong>Deps:</strong> WP-05, WP-07.</li>
+<li><strong>Source refs:</strong> <code>wifi_manager.cpp</code>, <code>sensors/http_altruist_sensor.cpp</code>, <code>webserver/webserver.cpp</code>.</li>
+<li><strong>Acceptance:</strong> Insight can discover/fallback-to-configured Urban endpoint and ingest data.</li>
+<li><strong>Tests:</strong> mocked resolver + HTTP payload mapping tests.</li>
+</ul>
+<hr />
+<h2 id="phase-4-web-configuration-ui-and-i18n">Phase 4 — Web configuration UI and i18n</h2>
+<h3 id="wp-20-configuration-http-api-and-pages">WP-20 — Configuration HTTP API and pages</h3>
+<ul>
+<li><strong>Goal:</strong> Port config/status endpoints and web pages.</li>
+<li><strong>In scope:</strong> <code>/config</code>, <code>/status</code>, <code>/values</code>, <code>/ota</code> and related handlers.</li>
+<li><strong>Out:</strong> complete Insight screen management.</li>
+<li><strong>Files:</strong> <code>app/src/web/*</code>, <code>app/web_assets/*</code>.</li>
+<li><strong>Deps:</strong> WP-04, WP-05.</li>
+<li><strong>Source refs:</strong> <code>webserver/webserver.cpp</code>, <code>webserver/pages/*</code>, <code>webserver/html-content.h</code>.</li>
+<li><strong>Acceptance:</strong> config can be viewed/updated from browser and persisted.</li>
+<li><strong>Tests:</strong> handler unit tests (<code>native_sim</code>) where possible.</li>
+</ul>
+<h3 id="wp-21-i18n-baseline-enru">WP-21 — i18n baseline (EN/RU)</h3>
+<ul>
+<li><strong>Goal:</strong> Port EN/RU translation pipeline used by web and Insight text.</li>
+<li><strong>In scope:</strong> string tables, locale selection, fallback behavior.</li>
+<li><strong>Out:</strong> additional languages beyond EN/RU.</li>
+<li><strong>Files:</strong> <code>app/src/i18n/*</code>, <code>app/include/altruist/i18n.h</code>.</li>
+<li><strong>Deps:</strong> WP-20.</li>
+<li><strong>Source refs:</strong> <code>intl.h</code>, <code>translations/intl_en.h</code>, <code>translations/intl_ru.h</code>.</li>
+<li><strong>Acceptance:</strong> EN/RU switch reflected in served UI and runtime labels.</li>
+<li><strong>Tests:</strong> locale selection unit tests.</li>
+</ul>
+<hr />
+<h2 id="phase-5-ota-ledsbuttons-sd-card">Phase 5 — OTA, LEDs/buttons, SD card</h2>
+<h3 id="wp-22-otadfu-with-mcuboot-and-channel-policy">WP-22 — OTA/DFU with MCUboot and channel policy</h3>
+<ul>
+<li><strong>Goal:</strong> Replace Arduino OTA with Zephyr DFU/MCUboot two-slot pipeline.</li>
+<li><strong>In scope:</strong> slot layout config, update check/download/install, stable/testing policy.</li>
+<li><strong>Out:</strong> web UX polish.</li>
+<li><strong>Files:</strong> <code>app/src/ota/*</code>, partition overlays.</li>
+<li><strong>Deps:</strong> WP-03, WP-05.</li>
+<li><strong>Source refs:</strong> <code>OTA_Update.cpp</code>, <code>esp32c3_partitions.csv</code>, <code>esp32c6_partitions.csv</code>, <code>platformio_build_metadata.py</code>.</li>
+<li><strong>Acceptance:</strong> image update + rollback behavior validated.</li>
+<li><strong>Tests:</strong> DFU simulation tests + board compile checks.</li>
+</ul>
+<h3 id="wp-23-ledsbuttonsreset-semantics">WP-23 — LEDs/buttons/reset semantics</h3>
+<ul>
+<li><strong>Goal:</strong> Port Urban/Insight button events and LED state machine.</li>
+<li><strong>In scope:</strong> RGB status policy, reset combinations, debounce/event model.</li>
+<li><strong>Out:</strong> advanced display analytics.</li>
+<li><strong>Files:</strong> <code>app/src/ui/buttons/*</code>, <code>app/src/ui/leds/*</code>.</li>
+<li><strong>Deps:</strong> WP-05.</li>
+<li><strong>Source refs:</strong> <code>leds/leds_controller_urban.cpp</code>, <code>buttons/button_manager.cpp</code>, <code>airrohr-firmware.ino</code>.</li>
+<li><strong>Acceptance:</strong> behavior matches documented semantics for setup/healthy/error/reset.</li>
+<li><strong>Tests:</strong> state-machine unit tests (<code>native_sim</code>).</li>
+</ul>
+<h3 id="wp-24-sd-card-logging-and-retention">WP-24 — SD card logging and retention</h3>
+<ul>
+<li><strong>Goal:</strong> Port CSV logger and retention/rollup background tasks.</li>
+<li><strong>In scope:</strong> append logs, read windows for graphs, retention cleanup.</li>
+<li><strong>Out:</strong> graph rendering itself.</li>
+<li><strong>Files:</strong> <code>app/src/storage/sd_logger/*</code>.</li>
+<li><strong>Deps:</strong> WP-07.</li>
+<li><strong>Source refs:</strong> <code>sd_card/sd_card.cpp</code>.</li>
+<li><strong>Acceptance:</strong> data append/read path works; retention task bounded.</li>
+<li><strong>Tests:</strong> filesystem-backed unit tests (<code>native_sim</code>) + compile checks.</li>
+</ul>
+<hr />
+<h2 id="phase-6-insight-variant">Phase 6 — Insight variant</h2>
+<h3 id="wp-25-insight-display-stack-fontsqrscreens">WP-25 — Insight display stack (fonts/QR/screens)</h3>
+<ul>
+<li><strong>Goal:</strong> Port Insight display system and screen navigation.</li>
+<li><strong>In scope:</strong> display init/update loop, basic screen set, QR rendering, font assets.</li>
+<li><strong>Out:</strong> Urban analytics fusion details.</li>
+<li><strong>Files:</strong> <code>app/src/insight/display/*</code>, <code>app/assets/fonts/*</code>, <code>app/assets/qr/*</code>.</li>
+<li><strong>Deps:</strong> WP-03, WP-21, WP-23.</li>
+<li><strong>Source refs:</strong> <code>display/display_manager.cpp</code>, <code>display/*</code>, <code>icons/*</code>.</li>
+<li><strong>Acceptance:</strong> Insight UI navigable with buttons and renders key pages.</li>
+<li><strong>Tests:</strong> compile-time tests + pure logic tests for screen FSM.</li>
+</ul>
+<h3 id="wp-26-insight-urban-aggregation-analytics-integration">WP-26 — Insight Urban aggregation + analytics integration</h3>
+<ul>
+<li><strong>Goal:</strong> Complete Insight-specific aggregation workflows and analytics views.</li>
+<li><strong>In scope:</strong> Urban pairing mode, cached Urban identity, graph/analytics data flow.</li>
+<li><strong>Out:</strong> non-Insight features.</li>
+<li><strong>Files:</strong> <code>app/src/insight/aggregation/*</code>, <code>app/src/insight/analytics/*</code>.</li>
+<li><strong>Deps:</strong> WP-19, WP-24, WP-25.</li>
+<li><strong>Source refs:</strong> <code>sensors/http_altruist_sensor.cpp</code>, <code>display/display_manager.cpp</code>, <code>airrohr-firmware.ino</code>.</li>
+<li><strong>Acceptance:</strong> Insight paired mode and standalone mode both operate as expected.</li>
+<li><strong>Tests:</strong> logic tests (<code>native_sim</code>) + compile checks for Insight profile.</li>
+</ul>
+<hr />
+<h2 id="suggested-parallelization-graph">Suggested parallelization graph</h2>
+<ul>
+<li>Earliest parallel lane after WP-07: WP-08..WP-16 can run in parallel.</li>
+<li>Networking lane: WP-17 and WP-18 in parallel after crypto + framework.</li>
+<li>UI lane: WP-20/WP-21 parallel with networking completion.</li>
+<li>Insight lane: WP-25 starts after core UI/button/i18n; WP-26 after WP-19 + WP-24 + WP-25.</li>
+</ul>
+<h2 id="source-baseline-index-non-exhaustive">Source baseline index (non-exhaustive)</h2>
+<ul>
+<li>Core runtime: <code>airrohr-firmware.ino</code></li>
+<li>Build/channels: <code>platformio.ini</code>, <code>platformio_build_metadata.py</code></li>
+<li>Config: <code>config_manager/config_helpers.cpp</code>, <code>config_manager/config_defaults.h</code>, <code>config_manager/airrohr-cfg.h</code></li>
+<li>Sensors: <code>sensors/sensor.h</code>, <code>sensors/sensor_factory.h</code>, <code>sensors/*.cpp</code></li>
+<li>APIs: <code>apis/api.h</code>, <code>apis/robonomics_datalog_api.cpp</code>, <code>apis/robonomics_http_api.cpp</code>, <code>apis/helpers/message_formatter.cpp</code></li>
+<li>Networking/UI: <code>wifi_manager.cpp</code>, <code>webserver/webserver.cpp</code>, <code>intl.h</code>, <code>translations/intl_en.h</code>, <code>translations/intl_ru.h</code></li>
+<li>OTA/partitions: <code>OTA_Update.cpp</code>, <code>esp32c3_partitions.csv</code>, <code>esp32c6_partitions.csv</code></li>
+<li>HW UI: <code>leds/leds_controller_urban.cpp</code>, <code>buttons/button_manager.cpp</code>, <code>display/display_manager.cpp</code>, <code>sd_card/sd_card.cpp</code></li>
+</ul>
+<h2 id="gpl-30-note">GPL-3.0 note</h2>
+<p>When implementation packages copy/adapt logic from source firmware, preserve GPL-3.0-compatible licensing and attributions.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.fe8b6f2b.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -8,15 +8,13 @@ permissions:
   contents: read
 
 jobs:
-  build-and-test:
-    name: Twister smoke + app build
+  tests:
+    name: Twister smoke tests
     runs-on: ubuntu-22.04
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          path: altruist-zephyr-firmware
           persist-credentials: false
 
       - name: Set up Python
@@ -27,14 +25,86 @@ jobs:
       - name: Setup Zephyr project
         uses: zephyrproject-rtos/action-zephyr-setup@v1
         with:
-          app-path: altruist-zephyr-firmware
-          toolchains: riscv64-zephyr-elf
-          ccache-cache-key: ubuntu-22.04
+          app-path: .
+          toolchains: x86_64-zephyr-elf
+          ccache-cache-key: v1-tests-${{ runner.os }}
+
+      - name: Export Zephyr CMake package
+        run: west zephyr-export
 
       - name: Twister smoke tests
-        working-directory: altruist-zephyr-firmware
-        run: west twister -T tests/smoke/native_sim -v --inline-logs
+        run: west twister -T tests/smoke/native_sim -v --inline-logs -O twister-out
 
-      - name: Compile app for ESP32-C6
-        working-directory: altruist-zephyr-firmware
-        run: west build -b esp32c6_devkitc/esp32c6/hpcore app -p always
+      - name: Upload Twister artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: twister-out-${{ github.run_id }}
+          path: twister-out
+          if-no-files-found: warn
+
+  build:
+    name: Build app variants
+    runs-on: ubuntu-22.04
+    needs: tests
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - board: esp32c6_devkitc
+            build-dir: build-esp32c6
+            extra-conf-file: ""
+            toolchain: riscv64-zephyr-elf
+          - board: esp32c3_devkitm
+            build-dir: build-urban-c3
+            extra-conf-file: prj_urban_c3.conf
+            toolchain: riscv64-zephyr-elf
+          - board: esp32c6_devkitc
+            build-dir: build-urban-c6
+            extra-conf-file: prj_urban_c6.conf
+            toolchain: riscv64-zephyr-elf
+          - board: esp32c6_devkitc
+            build-dir: build-insight-c6
+            extra-conf-file: prj_insight_c6.conf
+            toolchain: riscv64-zephyr-elf
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Setup Zephyr project
+        uses: zephyrproject-rtos/action-zephyr-setup@v1
+        with:
+          app-path: .
+          toolchains: ${{ matrix.toolchain }}:xtensa-espressif_esp32_zephyr-elf
+          ccache-cache-key: v1-build-${{ runner.os }}-${{ matrix.board }}-${{ hashFiles('app/**/*.c', 'app/**/*.h', 'app/CMakeLists.txt', 'app/Kconfig*', 'app/prj*.conf') }}
+
+      - name: Export Zephyr CMake package
+        run: west zephyr-export
+
+      - name: Build firmware
+        shell: bash
+        run: |
+          EXTRA_ARGS=""
+          if [ -n "${{ matrix.extra-conf-file }}" ]; then
+            EXTRA_ARGS="-- -DEXTRA_CONF_FILE=${{ matrix.extra-conf-file }}"
+          fi
+          west build -p always -b "${{ matrix.board }}" app -d "${{ matrix.build-dir }}" ${EXTRA_ARGS}
+
+      - name: Upload build artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.build-dir }}-${{ github.run_id }}
+          path: |
+            ${{ matrix.build-dir }}/zephyr/zephyr.bin
+            ${{ matrix.build-dir }}/zephyr/zephyr.elf
+            ${{ matrix.build-dir }}/zephyr/.config
+          if-no-files-found: warn

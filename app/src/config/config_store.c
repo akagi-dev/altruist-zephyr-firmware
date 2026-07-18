@@ -16,6 +16,7 @@
 #include <stdint.h>
 #include <string.h>
 
+#include <zephyr/kernel.h>
 #include <zephyr/settings/settings.h>
 #include <zephyr/sys/printk.h>
 
@@ -46,8 +47,10 @@
 #define EXPORT_KEY(name) CONFIG_ROOT "/" name
 
 static struct altruist_config g_cfg;
+static struct altruist_config g_cfg_snapshot;
 static altruist_config_migrate_cb_t g_migrate_hook;
 static bool g_initialized;
+K_MUTEX_DEFINE(g_cfg_lock);
 
 static int cfg_read_string(size_t len, settings_read_cb read_cb, void *cb_arg,
 			   char *dst, size_t dst_len)
@@ -134,185 +137,246 @@ static int cfg_read_u32(size_t len, settings_read_cb read_cb, void *cb_arg, uint
 static int altruist_config_settings_set(const char *name, size_t len,
 					settings_read_cb read_cb, void *cb_arg)
 {
+	int rc;
+
+	k_mutex_lock(&g_cfg_lock, K_FOREVER);
+
 	if (settings_name_steq(name, CFG_KEY_SCHEMA_VERSION, NULL)) {
-		return cfg_read_u32(len, read_cb, cb_arg, &g_cfg.schema_version);
+		rc = cfg_read_u32(len, read_cb, cb_arg, &g_cfg.schema_version);
+		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_CURRENT_LANG, NULL)) {
-		return cfg_read_string(len, read_cb, cb_arg,
-					       g_cfg.current_lang, sizeof(g_cfg.current_lang));
+		rc = cfg_read_string(len, read_cb, cb_arg,
+				     g_cfg.current_lang, sizeof(g_cfg.current_lang));
+		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_WLANSSID, NULL)) {
-		return cfg_read_string(len, read_cb, cb_arg, g_cfg.wlanssid,
-				       sizeof(g_cfg.wlanssid));
+		rc = cfg_read_string(len, read_cb, cb_arg, g_cfg.wlanssid,
+				     sizeof(g_cfg.wlanssid));
+		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_WLANPWD, NULL)) {
-		return cfg_read_string(len, read_cb, cb_arg, g_cfg.wlanpwd,
-				       sizeof(g_cfg.wlanpwd));
+		rc = cfg_read_string(len, read_cb, cb_arg, g_cfg.wlanpwd,
+				     sizeof(g_cfg.wlanpwd));
+		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_WLANNOPWD, NULL)) {
-		return cfg_read_bool(len, read_cb, cb_arg, &g_cfg.wlannopwd);
+		rc = cfg_read_bool(len, read_cb, cb_arg, &g_cfg.wlannopwd);
+		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_FS_SSID, NULL)) {
-		return cfg_read_string(len, read_cb, cb_arg, g_cfg.fs_ssid,
-				       sizeof(g_cfg.fs_ssid));
+		rc = cfg_read_string(len, read_cb, cb_arg, g_cfg.fs_ssid,
+				     sizeof(g_cfg.fs_ssid));
+		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_FS_PWD, NULL)) {
-		return cfg_read_string(len, read_cb, cb_arg, g_cfg.fs_pwd,
-				       sizeof(g_cfg.fs_pwd));
+		rc = cfg_read_string(len, read_cb, cb_arg, g_cfg.fs_pwd,
+				     sizeof(g_cfg.fs_pwd));
+		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_RWS_OWNER, NULL)) {
-		return cfg_read_string(len, read_cb, cb_arg, g_cfg.rws_owner,
-				       sizeof(g_cfg.rws_owner));
+		rc = cfg_read_string(len, read_cb, cb_arg, g_cfg.rws_owner,
+				     sizeof(g_cfg.rws_owner));
+		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_ROBONOMICS_PUBLIC_NODE, NULL)) {
-		return cfg_read_string(len, read_cb, cb_arg,
-				       g_cfg.robonomics_public_node,
-				       sizeof(g_cfg.robonomics_public_node));
+		rc = cfg_read_string(len, read_cb, cb_arg,
+				     g_cfg.robonomics_public_node,
+				     sizeof(g_cfg.robonomics_public_node));
+		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_ROBONOMICS_CONNECTIVITY_HOST, NULL)) {
-		return cfg_read_string(len, read_cb, cb_arg,
-				       g_cfg.robonomics_connectivity_host,
-				       sizeof(g_cfg.robonomics_connectivity_host));
+		rc = cfg_read_string(len, read_cb, cb_arg,
+				     g_cfg.robonomics_connectivity_host,
+				     sizeof(g_cfg.robonomics_connectivity_host));
+		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_ROBONOMICS_CONNECTIVITY_HOSTS, NULL)) {
-		return cfg_read_string(len, read_cb, cb_arg,
-				       g_cfg.robonomics_connectivity_hosts,
-				       sizeof(g_cfg.robonomics_connectivity_hosts));
+		rc = cfg_read_string(len, read_cb, cb_arg,
+				     g_cfg.robonomics_connectivity_hosts,
+				     sizeof(g_cfg.robonomics_connectivity_hosts));
+		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_PRIVATE_KEY, NULL)) {
-		return cfg_read_string(len, read_cb, cb_arg, g_cfg.private_key,
-				       sizeof(g_cfg.private_key));
+		rc = cfg_read_string(len, read_cb, cb_arg, g_cfg.private_key,
+				     sizeof(g_cfg.private_key));
+		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_SEND2ROBONOMICS, NULL)) {
-		return cfg_read_bool(len, read_cb, cb_arg, &g_cfg.send2robonomics);
+		rc = cfg_read_bool(len, read_cb, cb_arg, &g_cfg.send2robonomics);
+		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_SEND2CSV, NULL)) {
-		return cfg_read_bool(len, read_cb, cb_arg, &g_cfg.send2csv);
+		rc = cfg_read_bool(len, read_cb, cb_arg, &g_cfg.send2csv);
+		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_SENDING_INTERVAL_MS, NULL) ||
 	    settings_name_steq(name, CFG_KEY_SENDING_INTERVAL_MS_LEGACY, NULL)) {
-		return cfg_read_u32(len, read_cb, cb_arg, &g_cfg.sending_interval_ms);
+		rc = cfg_read_u32(len, read_cb, cb_arg, &g_cfg.sending_interval_ms);
+		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_DATALOG_SENDING_INTERVAL_MS, NULL) ||
 	    settings_name_steq(name, CFG_KEY_DATALOG_SENDING_INTERVAL_MS_LEGACY, NULL)) {
-		return cfg_read_u32(len, read_cb, cb_arg,
-				    &g_cfg.datalog_sending_interval_ms);
+		rc = cfg_read_u32(len, read_cb, cb_arg,
+				  &g_cfg.datalog_sending_interval_ms);
+		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_SDS_MEAS_INTERVAL_MS, NULL)) {
-		return cfg_read_u32(len, read_cb, cb_arg, &g_cfg.sds_meas_interval_ms);
+		rc = cfg_read_u32(len, read_cb, cb_arg, &g_cfg.sds_meas_interval_ms);
+		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_TIME_FOR_WIFI_CONFIG, NULL)) {
-		return cfg_read_u32(len, read_cb, cb_arg, &g_cfg.time_for_wifi_config);
+		rc = cfg_read_u32(len, read_cb, cb_arg, &g_cfg.time_for_wifi_config);
+		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_STANDALONE, NULL)) {
-		return cfg_read_bool(len, read_cb, cb_arg, &g_cfg.standalone);
+		rc = cfg_read_bool(len, read_cb, cb_arg, &g_cfg.standalone);
+		goto out;
 	}
 
-	return -ENOENT;
+	rc = -ENOENT;
+out:
+	k_mutex_unlock(&g_cfg_lock);
+	return rc;
 }
 
 static int altruist_config_settings_get(const char *name, char *val, int val_len_max)
 {
+	int rc;
+
 	if ((val == NULL) || (val_len_max <= 0)) {
 		return -EINVAL;
 	}
 
+	k_mutex_lock(&g_cfg_lock, K_FOREVER);
+
 	if (settings_name_steq(name, CFG_KEY_SCHEMA_VERSION, NULL)) {
 		if (val_len_max < (int)sizeof(g_cfg.schema_version)) {
-			return -ENOMEM;
+			rc = -ENOMEM;
+			goto out;
 		}
 		memcpy(val, &g_cfg.schema_version, sizeof(g_cfg.schema_version));
-		return sizeof(g_cfg.schema_version);
+		rc = sizeof(g_cfg.schema_version);
+		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_CURRENT_LANG, NULL)) {
-		return snprintk(val, val_len_max, "%s", g_cfg.current_lang);
+		rc = snprintk(val, val_len_max, "%s", g_cfg.current_lang);
+		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_WLANSSID, NULL)) {
-		return snprintk(val, val_len_max, "%s", g_cfg.wlanssid);
+		rc = snprintk(val, val_len_max, "%s", g_cfg.wlanssid);
+		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_WLANPWD, NULL)) {
-		return snprintk(val, val_len_max, "%s", g_cfg.wlanpwd);
+		rc = snprintk(val, val_len_max, "%s", g_cfg.wlanpwd);
+		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_WLANNOPWD, NULL)) {
 		if (val_len_max < (int)sizeof(g_cfg.wlannopwd)) {
-			return -ENOMEM;
+			rc = -ENOMEM;
+			goto out;
 		}
 		memcpy(val, &g_cfg.wlannopwd, sizeof(g_cfg.wlannopwd));
-		return sizeof(g_cfg.wlannopwd);
+		rc = sizeof(g_cfg.wlannopwd);
+		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_FS_SSID, NULL)) {
-		return snprintk(val, val_len_max, "%s", g_cfg.fs_ssid);
+		rc = snprintk(val, val_len_max, "%s", g_cfg.fs_ssid);
+		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_FS_PWD, NULL)) {
-		return snprintk(val, val_len_max, "%s", g_cfg.fs_pwd);
+		rc = snprintk(val, val_len_max, "%s", g_cfg.fs_pwd);
+		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_RWS_OWNER, NULL)) {
-		return snprintk(val, val_len_max, "%s", g_cfg.rws_owner);
+		rc = snprintk(val, val_len_max, "%s", g_cfg.rws_owner);
+		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_ROBONOMICS_PUBLIC_NODE, NULL)) {
-		return snprintk(val, val_len_max, "%s", g_cfg.robonomics_public_node);
+		rc = snprintk(val, val_len_max, "%s", g_cfg.robonomics_public_node);
+		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_ROBONOMICS_CONNECTIVITY_HOST, NULL)) {
-		return snprintk(val, val_len_max, "%s", g_cfg.robonomics_connectivity_host);
+		rc = snprintk(val, val_len_max, "%s", g_cfg.robonomics_connectivity_host);
+		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_ROBONOMICS_CONNECTIVITY_HOSTS, NULL)) {
-		return snprintk(val, val_len_max, "%s", g_cfg.robonomics_connectivity_hosts);
+		rc = snprintk(val, val_len_max, "%s", g_cfg.robonomics_connectivity_hosts);
+		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_PRIVATE_KEY, NULL)) {
-		return snprintk(val, val_len_max, "%s", g_cfg.private_key);
+		rc = snprintk(val, val_len_max, "%s", g_cfg.private_key);
+		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_SEND2ROBONOMICS, NULL)) {
 		if (val_len_max < (int)sizeof(g_cfg.send2robonomics)) {
-			return -ENOMEM;
+			rc = -ENOMEM;
+			goto out;
 		}
 		memcpy(val, &g_cfg.send2robonomics, sizeof(g_cfg.send2robonomics));
-		return sizeof(g_cfg.send2robonomics);
+		rc = sizeof(g_cfg.send2robonomics);
+		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_SEND2CSV, NULL)) {
 		if (val_len_max < (int)sizeof(g_cfg.send2csv)) {
-			return -ENOMEM;
+			rc = -ENOMEM;
+			goto out;
 		}
 		memcpy(val, &g_cfg.send2csv, sizeof(g_cfg.send2csv));
-		return sizeof(g_cfg.send2csv);
+		rc = sizeof(g_cfg.send2csv);
+		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_SENDING_INTERVAL_MS, NULL)) {
 		if (val_len_max < (int)sizeof(g_cfg.sending_interval_ms)) {
-			return -ENOMEM;
+			rc = -ENOMEM;
+			goto out;
 		}
 		memcpy(val, &g_cfg.sending_interval_ms, sizeof(g_cfg.sending_interval_ms));
-		return sizeof(g_cfg.sending_interval_ms);
+		rc = sizeof(g_cfg.sending_interval_ms);
+		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_DATALOG_SENDING_INTERVAL_MS, NULL)) {
 		if (val_len_max < (int)sizeof(g_cfg.datalog_sending_interval_ms)) {
-			return -ENOMEM;
+			rc = -ENOMEM;
+			goto out;
 		}
 		memcpy(val, &g_cfg.datalog_sending_interval_ms,
 		       sizeof(g_cfg.datalog_sending_interval_ms));
-		return sizeof(g_cfg.datalog_sending_interval_ms);
+		rc = sizeof(g_cfg.datalog_sending_interval_ms);
+		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_SDS_MEAS_INTERVAL_MS, NULL)) {
 		if (val_len_max < (int)sizeof(g_cfg.sds_meas_interval_ms)) {
-			return -ENOMEM;
+			rc = -ENOMEM;
+			goto out;
 		}
 		memcpy(val, &g_cfg.sds_meas_interval_ms, sizeof(g_cfg.sds_meas_interval_ms));
-		return sizeof(g_cfg.sds_meas_interval_ms);
+		rc = sizeof(g_cfg.sds_meas_interval_ms);
+		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_TIME_FOR_WIFI_CONFIG, NULL)) {
 		if (val_len_max < (int)sizeof(g_cfg.time_for_wifi_config)) {
-			return -ENOMEM;
+			rc = -ENOMEM;
+			goto out;
 		}
 		memcpy(val, &g_cfg.time_for_wifi_config, sizeof(g_cfg.time_for_wifi_config));
-		return sizeof(g_cfg.time_for_wifi_config);
+		rc = sizeof(g_cfg.time_for_wifi_config);
+		goto out;
 	}
 	if (settings_name_steq(name, CFG_KEY_STANDALONE, NULL)) {
 		if (val_len_max < (int)sizeof(g_cfg.standalone)) {
-			return -ENOMEM;
+			rc = -ENOMEM;
+			goto out;
 		}
 		memcpy(val, &g_cfg.standalone, sizeof(g_cfg.standalone));
-		return sizeof(g_cfg.standalone);
+		rc = sizeof(g_cfg.standalone);
+		goto out;
 	}
 
-	return -ENOENT;
+	rc = -ENOENT;
+out:
+	k_mutex_unlock(&g_cfg_lock);
+	return rc;
 }
 
 static int altruist_config_settings_export(int (*cb)(const char *name,
@@ -321,107 +385,107 @@ static int altruist_config_settings_export(int (*cb)(const char *name,
 {
 	int rc;
 
+	k_mutex_lock(&g_cfg_lock, K_FOREVER);
+
 	rc = cb(EXPORT_KEY(CFG_KEY_SCHEMA_VERSION), &g_cfg.schema_version,
 		sizeof(g_cfg.schema_version));
 	if (rc) {
-		return rc;
+		goto out;
 	}
 	rc = cb(EXPORT_KEY(CFG_KEY_CURRENT_LANG), g_cfg.current_lang,
 		strlen(g_cfg.current_lang) + 1U);
 	if (rc) {
-		return rc;
+		goto out;
 	}
 	rc = cb(EXPORT_KEY(CFG_KEY_WLANSSID), g_cfg.wlanssid,
 		strlen(g_cfg.wlanssid) + 1U);
 	if (rc) {
-		return rc;
+		goto out;
 	}
 	rc = cb(EXPORT_KEY(CFG_KEY_WLANPWD), g_cfg.wlanpwd,
 		strlen(g_cfg.wlanpwd) + 1U);
 	if (rc) {
-		return rc;
+		goto out;
 	}
 	rc = cb(EXPORT_KEY(CFG_KEY_WLANNOPWD), &g_cfg.wlannopwd,
 		sizeof(g_cfg.wlannopwd));
 	if (rc) {
-		return rc;
+		goto out;
 	}
 	rc = cb(EXPORT_KEY(CFG_KEY_FS_SSID), g_cfg.fs_ssid,
 		strlen(g_cfg.fs_ssid) + 1U);
 	if (rc) {
-		return rc;
+		goto out;
 	}
 	rc = cb(EXPORT_KEY(CFG_KEY_FS_PWD), g_cfg.fs_pwd,
 		strlen(g_cfg.fs_pwd) + 1U);
 	if (rc) {
-		return rc;
+		goto out;
 	}
 	rc = cb(EXPORT_KEY(CFG_KEY_RWS_OWNER), g_cfg.rws_owner,
 		strlen(g_cfg.rws_owner) + 1U);
 	if (rc) {
-		return rc;
+		goto out;
 	}
 	rc = cb(EXPORT_KEY(CFG_KEY_ROBONOMICS_PUBLIC_NODE),
 		g_cfg.robonomics_public_node,
 		strlen(g_cfg.robonomics_public_node) + 1U);
 	if (rc) {
-		return rc;
+		goto out;
 	}
 	rc = cb(EXPORT_KEY(CFG_KEY_ROBONOMICS_CONNECTIVITY_HOST),
 		g_cfg.robonomics_connectivity_host,
 		strlen(g_cfg.robonomics_connectivity_host) + 1U);
 	if (rc) {
-		return rc;
+		goto out;
 	}
 	rc = cb(EXPORT_KEY(CFG_KEY_ROBONOMICS_CONNECTIVITY_HOSTS),
 		g_cfg.robonomics_connectivity_hosts,
 		strlen(g_cfg.robonomics_connectivity_hosts) + 1U);
 	if (rc) {
-		return rc;
+		goto out;
 	}
 	rc = cb(EXPORT_KEY(CFG_KEY_PRIVATE_KEY), g_cfg.private_key,
 		strlen(g_cfg.private_key) + 1U);
 	if (rc) {
-		return rc;
+		goto out;
 	}
 	rc = cb(EXPORT_KEY(CFG_KEY_SEND2ROBONOMICS), &g_cfg.send2robonomics,
 		sizeof(g_cfg.send2robonomics));
 	if (rc) {
-		return rc;
+		goto out;
 	}
 	rc = cb(EXPORT_KEY(CFG_KEY_SEND2CSV), &g_cfg.send2csv,
 		sizeof(g_cfg.send2csv));
 	if (rc) {
-		return rc;
+		goto out;
 	}
 	rc = cb(EXPORT_KEY(CFG_KEY_SENDING_INTERVAL_MS), &g_cfg.sending_interval_ms,
 		sizeof(g_cfg.sending_interval_ms));
 	if (rc) {
-		return rc;
+		goto out;
 	}
 	rc = cb(EXPORT_KEY(CFG_KEY_DATALOG_SENDING_INTERVAL_MS),
 		&g_cfg.datalog_sending_interval_ms,
 		sizeof(g_cfg.datalog_sending_interval_ms));
 	if (rc) {
-		return rc;
+		goto out;
 	}
 	rc = cb(EXPORT_KEY(CFG_KEY_SDS_MEAS_INTERVAL_MS), &g_cfg.sds_meas_interval_ms,
 		sizeof(g_cfg.sds_meas_interval_ms));
 	if (rc) {
-		return rc;
+		goto out;
 	}
 	rc = cb(EXPORT_KEY(CFG_KEY_TIME_FOR_WIFI_CONFIG), &g_cfg.time_for_wifi_config,
 		sizeof(g_cfg.time_for_wifi_config));
 	if (rc) {
-		return rc;
+		goto out;
 	}
 	rc = cb(EXPORT_KEY(CFG_KEY_STANDALONE), &g_cfg.standalone,
 		sizeof(g_cfg.standalone));
-	if (rc) {
-		return rc;
-	}
-
-	return 0;
+out:
+	k_mutex_unlock(&g_cfg_lock);
+	return rc;
 }
 
 SETTINGS_STATIC_HANDLER_DEFINE(altruist_config, CONFIG_ROOT,
@@ -432,21 +496,31 @@ SETTINGS_STATIC_HANDLER_DEFINE(altruist_config, CONFIG_ROOT,
 
 static int altruist_config_apply_migration(void)
 {
-	uint32_t from_version = g_cfg.schema_version;
+	altruist_config_migrate_cb_t migrate_hook;
+	uint32_t from_version;
 	int rc;
+
+	k_mutex_lock(&g_cfg_lock, K_FOREVER);
+	from_version = g_cfg.schema_version;
+	migrate_hook = g_migrate_hook;
+	k_mutex_unlock(&g_cfg_lock);
 
 	if (from_version >= ALTRUIST_CONFIG_SCHEMA_VERSION) {
 		return 0;
 	}
 
-	if (g_migrate_hook != NULL) {
-		rc = g_migrate_hook(from_version, &g_cfg);
+	if (migrate_hook != NULL) {
+		k_mutex_lock(&g_cfg_lock, K_FOREVER);
+		rc = migrate_hook(from_version, &g_cfg);
+		k_mutex_unlock(&g_cfg_lock);
 		if (rc < 0) {
 			return rc;
 		}
 	}
 
+	k_mutex_lock(&g_cfg_lock, K_FOREVER);
 	g_cfg.schema_version = ALTRUIST_CONFIG_SCHEMA_VERSION;
+	k_mutex_unlock(&g_cfg_lock);
 	return altruist_config_save();
 }
 
@@ -454,7 +528,9 @@ int altruist_config_init(void)
 {
 	int rc;
 
+	k_mutex_lock(&g_cfg_lock, K_FOREVER);
 	altruist_config_apply_defaults(&g_cfg);
+	k_mutex_unlock(&g_cfg_lock);
 
 	rc = settings_subsys_init();
 	if ((rc < 0) && (rc != -EALREADY)) {
@@ -471,7 +547,9 @@ int altruist_config_init(void)
 		return rc;
 	}
 
+	k_mutex_lock(&g_cfg_lock, K_FOREVER);
 	g_initialized = true;
+	k_mutex_unlock(&g_cfg_lock);
 	return 0;
 }
 
@@ -487,7 +565,9 @@ int altruist_config_save(void)
 
 int altruist_config_reset_defaults(bool persist)
 {
+	k_mutex_lock(&g_cfg_lock, K_FOREVER);
 	altruist_config_apply_defaults(&g_cfg);
+	k_mutex_unlock(&g_cfg_lock);
 	if (!persist) {
 		return 0;
 	}
@@ -501,7 +581,9 @@ int altruist_config_replace(const struct altruist_config *new_cfg, bool persist)
 		return -EINVAL;
 	}
 
+	k_mutex_lock(&g_cfg_lock, K_FOREVER);
 	memcpy(&g_cfg, new_cfg, sizeof(g_cfg));
+	k_mutex_unlock(&g_cfg_lock);
 	if (!persist) {
 		return 0;
 	}
@@ -511,15 +593,20 @@ int altruist_config_replace(const struct altruist_config *new_cfg, bool persist)
 
 int altruist_config_set_migration_hook(altruist_config_migrate_cb_t hook)
 {
+	k_mutex_lock(&g_cfg_lock, K_FOREVER);
 	g_migrate_hook = hook;
+	k_mutex_unlock(&g_cfg_lock);
 	return 0;
 }
 
 const struct altruist_config *altruist_config_get(void)
 {
+	k_mutex_lock(&g_cfg_lock, K_FOREVER);
 	if (!g_initialized) {
 		altruist_config_apply_defaults(&g_cfg);
 	}
+	memcpy(&g_cfg_snapshot, &g_cfg, sizeof(g_cfg_snapshot));
+	k_mutex_unlock(&g_cfg_lock);
 
-	return &g_cfg;
+	return &g_cfg_snapshot;
 }

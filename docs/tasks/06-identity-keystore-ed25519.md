@@ -41,6 +41,7 @@ Implement key generation, persistent storage, and signing API.
 - Builds for relevant board/profile targets.
 - Required tests added and passing (Twister/native_sim where possible).
 - No regressions in previously completed dependency packages.
+- Key reset behavior is documented and testable: deleting identity settings forces regeneration on next init.
 
 ## Suggested tests
 - Twister: `native_sim` for pure logic/state machines/parsers.
@@ -50,3 +51,4 @@ Implement key generation, persistent storage, and signing API.
 ## Handoff notes
 - Summarize design decisions and unresolved risks in the PR description.
 - Explicitly reference any assumptions about Zephyr ESP32 support status.
+- Developer-focused implementation details now live in [`docs/development/identity.md`](../development/identity.md).

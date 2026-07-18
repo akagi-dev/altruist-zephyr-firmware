@@ -80,16 +80,34 @@ K_MUTEX_DEFINE(wifi_manager_lock);
 	MIN(CONFIG_ALTRUIST_WIFI_RECONNECT_INITIAL_BACKOFF_MS,                          \
 	    CONFIG_ALTRUIST_WIFI_RECONNECT_MAX_BACKOFF_MS)
 
+static void wifi_lock(void)
+{
+	k_mutex_lock(&wifi_manager_lock, K_FOREVER);
+}
+
+static void wifi_unlock(void)
+{
+	k_mutex_unlock(&wifi_manager_lock);
+}
+
+static void wifi_clear_cached_credentials(void)
+{
+	memset(&cached_credentials, 0, sizeof(cached_credentials));
+}
+
 static int wifi_connect_now(void);
 static void wifi_on_disconnected(void);
+static void wifi_handle_net_event_locked(uint32_t mgmt_event);
 
 static void wifi_reconnect_work_handler(struct k_work *work)
 {
 	ARG_UNUSED(work);
 
+	wifi_lock();
 	reconnect_scheduled = false;
 	reconnect_remaining_ms = 0U;
 	(void)wifi_connect_now();
+	wifi_unlock();
 }
 
 #if defined(CONFIG_NET_MGMT_EVENT)
@@ -103,16 +121,19 @@ static void wifi_net_event_callback(struct net_mgmt_event_callback *cb,
 
 	ARG_UNUSED(iface);
 
+	wifi_lock();
 	if (mgmt_event == NET_EVENT_WIFI_CONNECT_RESULT && cb->info != NULL &&
 	    cb->info_length >= sizeof(*status)) {
 		status = cb->info;
 		if (status->status != 0) {
 			wifi_on_disconnected();
+			wifi_unlock();
 			return;
 		}
 	}
 
-	wifi_manager_handle_net_event(mgmt_event);
+	wifi_handle_net_event_locked(mgmt_event);
+	wifi_unlock();
 }
 #endif
 
@@ -189,10 +210,11 @@ static void wifi_on_disconnected(void)
 
 int wifi_manager_init(void)
 {
-	k_mutex_lock(&wifi_manager_lock, K_FOREVER);
+	wifi_lock();
 
 	wifi_state = WIFI_MANAGER_STATE_DISCONNECTED;
 	wifi_cancel_reconnect();
+	wifi_clear_cached_credentials();
 	wifi_reset_backoff();
 
 	if (!reconnect_work_initialized) {
@@ -210,24 +232,33 @@ int wifi_manager_init(void)
 	}
 #endif
 
-	k_mutex_unlock(&wifi_manager_lock);
+	wifi_unlock();
 	return 0;
 }
 
 int wifi_manager_refresh_configuration(void)
 {
+	struct wifi_manager_credentials new_credentials = { 0 };
 	bool force_provisioning = altruist_config_is_provisioning_forced();
-	bool has_credentials = altruist_config_get_wifi_credentials(&cached_credentials);
+	bool has_credentials = altruist_config_get_wifi_credentials(&new_credentials);
+	int rc;
 
+	wifi_lock();
 	wifi_cancel_reconnect();
 
 	if (force_provisioning || !has_credentials) {
 		wifi_state = WIFI_MANAGER_STATE_PROVISIONING;
-		return altruist_provisioning_start_ap_mode();
+		wifi_clear_cached_credentials();
+		rc = altruist_provisioning_start_ap_mode();
+		wifi_unlock();
+		return rc;
 	}
 
+	cached_credentials = new_credentials;
 	(void)altruist_provisioning_stop();
-	return wifi_connect_now();
+	rc = wifi_connect_now();
+	wifi_unlock();
+	return rc;
 }
 
 int wifi_manager_start(void)
@@ -236,6 +267,13 @@ int wifi_manager_start(void)
 }
 
 void wifi_manager_handle_net_event(uint32_t mgmt_event)
+{
+	wifi_lock();
+	wifi_handle_net_event_locked(mgmt_event);
+	wifi_unlock();
+}
+
+static void wifi_handle_net_event_locked(uint32_t mgmt_event)
 {
 	if (mgmt_event == NET_EVENT_WIFI_CONNECT_RESULT) {
 		wifi_on_connected();
@@ -250,12 +288,15 @@ void wifi_manager_handle_net_event(uint32_t mgmt_event)
 
 void wifi_manager_advance_time(uint32_t elapsed_ms)
 {
+	wifi_lock();
 	if (!reconnect_scheduled) {
+		wifi_unlock();
 		return;
 	}
 
 	if (elapsed_ms < reconnect_remaining_ms) {
 		reconnect_remaining_ms -= elapsed_ms;
+		wifi_unlock();
 		return;
 	}
 
@@ -265,24 +306,45 @@ void wifi_manager_advance_time(uint32_t elapsed_ms)
 		(void)k_work_cancel_delayable(&reconnect_work);
 	}
 	(void)wifi_connect_now();
+	wifi_unlock();
 }
 
 enum wifi_manager_state wifi_manager_get_state(void)
 {
-	return wifi_state;
+	enum wifi_manager_state state;
+
+	wifi_lock();
+	state = wifi_state;
+	wifi_unlock();
+	return state;
 }
 
 bool wifi_manager_is_reconnect_scheduled(void)
 {
-	return reconnect_scheduled;
+	bool scheduled;
+
+	wifi_lock();
+	scheduled = reconnect_scheduled;
+	wifi_unlock();
+	return scheduled;
 }
 
 uint32_t wifi_manager_get_reconnect_remaining_ms(void)
 {
-	return reconnect_remaining_ms;
+	uint32_t remaining;
+
+	wifi_lock();
+	remaining = reconnect_remaining_ms;
+	wifi_unlock();
+	return remaining;
 }
 
 uint32_t wifi_manager_get_next_backoff_ms(void)
 {
-	return next_backoff_ms;
+	uint32_t backoff;
+
+	wifi_lock();
+	backoff = next_backoff_ms;
+	wifi_unlock();
+	return backoff;
 }

@@ -11,8 +11,8 @@ static bool test_has_credentials;
 static bool test_force_provisioning;
 static int test_connect_attempts;
 static int test_connect_result;
-static const char TEST_MOCK_SSID[] = "ssid";
-static const char TEST_MOCK_PSK[] = "psk";
+static const char TEST_MOCK_SSID[] = "test_network_ssid";
+static const char TEST_MOCK_PSK[] = "test_network_psk";
 
 bool altruist_config_get_wifi_credentials(struct wifi_manager_credentials *out)
 {

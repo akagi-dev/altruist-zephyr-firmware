@@ -6,4 +6,6 @@ config ALTRUIST_BOOT_MESSAGE
 	help
 	  Message printed during boot.
 
+source "Kconfig.variants"
+
 endmenu

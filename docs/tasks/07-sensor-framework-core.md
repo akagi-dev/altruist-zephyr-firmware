@@ -21,7 +21,7 @@ Implement core sensor interface, registry, and polling scheduler.
 - **Out of scope:** No concrete sensor hardware drivers.
 
 ## Requirements
-1. Follow Zephyr v4.x conventions (Kconfig/devicetree/CMake/Twister).
+1. Follow Zephyr LTS3 (v3.7.0) conventions (Kconfig/devicetree/CMake/Twister).
 2. Keep implementation modular and variant-gated (`Urban C3 reduced`, `Urban C6`, `Insight C6`).
 3. Maintain GPL-3.0 compatibility when adapting logic from source firmware.
 4. Add/update tests for behavior introduced by this package.

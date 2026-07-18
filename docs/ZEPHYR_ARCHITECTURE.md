@@ -1,4 +1,4 @@
-# Target Zephyr Architecture (v4.x)
+# Target Zephyr Architecture (LTS3 / v3.7.0)
 
 This is the target architecture for porting Altruist firmware functionality from Arduino/PlatformIO to Zephyr OS.
 
@@ -7,7 +7,7 @@ This is the target architecture for porting Altruist firmware functionality from
 ## West workspace
 
 - Root workspace manifest in `west.yml`.
-- Pin Zephyr `v4.x` and required external modules (if any) in west projects.
+- Pin Zephyr `LTS3 (v3.7.0)` and required external modules (if any) in west projects.
 - Keep application code in a dedicated app directory (recommended `app/`).
 
 Proposed structure:

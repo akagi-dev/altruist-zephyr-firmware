@@ -47,8 +47,8 @@ struct altruist_config {
 
 	bool send2robonomics;
 	bool send2csv;
-	uint32_t sending_intervall_ms;
-	uint32_t datalog_sending_intervall_ms;
+	uint32_t sending_interval_ms;
+	uint32_t datalog_sending_interval_ms;
 	uint32_t sds_meas_interval_ms;
 	uint32_t time_for_wifi_config;
 

@@ -37,13 +37,13 @@ ZTEST(config_settings, test_runtime_decode_and_encode)
 	rc = settings_runtime_set("altruist/send2robonomics", &flag, sizeof(flag));
 	zassert_equal(rc, 0, "runtime set bool failed (%d)", rc);
 
-	rc = settings_runtime_set("altruist/sending_intervall_ms", &interval, sizeof(interval));
+	rc = settings_runtime_set("altruist/sending_interval_ms", &interval, sizeof(interval));
 	zassert_equal(rc, 0, "runtime set uint failed (%d)", rc);
 
 	cfg = altruist_config_get();
 	zassert_equal(strcmp(cfg->wlanssid, "LabNet"), 0, "decoded ssid");
 	zassert_true(cfg->send2robonomics, "decoded bool");
-	zassert_equal(cfg->sending_intervall_ms, interval, "decoded interval");
+	zassert_equal(cfg->sending_interval_ms, interval, "decoded interval");
 
 	rc = settings_runtime_get("altruist/wlanssid", value, sizeof(value));
 	zassert_true(rc > 0, "runtime get ssid failed (%d)", rc);

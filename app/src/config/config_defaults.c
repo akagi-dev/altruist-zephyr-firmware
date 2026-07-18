@@ -37,8 +37,8 @@ void altruist_config_apply_defaults(struct altruist_config *cfg)
 
 	cfg->send2robonomics = false;
 	cfg->send2csv = false;
-	cfg->sending_intervall_ms = 145000U;
-	cfg->datalog_sending_intervall_ms = 600000U;
+	cfg->sending_interval_ms = 145000U;
+	cfg->datalog_sending_interval_ms = 600000U;
 	cfg->sds_meas_interval_ms = 10000U;
 	cfg->time_for_wifi_config = 600000U;
 

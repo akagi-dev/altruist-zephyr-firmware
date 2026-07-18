@@ -11,8 +11,8 @@ static bool test_has_credentials;
 static bool test_force_provisioning;
 static int test_connect_attempts;
 static int test_connect_result;
-static const char TEST_SSID[] = "ssid";
-static const char TEST_PSK[] = "psk";
+static const char TEST_MOCK_SSID[] = "ssid";
+static const char TEST_MOCK_PSK[] = "psk";
 
 bool altruist_config_get_wifi_credentials(struct wifi_manager_credentials *out)
 {
@@ -21,8 +21,8 @@ bool altruist_config_get_wifi_credentials(struct wifi_manager_credentials *out)
 	}
 
 	memset(out, 0, sizeof(*out));
-	memcpy(out->ssid, TEST_SSID, sizeof(TEST_SSID));
-	memcpy(out->psk, TEST_PSK, sizeof(TEST_PSK));
+	memcpy(out->ssid, TEST_MOCK_SSID, sizeof(TEST_MOCK_SSID));
+	memcpy(out->psk, TEST_MOCK_PSK, sizeof(TEST_MOCK_PSK));
 	return true;
 }
 
@@ -46,11 +46,16 @@ static void reset_mocks(void)
 	test_connect_result = 0;
 }
 
+static void test_init_and_start(void)
+{
+	zassert_ok(wifi_manager_init(), NULL);
+	zassert_ok(wifi_manager_start(), NULL);
+}
+
 ZTEST(wifi_manager, test_reconnect_backoff_is_bounded)
 {
 	reset_mocks();
-	zassert_ok(wifi_manager_init(), NULL);
-	zassert_ok(wifi_manager_start(), NULL);
+	test_init_and_start();
 	zassert_equal(test_connect_attempts, 1, NULL);
 	zassert_equal(wifi_manager_get_state(), WIFI_MANAGER_STATE_CONNECTING, NULL);
 
@@ -80,8 +85,7 @@ ZTEST(wifi_manager, test_provisioning_mode_without_credentials)
 	reset_mocks();
 	test_has_credentials = false;
 
-	zassert_ok(wifi_manager_init(), NULL);
-	zassert_ok(wifi_manager_start(), NULL);
+	test_init_and_start();
 	zassert_equal(test_connect_attempts, 0, NULL);
 	zassert_true(altruist_provisioning_is_active(), NULL);
 	zassert_equal(wifi_manager_get_state(), WIFI_MANAGER_STATE_PROVISIONING, NULL);
@@ -96,8 +100,7 @@ ZTEST(wifi_manager, test_provisioning_mode_without_credentials)
 ZTEST(wifi_manager, test_connected_event_resets_backoff)
 {
 	reset_mocks();
-	zassert_ok(wifi_manager_init(), NULL);
-	zassert_ok(wifi_manager_start(), NULL);
+	test_init_and_start();
 	wifi_manager_handle_net_event(NET_EVENT_WIFI_DISCONNECT_RESULT);
 	wifi_manager_advance_time(100);
 	zassert_equal(wifi_manager_get_next_backoff_ms(), 200, NULL);

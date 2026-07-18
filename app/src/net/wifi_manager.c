@@ -74,6 +74,11 @@ static uint32_t next_backoff_ms;
 static bool reconnect_scheduled;
 static struct k_work_delayable reconnect_work;
 static bool reconnect_work_initialized;
+K_MUTEX_DEFINE(wifi_manager_lock);
+
+#define WIFI_BOUNDED_INITIAL_BACKOFF_MS                                                 \
+	MIN(CONFIG_ALTRUIST_WIFI_RECONNECT_INITIAL_BACKOFF_MS,                          \
+	    CONFIG_ALTRUIST_WIFI_RECONNECT_MAX_BACKOFF_MS)
 
 static int wifi_connect_now(void);
 static void wifi_on_disconnected(void);
@@ -111,15 +116,9 @@ static void wifi_net_event_callback(struct net_mgmt_event_callback *cb,
 }
 #endif
 
-static uint32_t wifi_bounded_initial_backoff_ms(void)
-{
-	return MIN(CONFIG_ALTRUIST_WIFI_RECONNECT_INITIAL_BACKOFF_MS,
-		   CONFIG_ALTRUIST_WIFI_RECONNECT_MAX_BACKOFF_MS);
-}
-
 static void wifi_reset_backoff(void)
 {
-	next_backoff_ms = wifi_bounded_initial_backoff_ms();
+	next_backoff_ms = WIFI_BOUNDED_INITIAL_BACKOFF_MS;
 }
 
 static void wifi_cancel_reconnect(void)
@@ -190,6 +189,8 @@ static void wifi_on_disconnected(void)
 
 int wifi_manager_init(void)
 {
+	k_mutex_lock(&wifi_manager_lock, K_FOREVER);
+
 	wifi_state = WIFI_MANAGER_STATE_DISCONNECTED;
 	wifi_cancel_reconnect();
 	wifi_reset_backoff();
@@ -209,6 +210,7 @@ int wifi_manager_init(void)
 	}
 #endif
 
+	k_mutex_unlock(&wifi_manager_lock);
 	return 0;
 }
 

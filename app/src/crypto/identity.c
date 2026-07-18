@@ -293,7 +293,7 @@ int altruist_identity_sign_detached(const uint8_t *private_key, size_t private_k
 	psa_status_t status;
 	int rc;
 
-	if ((message == NULL) || (signature == NULL) ||
+	if (((message == NULL) && (message_len > 0U)) || (signature == NULL) ||
 	    (signature_len < ALTRUIST_IDENTITY_ED25519_SIGNATURE_SIZE)) {
 		return -EINVAL;
 	}
@@ -330,7 +330,7 @@ int altruist_identity_verify_detached(const uint8_t *public_key, size_t public_k
 	psa_status_t status;
 	int rc;
 
-	if ((message == NULL) || (signature == NULL) ||
+	if (((message == NULL) && (message_len > 0U)) || (signature == NULL) ||
 	    (signature_len != ALTRUIST_IDENTITY_ED25519_SIGNATURE_SIZE)) {
 		return -EINVAL;
 	}

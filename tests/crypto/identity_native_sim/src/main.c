@@ -78,21 +78,20 @@ ZTEST(identity_sign_verify, test_rfc8032_vector)
 		0xd2, 0x5b, 0xf5, 0xf0, 0x59, 0x5b, 0xbe, 0x24,
 		0x65, 0x51, 0x41, 0x43, 0x8e, 0x7a, 0x10, 0x0b,
 	};
-	static const uint8_t empty_message[1] = {0};
 	uint8_t signature[ALTRUIST_IDENTITY_ED25519_SIGNATURE_SIZE];
 
 	zassert_ok(altruist_identity_sign_detached(private_key, sizeof(private_key),
-						   empty_message, 0U,
+						   NULL, 0U,
 						   signature, sizeof(signature)));
 	zassert_mem_equal(expected_signature, signature, sizeof(signature),
 			  "signature mismatch");
 	zassert_ok(altruist_identity_verify_detached(public_key, sizeof(public_key),
-						     empty_message, 0U,
+						     NULL, 0U,
 						     signature, sizeof(signature)));
 
 	signature[0] ^= 0x01U;
 	zassert_not_equal(altruist_identity_verify_detached(public_key, sizeof(public_key),
-							    empty_message, 0U,
+							    NULL, 0U,
 							    signature, sizeof(signature)),
 			  0, "tampered signature unexpectedly verified");
 }

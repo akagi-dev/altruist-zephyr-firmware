@@ -17,3 +17,6 @@ manifest:
           - cmsis
           - hal_espressif
           - hal_xtensa
+          - mbedtls
+          - tf-psa-crypto
+          - mldsa-native

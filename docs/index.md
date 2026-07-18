@@ -6,5 +6,6 @@ Planning repository for porting Altruist environmental sensor station firmware f
 
 - [Source architecture baseline](ARCHITECTURE.md)
 - [Target Zephyr architecture](ZEPHYR_ARCHITECTURE.md)
+- [Developer identity architecture](development/identity.md)
 - [Master implementation plan](IMPLEMENTATION_PLAN.md)
 - [Agent-ready work packages](tasks/)

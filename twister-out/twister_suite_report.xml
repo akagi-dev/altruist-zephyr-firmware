@@ -1,33 +1,12 @@
-2026-07-18 12:34:58,901 - twister - INFO - Using Ninja..
-2026-07-18 12:34:58,960 - twister - INFO - Zephyr version: v4.4.1
-2026-07-18 12:34:58,962 - twister - DEBUG - Running cmake script /home/runner/work/altruist-zephyr-firmware/zephyr/cmake/verify-toolchain.cmake
-2026-07-18 12:34:58,962 - twister - DEBUG - Calling cmake: /usr/local/bin/cmake -DFORMAT=json -P /home/runner/work/altruist-zephyr-firmware/zephyr/cmake/verify-toolchain.cmake
-2026-07-18 12:34:59,173 - twister - DEBUG - Finished running /home/runner/work/altruist-zephyr-firmware/zephyr/cmake/verify-toolchain.cmake
-2026-07-18 12:34:59,174 - twister - INFO - Using 'host/gnu' toolchain variant.
-2026-07-18 12:35:00,233 - twister - DEBUG - Reading testsuite configuration files under /home/runner/work/altruist-zephyr-firmware/altruist-zephyr-firmware/tests/smoke/native_sim...
-2026-07-18 12:35:00,233 - twister - DEBUG - Found possible testsuite in /home/runner/work/altruist-zephyr-firmware/altruist-zephyr-firmware/tests/smoke/native_sim
-2026-07-18 12:35:00,234 - twister - DEBUG - No duplicates found.
-2026-07-18 12:35:00,234 - twister - DEBUG -  platform filter: ['native_sim']
-2026-07-18 12:35:00,234 - twister - DEBUG - platform_pattern: []
-2026-07-18 12:35:00,234 - twister - DEBUG -    vendor filter: []
-2026-07-18 12:35:00,234 - twister - DEBUG -      arch_filter: None
-2026-07-18 12:35:00,234 - twister - DEBUG -       tag_filter: None
-2026-07-18 12:35:00,234 - twister - DEBUG -      exclude_tag: None
-2026-07-18 12:35:00,234 - twister - DEBUG - Checking platform filter: ['native_sim']
-2026-07-18 12:35:00,235 - twister - INFO - Building initial testsuite list...
-2026-07-18 12:35:00,235 - twister - INFO - Built testsuite list in 0.00 seconds
-2026-07-18 12:35:00,236 - twister - INFO - Writing JSON report /home/runner/work/altruist-zephyr-firmware/altruist-zephyr-firmware/twister-out/testplan.json
-2026-07-18 12:35:00,253 - twister - INFO - JOBS: 4
-2026-07-18 12:35:00,253 - twister - INFO - Adding tasks to the queue...
-2026-07-18 12:35:00,253 - twister - DEBUG - adding native_sim/native/host/gnu/altruist.wp01.smoke.native_sim
-2026-07-18 12:35:00,254 - twister - INFO - Added initial list of jobs to queue
-2026-07-18 12:35:00,262 - twister - DEBUG - Launched 4 jobs
-2026-07-18 12:35:00,263 - twister - DEBUG - Running cmake on /home/runner/work/altruist-zephyr-firmware/altruist-zephyr-firmware/tests/smoke/native_sim for native_sim/native
-2026-07-18 12:35:00,264 - twister - DEBUG - Calling cmake: /usr/local/bin/cmake -B/home/runner/work/altruist-zephyr-firmware/altruist-zephyr-firmware/twister-out/native_sim_native/host_gnu/altruist-zephyr-firmware/tests/smoke/native_sim/altruist.wp01.smoke.native_sim -DTC_RUNID=0ef7f5eff303f3c5f78555003a47c61f -DTC_NAME=altruist.wp01.smoke.native_sim -DCONFIG_COMPILER_WARNINGS_AS_ERRORS=y -DEXTRA_GEN_EDT_ARGS=--edtlib-Werror -GNinja -DPython3_EXECUTABLE=/usr/bin/python3 -DZEPHYR_TOOLCHAIN_VARIANT=host/gnu -S/home/runner/work/altruist-zephyr-firmware/altruist-zephyr-firmware/tests/smoke/native_sim -DBOARD=native_sim/native
-2026-07-18 12:35:05,621 - twister - ERROR - CMake build failure: /home/runner/work/altruist-zephyr-firmware/altruist-zephyr-firmware/tests/smoke/native_sim for native_sim/native
-2026-07-18 12:35:05,624 - twister - INFO - 1/1 native_sim/native         altruist.wp01.smoke.native_sim                     [31mERROR[39m CMake build failure (native <host/gnu>)
-2026-07-18 12:35:05,624 - twister - INFO - /home/runner/work/altruist-zephyr-firmware/altruist-zephyr-firmware/twister-out/native_sim_native/host_gnu/altruist-zephyr-firmware/tests/smoke/native_sim/altruist.wp01.smoke.native_sim/build.log
-2026-07-18 12:35:05,625 - twister - ERROR - Loading Zephyr default modules (Zephyr base).
+<testsuites>
+	<testsuite name="altruist.wp01.smoke.native_sim" time="0.0" timestamp="2026-07-18T12:35:00.236003" tests="1" failures="0" errors="1" skipped="0">
+		<properties>
+			<property name="version" value="v4.4.1" />
+			<property name="platform" value="native_sim/native" />
+			<property name="architecture" value="posix" />
+		</properties>
+		<testcase classname="altruist.wp01.smoke.native_sim" name="altruist.wp01.smoke.native_sim" time="0.00">
+			<error type="failure" message="CMake build failure - warning: the choice symbol SYS_HEAP_AUTO (defined at lib/heap/Kconfig:199, lib/heap/Kconfig:199) is defined with a prompt outside the choice">Loading Zephyr default modules (Zephyr base).
 -- Application: /home/runner/work/altruist-zephyr-firmware/altruist-zephyr-firmware/tests/smoke/native_sim
 -- CMake version: 3.31.6
 -- Found Python3: /usr/bin/python3 (found suitable version "3.12.3", minimum required is "3.12") found components: Interpreter
@@ -43,7 +22,7 @@ Hint: The project() command has not yet been called.  It sets up system-specific
 -- Generated pickled edt: /home/runner/work/altruist-zephyr-firmware/altruist-zephyr-firmware/twister-out/native_sim_native/host_gnu/altruist-zephyr-firmware/tests/smoke/native_sim/altruist.wp01.smoke.native_sim/zephyr/edt.pickle
 -- Generated devicetree_generated.h: /home/runner/work/altruist-zephyr-firmware/altruist-zephyr-firmware/twister-out/native_sim_native/host_gnu/altruist-zephyr-firmware/tests/smoke/native_sim/altruist.wp01.smoke.native_sim/zephyr/include/generated/zephyr/devicetree_generated.h
 
-warning: the default selection ADC_MCUX_ADC16_CLK_DIV_RATIO_1 (defined at drivers/adc/Kconfig.mcux:62, drivers/adc/Kconfig.mcux:62) of <choice> (defined at drivers/adc/Kconfig.mcux:58) is not contained in the choice
+warning: the default selection ADC_MCUX_ADC16_CLK_DIV_RATIO_1 (defined at drivers/adc/Kconfig.mcux:62, drivers/adc/Kconfig.mcux:62) of &lt;choice&gt; (defined at drivers/adc/Kconfig.mcux:58) is not contained in the choice
 
 warning: the choice symbol ADC_MCUX_ADC16_CLK_DIV_RATIO_1 (defined at drivers/adc/Kconfig.mcux:62, drivers/adc/Kconfig.mcux:62) is defined with a prompt outside the choice
 
@@ -53,31 +32,31 @@ warning: the choice symbol ADC_MCUX_ADC16_CLK_DIV_RATIO_4 (defined at drivers/ad
 
 warning: the choice symbol ADC_MCUX_ADC16_CLK_DIV_RATIO_8 (defined at drivers/adc/Kconfig.mcux:71, drivers/adc/Kconfig.mcux:71) is defined with a prompt outside the choice
 
-warning: the default selection CRYPTO_ATAES132A_I2C_SPEED_STANDARD (defined at drivers/crypto/Kconfig.ataes132a:20, drivers/crypto/Kconfig.ataes132a:20) of <choice> (defined at drivers/crypto/Kconfig.ataes132a:16) is not contained in the choice
+warning: the default selection CRYPTO_ATAES132A_I2C_SPEED_STANDARD (defined at drivers/crypto/Kconfig.ataes132a:20, drivers/crypto/Kconfig.ataes132a:20) of &lt;choice&gt; (defined at drivers/crypto/Kconfig.ataes132a:16) is not contained in the choice
 
 warning: the choice symbol CRYPTO_ATAES132A_I2C_SPEED_STANDARD (defined at drivers/crypto/Kconfig.ataes132a:20, drivers/crypto/Kconfig.ataes132a:20) is defined with a prompt outside the choice
 
 warning: the choice symbol CRYPTO_ATAES132A_I2C_SPEED_FAST (defined at drivers/crypto/Kconfig.ataes132a:25, drivers/crypto/Kconfig.ataes132a:25) is defined with a prompt outside the choice
 
-warning: the default selection DAI_INTEL_DMIC_NHLT (defined at drivers/dai/intel/dmic/Kconfig.dmic:25, drivers/dai/intel/dmic/Kconfig.dmic:25) of <choice> (defined at drivers/dai/intel/dmic/Kconfig.dmic:16) is not contained in the choice
+warning: the default selection DAI_INTEL_DMIC_NHLT (defined at drivers/dai/intel/dmic/Kconfig.dmic:25, drivers/dai/intel/dmic/Kconfig.dmic:25) of &lt;choice&gt; (defined at drivers/dai/intel/dmic/Kconfig.dmic:16) is not contained in the choice
 
 warning: the choice symbol DAI_INTEL_DMIC_NHLT (defined at drivers/dai/intel/dmic/Kconfig.dmic:25, drivers/dai/intel/dmic/Kconfig.dmic:25) is defined with a prompt outside the choice
 
 warning: the choice symbol DAI_INTEL_DMIC_TPLG_PARAMS (defined at drivers/dai/intel/dmic/Kconfig.dmic:33, drivers/dai/intel/dmic/Kconfig.dmic:33) is defined with a prompt outside the choice
 
-warning: the default selection DMA_IPROC_PAX_IRQ_SYNC (defined at drivers/dma/Kconfig.iproc_pax:42, drivers/dma/Kconfig.iproc_pax:42) of <choice> (defined at drivers/dma/Kconfig.iproc_pax:33) is not contained in the choice
+warning: the default selection DMA_IPROC_PAX_IRQ_SYNC (defined at drivers/dma/Kconfig.iproc_pax:42, drivers/dma/Kconfig.iproc_pax:42) of &lt;choice&gt; (defined at drivers/dma/Kconfig.iproc_pax:33) is not contained in the choice
 
 warning: the choice symbol DMA_IPROC_PAX_POLL_MODE (defined at drivers/dma/Kconfig.iproc_pax:37, drivers/dma/Kconfig.iproc_pax:37) is defined with a prompt outside the choice
 
 warning: the choice symbol DMA_IPROC_PAX_IRQ_SYNC (defined at drivers/dma/Kconfig.iproc_pax:42, drivers/dma/Kconfig.iproc_pax:42) is defined with a prompt outside the choice
 
-warning: the default selection DMA_IPROC_PAX_TOGGLE_MODE (defined at drivers/dma/Kconfig.iproc_pax:54, drivers/dma/Kconfig.iproc_pax:54) of <choice> (defined at drivers/dma/Kconfig.iproc_pax:50) is not contained in the choice
+warning: the default selection DMA_IPROC_PAX_TOGGLE_MODE (defined at drivers/dma/Kconfig.iproc_pax:54, drivers/dma/Kconfig.iproc_pax:54) of &lt;choice&gt; (defined at drivers/dma/Kconfig.iproc_pax:50) is not contained in the choice
 
 warning: the choice symbol DMA_IPROC_PAX_TOGGLE_MODE (defined at drivers/dma/Kconfig.iproc_pax:54, drivers/dma/Kconfig.iproc_pax:54) is defined with a prompt outside the choice
 
 warning: the choice symbol DMA_IPROC_PAX_DOORBELL_MODE (defined at drivers/dma/Kconfig.iproc_pax:59, drivers/dma/Kconfig.iproc_pax:59) is defined with a prompt outside the choice
 
-warning: the default selection DMA_XILINX_AXI_DMA_LOCK_ALL_IRQS (defined at drivers/dma/Kconfig.xilinx_axi_dma:50, drivers/dma/Kconfig.xilinx_axi_dma:50) of <choice> (defined at drivers/dma/Kconfig.xilinx_axi_dma:45) is not contained in the choice
+warning: the default selection DMA_XILINX_AXI_DMA_LOCK_ALL_IRQS (defined at drivers/dma/Kconfig.xilinx_axi_dma:50, drivers/dma/Kconfig.xilinx_axi_dma:50) of &lt;choice&gt; (defined at drivers/dma/Kconfig.xilinx_axi_dma:45) is not contained in the choice
 
 warning: the choice symbol DMA_XILINX_AXI_DMA_LOCK_ALL_IRQS (defined at drivers/dma/Kconfig.xilinx_axi_dma:50, drivers/dma/Kconfig.xilinx_axi_dma:50) is defined with a prompt outside the choice
 
@@ -85,7 +64,7 @@ warning: the choice symbol DMA_XILINX_AXI_DMA_LOCK_DMA_IRQS (defined at drivers/
 
 warning: the choice symbol DMA_XILINX_AXI_DMA_LOCK_CHANNEL_IRQ (defined at drivers/dma/Kconfig.xilinx_axi_dma:65, drivers/dma/Kconfig.xilinx_axi_dma:65) is defined with a prompt outside the choice
 
-warning: the default selection ENTROPY_NPCX_DRBG_SECURITY_STRENGTH_128B (defined at drivers/entropy/Kconfig.npcx:27, drivers/entropy/Kconfig.npcx:27) of <choice> (defined at drivers/entropy/Kconfig.npcx:17) is not contained in the choice
+warning: the default selection ENTROPY_NPCX_DRBG_SECURITY_STRENGTH_128B (defined at drivers/entropy/Kconfig.npcx:27, drivers/entropy/Kconfig.npcx:27) of &lt;choice&gt; (defined at drivers/entropy/Kconfig.npcx:17) is not contained in the choice
 
 warning: the choice symbol ENTROPY_NPCX_DRBG_SECURITY_STRENGTH_112B (defined at drivers/entropy/Kconfig.npcx:24, drivers/entropy/Kconfig.npcx:24) is defined with a prompt outside the choice
 
@@ -99,7 +78,7 @@ warning: the choice symbol ENTROPY_NPCX_DRBG_SECURITY_STRENGTH_128B_TEST (define
 
 warning: the choice symbol ENTROPY_NPCX_DRBG_SECURITY_STRENGTH_256B_TEST (defined at drivers/entropy/Kconfig.npcx:39, drivers/entropy/Kconfig.npcx:39) is defined with a prompt outside the choice
 
-warning: the default selection CDNS_NAND_CDMA_MODE (defined at drivers/flash/Kconfig.cadence_nand:31, drivers/flash/Kconfig.cadence_nand:31) of <choice> (defined at drivers/flash/Kconfig.cadence_nand:25) is not contained in the choice
+warning: the default selection CDNS_NAND_CDMA_MODE (defined at drivers/flash/Kconfig.cadence_nand:31, drivers/flash/Kconfig.cadence_nand:31) of &lt;choice&gt; (defined at drivers/flash/Kconfig.cadence_nand:25) is not contained in the choice
 
 warning: the choice symbol CDNS_NAND_CDMA_MODE (defined at drivers/flash/Kconfig.cadence_nand:31, drivers/flash/Kconfig.cadence_nand:31) is defined with a prompt outside the choice
 
@@ -107,13 +86,13 @@ warning: the choice symbol CDNS_NAND_PIO_MODE (defined at drivers/flash/Kconfig.
 
 warning: the choice symbol CDNS_NAND_GENERIC_MODE (defined at drivers/flash/Kconfig.cadence_nand:37, drivers/flash/Kconfig.cadence_nand:37) is defined with a prompt outside the choice
 
-warning: the default selection HWINFO_CC13XX_CC26XX_USE_IEEE_MAC (defined at drivers/hwinfo/Kconfig.cc13xx_cc26xx:27, drivers/hwinfo/Kconfig.cc13xx_cc26xx:27) of <choice> (defined at drivers/hwinfo/Kconfig.cc13xx_cc26xx:21) is not contained in the choice
+warning: the default selection HWINFO_CC13XX_CC26XX_USE_IEEE_MAC (defined at drivers/hwinfo/Kconfig.cc13xx_cc26xx:27, drivers/hwinfo/Kconfig.cc13xx_cc26xx:27) of &lt;choice&gt; (defined at drivers/hwinfo/Kconfig.cc13xx_cc26xx:21) is not contained in the choice
 
 warning: the choice symbol HWINFO_CC13XX_CC26XX_USE_IEEE_MAC (defined at drivers/hwinfo/Kconfig.cc13xx_cc26xx:27, drivers/hwinfo/Kconfig.cc13xx_cc26xx:27) is defined with a prompt outside the choice
 
 warning: the choice symbol HWINFO_CC13XX_CC26XX_USE_BLE_MAC (defined at drivers/hwinfo/Kconfig.cc13xx_cc26xx:32, drivers/hwinfo/Kconfig.cc13xx_cc26xx:32) is defined with a prompt outside the choice
 
-warning: the default selection I3CS_TX_FIFO_16_BYTE (defined at drivers/i3c/Kconfig.it51xxx:53, drivers/i3c/Kconfig.it51xxx:53) of <choice> (defined at drivers/i3c/Kconfig.it51xxx:49) is not contained in the choice
+warning: the default selection I3CS_TX_FIFO_16_BYTE (defined at drivers/i3c/Kconfig.it51xxx:53, drivers/i3c/Kconfig.it51xxx:53) of &lt;choice&gt; (defined at drivers/i3c/Kconfig.it51xxx:49) is not contained in the choice
 
 warning: the choice symbol I3CS_TX_FIFO_16_BYTE (defined at drivers/i3c/Kconfig.it51xxx:53, drivers/i3c/Kconfig.it51xxx:53) is defined with a prompt outside the choice
 
@@ -125,7 +104,7 @@ warning: the choice symbol I3CS_TX_FIFO_128_BYTE (defined at drivers/i3c/Kconfig
 
 warning: the choice symbol I3CS_TX_FIFO_4096_BYTE (defined at drivers/i3c/Kconfig.it51xxx:65, drivers/i3c/Kconfig.it51xxx:65) is defined with a prompt outside the choice
 
-warning: the default selection I3CS_RX_FIFO_16_BYTE (defined at drivers/i3c/Kconfig.it51xxx:84, drivers/i3c/Kconfig.it51xxx:84) of <choice> (defined at drivers/i3c/Kconfig.it51xxx:80) is not contained in the choice
+warning: the default selection I3CS_RX_FIFO_16_BYTE (defined at drivers/i3c/Kconfig.it51xxx:84, drivers/i3c/Kconfig.it51xxx:84) of &lt;choice&gt; (defined at drivers/i3c/Kconfig.it51xxx:80) is not contained in the choice
 
 warning: the choice symbol I3CS_RX_FIFO_16_BYTE (defined at drivers/i3c/Kconfig.it51xxx:84, drivers/i3c/Kconfig.it51xxx:84) is defined with a prompt outside the choice
 
@@ -137,7 +116,7 @@ warning: the choice symbol I3CS_RX_FIFO_128_BYTE (defined at drivers/i3c/Kconfig
 
 warning: the choice symbol I3CS_RX_FIFO_4096_BYTE (defined at drivers/i3c/Kconfig.it51xxx:96, drivers/i3c/Kconfig.it51xxx:96) is defined with a prompt outside the choice
 
-warning: the default selection IEEE802154_CC1200_RF_SET_0 (defined at drivers/ieee802154/Kconfig.cc1200:86, drivers/ieee802154/Kconfig.cc1200:86) of <choice> (defined at drivers/ieee802154/Kconfig.cc1200:79) is not contained in the choice
+warning: the default selection IEEE802154_CC1200_RF_SET_0 (defined at drivers/ieee802154/Kconfig.cc1200:86, drivers/ieee802154/Kconfig.cc1200:86) of &lt;choice&gt; (defined at drivers/ieee802154/Kconfig.cc1200:79) is not contained in the choice
 
 warning: the choice symbol IEEE802154_CC1200_RF_SET_0 (defined at drivers/ieee802154/Kconfig.cc1200:86, drivers/ieee802154/Kconfig.cc1200:86) is defined with a prompt outside the choice
 
@@ -145,9 +124,9 @@ warning: the choice symbol IEEE802154_CC1200_RF_SET_1 (defined at drivers/ieee80
 
 warning: the choice symbol IEEE802154_CC1200_RF_SET_2 (defined at drivers/ieee802154/Kconfig.cc1200:98, drivers/ieee802154/Kconfig.cc1200:98) is defined with a prompt outside the choice
 
-warning: the default selection MCR20A_CLK_OUT_4MHZ (defined at drivers/ieee802154/Kconfig.mcr20a:41, drivers/ieee802154/Kconfig.mcr20a:41) of <choice> (defined at drivers/ieee802154/Kconfig.mcr20a:22) is not contained in the choice
+warning: the default selection MCR20A_CLK_OUT_4MHZ (defined at drivers/ieee802154/Kconfig.mcr20a:41, drivers/ieee802154/Kconfig.mcr20a:41) of &lt;choice&gt; (defined at drivers/ieee802154/Kconfig.mcr20a:22) is not contained in the choice
 
-warning: the default selection MCR20A_CLK_OUT_DISABLED (defined at drivers/ieee802154/Kconfig.mcr20a:29, drivers/ieee802154/Kconfig.mcr20a:29) of <choice> (defined at drivers/ieee802154/Kconfig.mcr20a:22) is not contained in the choice
+warning: the default selection MCR20A_CLK_OUT_DISABLED (defined at drivers/ieee802154/Kconfig.mcr20a:29, drivers/ieee802154/Kconfig.mcr20a:29) of &lt;choice&gt; (defined at drivers/ieee802154/Kconfig.mcr20a:22) is not contained in the choice
 
 warning: the choice symbol MCR20A_CLK_OUT_DISABLED (defined at drivers/ieee802154/Kconfig.mcr20a:29, drivers/ieee802154/Kconfig.mcr20a:29) is defined with a prompt outside the choice
 
@@ -167,7 +146,7 @@ warning: the choice symbol MCR20A_CLK_OUT_62500HZ (defined at drivers/ieee802154
 
 warning: the choice symbol MCR20A_CLK_OUT_32768HZ (defined at drivers/ieee802154/Kconfig.mcr20a:53, drivers/ieee802154/Kconfig.mcr20a:53) is defined with a prompt outside the choice
 
-warning: the default selection IPM_IMX_MAX_DATA_SIZE_16 (defined at drivers/ipm/Kconfig.imx:39, drivers/ipm/Kconfig.imx:39) of <choice> (defined at drivers/ipm/Kconfig.imx:21) is not contained in the choice
+warning: the default selection IPM_IMX_MAX_DATA_SIZE_16 (defined at drivers/ipm/Kconfig.imx:39, drivers/ipm/Kconfig.imx:39) of &lt;choice&gt; (defined at drivers/ipm/Kconfig.imx:21) is not contained in the choice
 
 warning: the choice symbol IPM_IMX_MAX_DATA_SIZE_4 (defined at drivers/ipm/Kconfig.imx:27, drivers/ipm/Kconfig.imx:27) is defined with a prompt outside the choice
 
@@ -175,11 +154,11 @@ warning: the choice symbol IPM_IMX_MAX_DATA_SIZE_8 (defined at drivers/ipm/Kconf
 
 warning: the choice symbol IPM_IMX_MAX_DATA_SIZE_16 (defined at drivers/ipm/Kconfig.imx:39, drivers/ipm/Kconfig.imx:39) is defined with a prompt outside the choice
 
-warning: the default selection ETHOS_U_ARM (defined at drivers/misc/ethos_u/Kconfig:11, drivers/misc/ethos_u/Kconfig:11) of <choice> (defined at drivers/misc/ethos_u/Kconfig:4) is not contained in the choice
+warning: the default selection ETHOS_U_ARM (defined at drivers/misc/ethos_u/Kconfig:11, drivers/misc/ethos_u/Kconfig:11) of &lt;choice&gt; (defined at drivers/misc/ethos_u/Kconfig:4) is not contained in the choice
 
-warning: the default selection ETHOS_U_NUMAKER (defined at drivers/misc/ethos_u/Kconfig:16, drivers/misc/ethos_u/Kconfig:16) of <choice> (defined at drivers/misc/ethos_u/Kconfig:4) is not contained in the choice
+warning: the default selection ETHOS_U_NUMAKER (defined at drivers/misc/ethos_u/Kconfig:16, drivers/misc/ethos_u/Kconfig:16) of &lt;choice&gt; (defined at drivers/misc/ethos_u/Kconfig:4) is not contained in the choice
 
-warning: the default selection ETHOS_U_RENESAS (defined at drivers/misc/ethos_u/Kconfig:21, drivers/misc/ethos_u/Kconfig:21) of <choice> (defined at drivers/misc/ethos_u/Kconfig:4) is not contained in the choice
+warning: the default selection ETHOS_U_RENESAS (defined at drivers/misc/ethos_u/Kconfig:21, drivers/misc/ethos_u/Kconfig:21) of &lt;choice&gt; (defined at drivers/misc/ethos_u/Kconfig:4) is not contained in the choice
 
 warning: the choice symbol ETHOS_U_ARM (defined at drivers/misc/ethos_u/Kconfig:11, drivers/misc/ethos_u/Kconfig:11) is defined with a prompt outside the choice
 
@@ -187,13 +166,13 @@ warning: the choice symbol ETHOS_U_NUMAKER (defined at drivers/misc/ethos_u/Kcon
 
 warning: the choice symbol ETHOS_U_RENESAS (defined at drivers/misc/ethos_u/Kconfig:21, drivers/misc/ethos_u/Kconfig:21) is defined with a prompt outside the choice
 
-warning: the default selection MODEM_HL7800_EDRX (defined at drivers/modem/Kconfig.hl7800:201, drivers/modem/Kconfig.hl7800:201) of <choice> (defined at drivers/modem/Kconfig.hl7800:197) is not contained in the choice
+warning: the default selection MODEM_HL7800_EDRX (defined at drivers/modem/Kconfig.hl7800:201, drivers/modem/Kconfig.hl7800:201) of &lt;choice&gt; (defined at drivers/modem/Kconfig.hl7800:197) is not contained in the choice
 
 warning: the choice symbol MODEM_HL7800_EDRX (defined at drivers/modem/Kconfig.hl7800:201, drivers/modem/Kconfig.hl7800:201) is defined with a prompt outside the choice
 
 warning: the choice symbol MODEM_HL7800_PSM (defined at drivers/modem/Kconfig.hl7800:206, drivers/modem/Kconfig.hl7800:206) is defined with a prompt outside the choice
 
-warning: the default selection MODEM_HL7800_SLEEP_LEVEL_HIBERNATE (defined at drivers/modem/Kconfig.hl7800:249, drivers/modem/Kconfig.hl7800:249) of <choice> (defined at drivers/modem/Kconfig.hl7800:243) is not contained in the choice
+warning: the default selection MODEM_HL7800_SLEEP_LEVEL_HIBERNATE (defined at drivers/modem/Kconfig.hl7800:249, drivers/modem/Kconfig.hl7800:249) of &lt;choice&gt; (defined at drivers/modem/Kconfig.hl7800:243) is not contained in the choice
 
 warning: the choice symbol MODEM_HL7800_SLEEP_LEVEL_HIBERNATE (defined at drivers/modem/Kconfig.hl7800:249, drivers/modem/Kconfig.hl7800:249) is defined with a prompt outside the choice
 
@@ -201,7 +180,7 @@ warning: the choice symbol MODEM_HL7800_SLEEP_LEVEL_LITE_HIBERNATE (defined at d
 
 warning: the choice symbol MODEM_HL7800_SLEEP_LEVEL_SLEEP (defined at drivers/modem/Kconfig.hl7800:262, drivers/modem/Kconfig.hl7800:262) is defined with a prompt outside the choice
 
-warning: the default selection MODEM_HL7800_BOOT_NORMAL (defined at drivers/modem/Kconfig.hl7800:310, drivers/modem/Kconfig.hl7800:310) of <choice> (defined at drivers/modem/Kconfig.hl7800:306) is not contained in the choice
+warning: the default selection MODEM_HL7800_BOOT_NORMAL (defined at drivers/modem/Kconfig.hl7800:310, drivers/modem/Kconfig.hl7800:310) of &lt;choice&gt; (defined at drivers/modem/Kconfig.hl7800:306) is not contained in the choice
 
 warning: the choice symbol MODEM_HL7800_BOOT_NORMAL (defined at drivers/modem/Kconfig.hl7800:310, drivers/modem/Kconfig.hl7800:310) is defined with a prompt outside the choice
 
@@ -209,7 +188,7 @@ warning: the choice symbol MODEM_HL7800_BOOT_DELAY (defined at drivers/modem/Kco
 
 warning: the choice symbol MODEM_HL7800_BOOT_IN_AIRPLANE_MODE (defined at drivers/modem/Kconfig.hl7800:319, drivers/modem/Kconfig.hl7800:319) is defined with a prompt outside the choice
 
-warning: the default selection MODEM_HL7800_ADDRESS_FAMILY_IPV4V6 (defined at drivers/modem/Kconfig.hl7800:349, drivers/modem/Kconfig.hl7800:349) of <choice> (defined at drivers/modem/Kconfig.hl7800:337) is not contained in the choice
+warning: the default selection MODEM_HL7800_ADDRESS_FAMILY_IPV4V6 (defined at drivers/modem/Kconfig.hl7800:349, drivers/modem/Kconfig.hl7800:349) of &lt;choice&gt; (defined at drivers/modem/Kconfig.hl7800:337) is not contained in the choice
 
 warning: the choice symbol MODEM_HL7800_ADDRESS_FAMILY_IPV4 (defined at drivers/modem/Kconfig.hl7800:343, drivers/modem/Kconfig.hl7800:343) is defined with a prompt outside the choice
 
@@ -217,25 +196,25 @@ warning: the choice symbol MODEM_HL7800_ADDRESS_FAMILY_IPV6 (defined at drivers/
 
 warning: the choice symbol MODEM_HL7800_ADDRESS_FAMILY_IPV4V6 (defined at drivers/modem/Kconfig.hl7800:349, drivers/modem/Kconfig.hl7800:349) is defined with a prompt outside the choice
 
-warning: the default selection NTN_POSITION_SOURCE_IGNSS (defined at drivers/modem/hl78xx/Kconfig.hl78xx:922, drivers/modem/hl78xx/Kconfig.hl78xx:922) of <choice> (defined at drivers/modem/hl78xx/Kconfig.hl78xx:914) is not contained in the choice
+warning: the default selection NTN_POSITION_SOURCE_IGNSS (defined at drivers/modem/hl78xx/Kconfig.hl78xx:922, drivers/modem/hl78xx/Kconfig.hl78xx:922) of &lt;choice&gt; (defined at drivers/modem/hl78xx/Kconfig.hl78xx:914) is not contained in the choice
 
 warning: the choice symbol NTN_POSITION_SOURCE_IGNSS (defined at drivers/modem/hl78xx/Kconfig.hl78xx:922, drivers/modem/hl78xx/Kconfig.hl78xx:922) is defined with a prompt outside the choice
 
 warning: the choice symbol NTN_POSITION_SOURCE_MANUAL (defined at drivers/modem/hl78xx/Kconfig.hl78xx:927, drivers/modem/hl78xx/Kconfig.hl78xx:927) is defined with a prompt outside the choice
 
-warning: the default selection NTN_MOBILITY_TYPE_STATIC (defined at drivers/modem/hl78xx/Kconfig.hl78xx:942, drivers/modem/hl78xx/Kconfig.hl78xx:942) of <choice> (defined at drivers/modem/hl78xx/Kconfig.hl78xx:934) is not contained in the choice
+warning: the default selection NTN_MOBILITY_TYPE_STATIC (defined at drivers/modem/hl78xx/Kconfig.hl78xx:942, drivers/modem/hl78xx/Kconfig.hl78xx:942) of &lt;choice&gt; (defined at drivers/modem/hl78xx/Kconfig.hl78xx:934) is not contained in the choice
 
 warning: the choice symbol NTN_MOBILITY_TYPE_STATIC (defined at drivers/modem/hl78xx/Kconfig.hl78xx:942, drivers/modem/hl78xx/Kconfig.hl78xx:942) is defined with a prompt outside the choice
 
 warning: the choice symbol NTN_MOBILITY_TYPE_DYNAMIC (defined at drivers/modem/hl78xx/Kconfig.hl78xx:947, drivers/modem/hl78xx/Kconfig.hl78xx:947) is defined with a prompt outside the choice
 
-warning: the default selection MODEM_SIMCOM_SIM7080_BOOT_TYPE_NORMAL (defined at drivers/modem/simcom/sim7080/Kconfig:99, drivers/modem/simcom/sim7080/Kconfig:99) of <choice> (defined at drivers/modem/simcom/sim7080/Kconfig:95) is not contained in the choice
+warning: the default selection MODEM_SIMCOM_SIM7080_BOOT_TYPE_NORMAL (defined at drivers/modem/simcom/sim7080/Kconfig:99, drivers/modem/simcom/sim7080/Kconfig:99) of &lt;choice&gt; (defined at drivers/modem/simcom/sim7080/Kconfig:95) is not contained in the choice
 
 warning: the choice symbol MODEM_SIMCOM_SIM7080_BOOT_TYPE_NORMAL (defined at drivers/modem/simcom/sim7080/Kconfig:99, drivers/modem/simcom/sim7080/Kconfig:99) is defined with a prompt outside the choice
 
 warning: the choice symbol MODEM_SIMCOM_SIM7080_BOOT_TYPE_CONSTRAINED (defined at drivers/modem/simcom/sim7080/Kconfig:104, drivers/modem/simcom/sim7080/Kconfig:104) is defined with a prompt outside the choice
 
-warning: the default selection SENSOR_CLOCK_SYSTEM (defined at drivers/sensor/Kconfig.sensor_clock:19, drivers/sensor/Kconfig.sensor_clock:19) of <choice> (defined at drivers/sensor/Kconfig.sensor_clock:13) is not contained in the choice
+warning: the default selection SENSOR_CLOCK_SYSTEM (defined at drivers/sensor/Kconfig.sensor_clock:19, drivers/sensor/Kconfig.sensor_clock:19) of &lt;choice&gt; (defined at drivers/sensor/Kconfig.sensor_clock:13) is not contained in the choice
 
 warning: the choice symbol SENSOR_CLOCK_SYSTEM (defined at drivers/sensor/Kconfig.sensor_clock:19, drivers/sensor/Kconfig.sensor_clock:19) is defined with a prompt outside the choice
 
@@ -243,7 +222,7 @@ warning: the choice symbol SENSOR_CLOCK_COUNTER (defined at drivers/sensor/Kconf
 
 warning: the choice symbol SENSOR_CLOCK_RTC (defined at drivers/sensor/Kconfig.sensor_clock:25, drivers/sensor/Kconfig.sensor_clock:25) is defined with a prompt outside the choice
 
-warning: the default selection ADT7310_TRIGGER_NONE (defined at drivers/sensor/adi/adt7310/Kconfig:27, drivers/sensor/adi/adt7310/Kconfig:27) of <choice> (defined at drivers/sensor/adi/adt7310/Kconfig:21) is not contained in the choice
+warning: the default selection ADT7310_TRIGGER_NONE (defined at drivers/sensor/adi/adt7310/Kconfig:27, drivers/sensor/adi/adt7310/Kconfig:27) of &lt;choice&gt; (defined at drivers/sensor/adi/adt7310/Kconfig:21) is not contained in the choice
 
 warning: the choice symbol ADT7310_TRIGGER_NONE (defined at drivers/sensor/adi/adt7310/Kconfig:27, drivers/sensor/adi/adt7310/Kconfig:27) is defined with a prompt outside the choice
 
@@ -251,7 +230,7 @@ warning: the choice symbol ADT7310_TRIGGER_GLOBAL_THREAD (defined at drivers/sen
 
 warning: the choice symbol ADT7310_TRIGGER_OWN_THREAD (defined at drivers/sensor/adi/adt7310/Kconfig:38, drivers/sensor/adi/adt7310/Kconfig:38) is defined with a prompt outside the choice
 
-warning: the default selection ADT7420_TRIGGER_NONE (defined at drivers/sensor/adi/adt7420/Kconfig:45, drivers/sensor/adi/adt7420/Kconfig:45) of <choice> (defined at drivers/sensor/adi/adt7420/Kconfig:39) is not contained in the choice
+warning: the default selection ADT7420_TRIGGER_NONE (defined at drivers/sensor/adi/adt7420/Kconfig:45, drivers/sensor/adi/adt7420/Kconfig:45) of &lt;choice&gt; (defined at drivers/sensor/adi/adt7420/Kconfig:39) is not contained in the choice
 
 warning: the choice symbol ADT7420_TRIGGER_NONE (defined at drivers/sensor/adi/adt7420/Kconfig:45, drivers/sensor/adi/adt7420/Kconfig:45) is defined with a prompt outside the choice
 
@@ -259,7 +238,7 @@ warning: the choice symbol ADT7420_TRIGGER_GLOBAL_THREAD (defined at drivers/sen
 
 warning: the choice symbol ADT7420_TRIGGER_OWN_THREAD (defined at drivers/sensor/adi/adt7420/Kconfig:54, drivers/sensor/adi/adt7420/Kconfig:54) is defined with a prompt outside the choice
 
-warning: the default selection ADXL362_ACCEL_RANGE_RUNTIME (defined at drivers/sensor/adi/adxl362/Kconfig:21, drivers/sensor/adi/adxl362/Kconfig:21) of <choice> (defined at drivers/sensor/adi/adxl362/Kconfig:17) is not contained in the choice
+warning: the default selection ADXL362_ACCEL_RANGE_RUNTIME (defined at drivers/sensor/adi/adxl362/Kconfig:21, drivers/sensor/adi/adxl362/Kconfig:21) of &lt;choice&gt; (defined at drivers/sensor/adi/adxl362/Kconfig:17) is not contained in the choice
 
 warning: the choice symbol ADXL362_ACCEL_RANGE_RUNTIME (defined at drivers/sensor/adi/adxl362/Kconfig:21, drivers/sensor/adi/adxl362/Kconfig:21) is defined with a prompt outside the choice
 
@@ -269,7 +248,7 @@ warning: the choice symbol ADXL362_ACCEL_RANGE_4G (defined at drivers/sensor/adi
 
 warning: the choice symbol ADXL362_ACCEL_RANGE_8G (defined at drivers/sensor/adi/adxl362/Kconfig:30, drivers/sensor/adi/adxl362/Kconfig:30) is defined with a prompt outside the choice
 
-warning: the default selection ADXL362_ACCEL_ODR_RUNTIME (defined at drivers/sensor/adi/adxl362/Kconfig:39, drivers/sensor/adi/adxl362/Kconfig:39) of <choice> (defined at drivers/sensor/adi/adxl362/Kconfig:35) is not contained in the choice
+warning: the default selection ADXL362_ACCEL_ODR_RUNTIME (defined at drivers/sensor/adi/adxl362/Kconfig:39, drivers/sensor/adi/adxl362/Kconfig:39) of &lt;choice&gt; (defined at drivers/sensor/adi/adxl362/Kconfig:35) is not contained in the choice
 
 warning: the choice symbol ADXL362_ACCEL_ODR_RUNTIME (defined at drivers/sensor/adi/adxl362/Kconfig:39, drivers/sensor/adi/adxl362/Kconfig:39) is defined with a prompt outside the choice
 
@@ -285,7 +264,7 @@ warning: the choice symbol ADXL362_ACCEL_ODR_200 (defined at drivers/sensor/adi/
 
 warning: the choice symbol ADXL362_ACCEL_ODR_400 (defined at drivers/sensor/adi/adxl362/Kconfig:57, drivers/sensor/adi/adxl362/Kconfig:57) is defined with a prompt outside the choice
 
-warning: the default selection ADXL362_TRIGGER_NONE (defined at drivers/sensor/adi/adxl362/Kconfig:68, drivers/sensor/adi/adxl362/Kconfig:68) of <choice> (defined at drivers/sensor/adi/adxl362/Kconfig:62) is not contained in the choice
+warning: the default selection ADXL362_TRIGGER_NONE (defined at drivers/sensor/adi/adxl362/Kconfig:68, drivers/sensor/adi/adxl362/Kconfig:68) of &lt;choice&gt; (defined at drivers/sensor/adi/adxl362/Kconfig:62) is not contained in the choice
 
 warning: the choice symbol ADXL362_TRIGGER_NONE (defined at drivers/sensor/adi/adxl362/Kconfig:68, drivers/sensor/adi/adxl362/Kconfig:68) is defined with a prompt outside the choice
 
@@ -293,7 +272,7 @@ warning: the choice symbol ADXL362_TRIGGER_GLOBAL_THREAD (defined at drivers/sen
 
 warning: the choice symbol ADXL362_TRIGGER_OWN_THREAD (defined at drivers/sensor/adi/adxl362/Kconfig:77, drivers/sensor/adi/adxl362/Kconfig:77) is defined with a prompt outside the choice
 
-warning: the default selection CCS811_TRIGGER_NONE (defined at drivers/sensor/ams/ccs811/Kconfig:50, drivers/sensor/ams/ccs811/Kconfig:50) of <choice> (defined at drivers/sensor/ams/ccs811/Kconfig:44) is not contained in the choice
+warning: the default selection CCS811_TRIGGER_NONE (defined at drivers/sensor/ams/ccs811/Kconfig:50, drivers/sensor/ams/ccs811/Kconfig:50) of &lt;choice&gt; (defined at drivers/sensor/ams/ccs811/Kconfig:44) is not contained in the choice
 
 warning: the choice symbol CCS811_TRIGGER_NONE (defined at drivers/sensor/ams/ccs811/Kconfig:50, drivers/sensor/ams/ccs811/Kconfig:50) is defined with a prompt outside the choice
 
@@ -301,7 +280,7 @@ warning: the choice symbol CCS811_TRIGGER_GLOBAL_THREAD (defined at drivers/sens
 
 warning: the choice symbol CCS811_TRIGGER_OWN_THREAD (defined at drivers/sensor/ams/ccs811/Kconfig:59, drivers/sensor/ams/ccs811/Kconfig:59) is defined with a prompt outside the choice
 
-warning: the default selection ENS210_TEMPERATURE_CONTINUOUS (defined at drivers/sensor/ams/ens210/Kconfig:24, drivers/sensor/ams/ens210/Kconfig:24) of <choice> (defined at drivers/sensor/ams/ens210/Kconfig:15) is not contained in the choice
+warning: the default selection ENS210_TEMPERATURE_CONTINUOUS (defined at drivers/sensor/ams/ens210/Kconfig:24, drivers/sensor/ams/ens210/Kconfig:24) of &lt;choice&gt; (defined at drivers/sensor/ams/ens210/Kconfig:15) is not contained in the choice
 
 warning: the choice symbol ENS210_TEMPERATURE_OFF (defined at drivers/sensor/ams/ens210/Kconfig:20, drivers/sensor/ams/ens210/Kconfig:20) is defined with a prompt outside the choice
 
@@ -309,7 +288,7 @@ warning: the choice symbol ENS210_TEMPERATURE_SINGLE (defined at drivers/sensor/
 
 warning: the choice symbol ENS210_TEMPERATURE_CONTINUOUS (defined at drivers/sensor/ams/ens210/Kconfig:24, drivers/sensor/ams/ens210/Kconfig:24) is defined with a prompt outside the choice
 
-warning: the default selection ENS210_HUMIDITY_CONTINUOUS (defined at drivers/sensor/ams/ens210/Kconfig:37, drivers/sensor/ams/ens210/Kconfig:37) of <choice> (defined at drivers/sensor/ams/ens210/Kconfig:28) is not contained in the choice
+warning: the default selection ENS210_HUMIDITY_CONTINUOUS (defined at drivers/sensor/ams/ens210/Kconfig:37, drivers/sensor/ams/ens210/Kconfig:37) of &lt;choice&gt; (defined at drivers/sensor/ams/ens210/Kconfig:28) is not contained in the choice
 
 warning: the choice symbol ENS210_HUMIDITY_OFF (defined at drivers/sensor/ams/ens210/Kconfig:33, drivers/sensor/ams/ens210/Kconfig:33) is defined with a prompt outside the choice
 
@@ -317,13 +296,13 @@ warning: the choice symbol ENS210_HUMIDITY_SINGLE (defined at drivers/sensor/ams
 
 warning: the choice symbol ENS210_HUMIDITY_CONTINUOUS (defined at drivers/sensor/ams/ens210/Kconfig:37, drivers/sensor/ams/ens210/Kconfig:37) is defined with a prompt outside the choice
 
-warning: the default selection TMD2620_TRIGGER_NONE (defined at drivers/sensor/ams/tmd2620/Kconfig:20, drivers/sensor/ams/tmd2620/Kconfig:20) of <choice> (defined at drivers/sensor/ams/tmd2620/Kconfig:14) is not contained in the choice
+warning: the default selection TMD2620_TRIGGER_NONE (defined at drivers/sensor/ams/tmd2620/Kconfig:20, drivers/sensor/ams/tmd2620/Kconfig:20) of &lt;choice&gt; (defined at drivers/sensor/ams/tmd2620/Kconfig:14) is not contained in the choice
 
 warning: the choice symbol TMD2620_TRIGGER_NONE (defined at drivers/sensor/ams/tmd2620/Kconfig:20, drivers/sensor/ams/tmd2620/Kconfig:20) is defined with a prompt outside the choice
 
 warning: the choice symbol TMD2620_TRIGGER_GLOBAL_THREAD (defined at drivers/sensor/ams/tmd2620/Kconfig:23, drivers/sensor/ams/tmd2620/Kconfig:23) is defined with a prompt outside the choice
 
-warning: the default selection TSL2540_TRIGGER_NONE (defined at drivers/sensor/ams/tsl2540/Kconfig:25, drivers/sensor/ams/tsl2540/Kconfig:25) of <choice> (defined at drivers/sensor/ams/tsl2540/Kconfig:19) is not contained in the choice
+warning: the default selection TSL2540_TRIGGER_NONE (defined at drivers/sensor/ams/tsl2540/Kconfig:25, drivers/sensor/ams/tsl2540/Kconfig:25) of &lt;choice&gt; (defined at drivers/sensor/ams/tsl2540/Kconfig:19) is not contained in the choice
 
 warning: the choice symbol TSL2540_TRIGGER_NONE (defined at drivers/sensor/ams/tsl2540/Kconfig:25, drivers/sensor/ams/tsl2540/Kconfig:25) is defined with a prompt outside the choice
 
@@ -331,7 +310,7 @@ warning: the choice symbol TSL2540_TRIGGER_GLOBAL_THREAD (defined at drivers/sen
 
 warning: the choice symbol TSL2540_TRIGGER_OWN_THREAD (defined at drivers/sensor/ams/tsl2540/Kconfig:34, drivers/sensor/ams/tsl2540/Kconfig:34) is defined with a prompt outside the choice
 
-warning: the default selection TSL2591_TRIGGER_NONE (defined at drivers/sensor/ams/tsl2591/Kconfig:34, drivers/sensor/ams/tsl2591/Kconfig:34) of <choice> (defined at drivers/sensor/ams/tsl2591/Kconfig:28) is not contained in the choice
+warning: the default selection TSL2591_TRIGGER_NONE (defined at drivers/sensor/ams/tsl2591/Kconfig:34, drivers/sensor/ams/tsl2591/Kconfig:34) of &lt;choice&gt; (defined at drivers/sensor/ams/tsl2591/Kconfig:28) is not contained in the choice
 
 warning: the choice symbol TSL2591_TRIGGER_NONE (defined at drivers/sensor/ams/tsl2591/Kconfig:34, drivers/sensor/ams/tsl2591/Kconfig:34) is defined with a prompt outside the choice
 
@@ -339,7 +318,7 @@ warning: the choice symbol TSL2591_TRIGGER_GLOBAL_THREAD (defined at drivers/sen
 
 warning: the choice symbol TSL2591_TRIGGER_OWN_THREAD (defined at drivers/sensor/ams/tsl2591/Kconfig:43, drivers/sensor/ams/tsl2591/Kconfig:43) is defined with a prompt outside the choice
 
-warning: the default selection BMA280_TRIGGER_GLOBAL_THREAD (defined at drivers/sensor/bosch/bma280/Kconfig:26, drivers/sensor/bosch/bma280/Kconfig:26) of <choice> (defined at drivers/sensor/bosch/bma280/Kconfig:17) is not contained in the choice
+warning: the default selection BMA280_TRIGGER_GLOBAL_THREAD (defined at drivers/sensor/bosch/bma280/Kconfig:26, drivers/sensor/bosch/bma280/Kconfig:26) of &lt;choice&gt; (defined at drivers/sensor/bosch/bma280/Kconfig:17) is not contained in the choice
 
 warning: the choice symbol BMA280_TRIGGER_NONE (defined at drivers/sensor/bosch/bma280/Kconfig:23, drivers/sensor/bosch/bma280/Kconfig:23) is defined with a prompt outside the choice
 
@@ -347,7 +326,7 @@ warning: the choice symbol BMA280_TRIGGER_GLOBAL_THREAD (defined at drivers/sens
 
 warning: the choice symbol BMA280_TRIGGER_OWN_THREAD (defined at drivers/sensor/bosch/bma280/Kconfig:32, drivers/sensor/bosch/bma280/Kconfig:32) is defined with a prompt outside the choice
 
-warning: the default selection BMA280_PMU_RANGE_2G (defined at drivers/sensor/bosch/bma280/Kconfig:63, drivers/sensor/bosch/bma280/Kconfig:63) of <choice> (defined at drivers/sensor/bosch/bma280/Kconfig:57) is not contained in the choice
+warning: the default selection BMA280_PMU_RANGE_2G (defined at drivers/sensor/bosch/bma280/Kconfig:63, drivers/sensor/bosch/bma280/Kconfig:63) of &lt;choice&gt; (defined at drivers/sensor/bosch/bma280/Kconfig:57) is not contained in the choice
 
 warning: the choice symbol BMA280_PMU_RANGE_2G (defined at drivers/sensor/bosch/bma280/Kconfig:63, drivers/sensor/bosch/bma280/Kconfig:63) is defined with a prompt outside the choice
 
@@ -357,7 +336,7 @@ warning: the choice symbol BMA280_PMU_RANGE_8G (defined at drivers/sensor/bosch/
 
 warning: the choice symbol BMA280_PMU_RANGE_16G (defined at drivers/sensor/bosch/bma280/Kconfig:72, drivers/sensor/bosch/bma280/Kconfig:72) is defined with a prompt outside the choice
 
-warning: the default selection BMA280_PMU_BW_7 (defined at drivers/sensor/bosch/bma280/Kconfig:101, drivers/sensor/bosch/bma280/Kconfig:101) of <choice> (defined at drivers/sensor/bosch/bma280/Kconfig:77) is not contained in the choice
+warning: the default selection BMA280_PMU_BW_7 (defined at drivers/sensor/bosch/bma280/Kconfig:101, drivers/sensor/bosch/bma280/Kconfig:101) of &lt;choice&gt; (defined at drivers/sensor/bosch/bma280/Kconfig:77) is not contained in the choice
 
 warning: the choice symbol BMA280_PMU_BW_1 (defined at drivers/sensor/bosch/bma280/Kconfig:83, drivers/sensor/bosch/bma280/Kconfig:83) is defined with a prompt outside the choice
 
@@ -375,7 +354,7 @@ warning: the choice symbol BMA280_PMU_BW_7 (defined at drivers/sensor/bosch/bma2
 
 warning: the choice symbol BMA280_PMU_BW_8 (defined at drivers/sensor/bosch/bma280/Kconfig:104, drivers/sensor/bosch/bma280/Kconfig:104) is defined with a prompt outside the choice
 
-warning: the default selection BMC150_MAGN_PRESET_REGULAR (defined at drivers/sensor/bosch/bmc150_magn/Kconfig:28, drivers/sensor/bosch/bmc150_magn/Kconfig:28) of <choice> (defined at drivers/sensor/bosch/bmc150_magn/Kconfig:18) is not contained in the choice
+warning: the default selection BMC150_MAGN_PRESET_REGULAR (defined at drivers/sensor/bosch/bmc150_magn/Kconfig:28, drivers/sensor/bosch/bmc150_magn/Kconfig:28) of &lt;choice&gt; (defined at drivers/sensor/bosch/bmc150_magn/Kconfig:18) is not contained in the choice
 
 warning: the choice symbol BMC150_MAGN_PRESET_LOW_POWER (defined at drivers/sensor/bosch/bmc150_magn/Kconfig:25, drivers/sensor/bosch/bmc150_magn/Kconfig:25) is defined with a prompt outside the choice
 
@@ -385,7 +364,7 @@ warning: the choice symbol BMC150_MAGN_PRESET_ENHANCED_REGULAR (defined at drive
 
 warning: the choice symbol BMC150_MAGN_PRESET_HIGH_ACCURACY (defined at drivers/sensor/bosch/bmc150_magn/Kconfig:34, drivers/sensor/bosch/bmc150_magn/Kconfig:34) is defined with a prompt outside the choice
 
-warning: the default selection BME280_TEMP_OVER_2X (defined at drivers/sensor/bosch/bme280/Kconfig:40, drivers/sensor/bosch/bme280/Kconfig:40) of <choice> (defined at drivers/sensor/bosch/bme280/Kconfig:32) is not contained in the choice
+warning: the default selection BME280_TEMP_OVER_2X (defined at drivers/sensor/bosch/bme280/Kconfig:40, drivers/sensor/bosch/bme280/Kconfig:40) of &lt;choice&gt; (defined at drivers/sensor/bosch/bme280/Kconfig:32) is not contained in the choice
 
 warning: the choice symbol BME280_TEMP_OVER_1X (defined at drivers/sensor/bosch/bme280/Kconfig:38, drivers/sensor/bosch/bme280/Kconfig:38) is defined with a prompt outside the choice
 
@@ -397,7 +376,7 @@ warning: the choice symbol BME280_TEMP_OVER_8X (defined at drivers/sensor/bosch/
 
 warning: the choice symbol BME280_TEMP_OVER_16X (defined at drivers/sensor/bosch/bme280/Kconfig:46, drivers/sensor/bosch/bme280/Kconfig:46) is defined with a prompt outside the choice
 
-warning: the default selection BME280_PRESS_OVER_16X (defined at drivers/sensor/bosch/bme280/Kconfig:64, drivers/sensor/bosch/bme280/Kconfig:64) of <choice> (defined at drivers/sensor/bosch/bme280/Kconfig:50) is not contained in the choice
+warning: the default selection BME280_PRESS_OVER_16X (defined at drivers/sensor/bosch/bme280/Kconfig:64, drivers/sensor/bosch/bme280/Kconfig:64) of &lt;choice&gt; (defined at drivers/sensor/bosch/bme280/Kconfig:50) is not contained in the choice
 
 warning: the choice symbol BME280_PRESS_OVER_1X (defined at drivers/sensor/bosch/bme280/Kconfig:56, drivers/sensor/bosch/bme280/Kconfig:56) is defined with a prompt outside the choice
 
@@ -409,7 +388,7 @@ warning: the choice symbol BME280_PRESS_OVER_8X (defined at drivers/sensor/bosch
 
 warning: the choice symbol BME280_PRESS_OVER_16X (defined at drivers/sensor/bosch/bme280/Kconfig:64, drivers/sensor/bosch/bme280/Kconfig:64) is defined with a prompt outside the choice
 
-warning: the default selection BME280_HUMIDITY_OVER_16X (defined at drivers/sensor/bosch/bme280/Kconfig:82, drivers/sensor/bosch/bme280/Kconfig:82) of <choice> (defined at drivers/sensor/bosch/bme280/Kconfig:68) is not contained in the choice
+warning: the default selection BME280_HUMIDITY_OVER_16X (defined at drivers/sensor/bosch/bme280/Kconfig:82, drivers/sensor/bosch/bme280/Kconfig:82) of &lt;choice&gt; (defined at drivers/sensor/bosch/bme280/Kconfig:68) is not contained in the choice
 
 warning: the choice symbol BME280_HUMIDITY_OVER_1X (defined at drivers/sensor/bosch/bme280/Kconfig:74, drivers/sensor/bosch/bme280/Kconfig:74) is defined with a prompt outside the choice
 
@@ -421,7 +400,7 @@ warning: the choice symbol BME280_HUMIDITY_OVER_8X (defined at drivers/sensor/bo
 
 warning: the choice symbol BME280_HUMIDITY_OVER_16X (defined at drivers/sensor/bosch/bme280/Kconfig:82, drivers/sensor/bosch/bme280/Kconfig:82) is defined with a prompt outside the choice
 
-warning: the default selection BME280_STANDBY_1000MS (defined at drivers/sensor/bosch/bme280/Kconfig:102, drivers/sensor/bosch/bme280/Kconfig:102) of <choice> (defined at drivers/sensor/bosch/bme280/Kconfig:86) is not contained in the choice
+warning: the default selection BME280_STANDBY_1000MS (defined at drivers/sensor/bosch/bme280/Kconfig:102, drivers/sensor/bosch/bme280/Kconfig:102) of &lt;choice&gt; (defined at drivers/sensor/bosch/bme280/Kconfig:86) is not contained in the choice
 
 warning: the choice symbol BME280_STANDBY_05MS (defined at drivers/sensor/bosch/bme280/Kconfig:92, drivers/sensor/bosch/bme280/Kconfig:92) is defined with a prompt outside the choice
 
@@ -439,7 +418,7 @@ warning: the choice symbol BME280_STANDBY_2000MS (defined at drivers/sensor/bosc
 
 warning: the choice symbol BME280_STANDBY_4000MS (defined at drivers/sensor/bosch/bme280/Kconfig:106, drivers/sensor/bosch/bme280/Kconfig:106) is defined with a prompt outside the choice
 
-warning: the default selection BME280_FILTER_4 (defined at drivers/sensor/bosch/bme280/Kconfig:119, drivers/sensor/bosch/bme280/Kconfig:119) of <choice> (defined at drivers/sensor/bosch/bme280/Kconfig:110) is not contained in the choice
+warning: the default selection BME280_FILTER_4 (defined at drivers/sensor/bosch/bme280/Kconfig:119, drivers/sensor/bosch/bme280/Kconfig:119) of &lt;choice&gt; (defined at drivers/sensor/bosch/bme280/Kconfig:110) is not contained in the choice
 
 warning: the choice symbol BME280_FILTER_OFF (defined at drivers/sensor/bosch/bme280/Kconfig:115, drivers/sensor/bosch/bme280/Kconfig:115) is defined with a prompt outside the choice
 
@@ -451,7 +430,7 @@ warning: the choice symbol BME280_FILTER_8 (defined at drivers/sensor/bosch/bme2
 
 warning: the choice symbol BME280_FILTER_16 (defined at drivers/sensor/bosch/bme280/Kconfig:123, drivers/sensor/bosch/bme280/Kconfig:123) is defined with a prompt outside the choice
 
-warning: the default selection BME680_TEMP_OVER_2X (defined at drivers/sensor/bosch/bme680/Kconfig:27, drivers/sensor/bosch/bme680/Kconfig:27) of <choice> (defined at drivers/sensor/bosch/bme680/Kconfig:19) is not contained in the choice
+warning: the default selection BME680_TEMP_OVER_2X (defined at drivers/sensor/bosch/bme680/Kconfig:27, drivers/sensor/bosch/bme680/Kconfig:27) of &lt;choice&gt; (defined at drivers/sensor/bosch/bme680/Kconfig:19) is not contained in the choice
 
 warning: the choice symbol BME680_TEMP_OVER_1X (defined at drivers/sensor/bosch/bme680/Kconfig:25, drivers/sensor/bosch/bme680/Kconfig:25) is defined with a prompt outside the choice
 
@@ -463,7 +442,7 @@ warning: the choice symbol BME680_TEMP_OVER_8X (defined at drivers/sensor/bosch/
 
 warning: the choice symbol BME680_TEMP_OVER_16X (defined at drivers/sensor/bosch/bme680/Kconfig:33, drivers/sensor/bosch/bme680/Kconfig:33) is defined with a prompt outside the choice
 
-warning: the default selection BME680_PRESS_OVER_16X (defined at drivers/sensor/bosch/bme680/Kconfig:51, drivers/sensor/bosch/bme680/Kconfig:51) of <choice> (defined at drivers/sensor/bosch/bme680/Kconfig:37) is not contained in the choice
+warning: the default selection BME680_PRESS_OVER_16X (defined at drivers/sensor/bosch/bme680/Kconfig:51, drivers/sensor/bosch/bme680/Kconfig:51) of &lt;choice&gt; (defined at drivers/sensor/bosch/bme680/Kconfig:37) is not contained in the choice
 
 warning: the choice symbol BME680_PRESS_OVER_1X (defined at drivers/sensor/bosch/bme680/Kconfig:43, drivers/sensor/bosch/bme680/Kconfig:43) is defined with a prompt outside the choice
 
@@ -475,7 +454,7 @@ warning: the choice symbol BME680_PRESS_OVER_8X (defined at drivers/sensor/bosch
 
 warning: the choice symbol BME680_PRESS_OVER_16X (defined at drivers/sensor/bosch/bme680/Kconfig:51, drivers/sensor/bosch/bme680/Kconfig:51) is defined with a prompt outside the choice
 
-warning: the default selection BME680_HUMIDITY_OVER_1X (defined at drivers/sensor/bosch/bme680/Kconfig:61, drivers/sensor/bosch/bme680/Kconfig:61) of <choice> (defined at drivers/sensor/bosch/bme680/Kconfig:55) is not contained in the choice
+warning: the default selection BME680_HUMIDITY_OVER_1X (defined at drivers/sensor/bosch/bme680/Kconfig:61, drivers/sensor/bosch/bme680/Kconfig:61) of &lt;choice&gt; (defined at drivers/sensor/bosch/bme680/Kconfig:55) is not contained in the choice
 
 warning: the choice symbol BME680_HUMIDITY_OVER_1X (defined at drivers/sensor/bosch/bme680/Kconfig:61, drivers/sensor/bosch/bme680/Kconfig:61) is defined with a prompt outside the choice
 
@@ -487,7 +466,7 @@ warning: the choice symbol BME680_HUMIDITY_OVER_8X (defined at drivers/sensor/bo
 
 warning: the choice symbol BME680_HUMIDITY_OVER_16X (defined at drivers/sensor/bosch/bme680/Kconfig:69, drivers/sensor/bosch/bme680/Kconfig:69) is defined with a prompt outside the choice
 
-warning: the default selection BME680_FILTER_OFF (defined at drivers/sensor/bosch/bme680/Kconfig:78, drivers/sensor/bosch/bme680/Kconfig:78) of <choice> (defined at drivers/sensor/bosch/bme680/Kconfig:73) is not contained in the choice
+warning: the default selection BME680_FILTER_OFF (defined at drivers/sensor/bosch/bme680/Kconfig:78, drivers/sensor/bosch/bme680/Kconfig:78) of &lt;choice&gt; (defined at drivers/sensor/bosch/bme680/Kconfig:73) is not contained in the choice
 
 warning: the choice symbol BME680_FILTER_OFF (defined at drivers/sensor/bosch/bme680/Kconfig:78, drivers/sensor/bosch/bme680/Kconfig:78) is defined with a prompt outside the choice
 
@@ -505,25 +484,25 @@ warning: the choice symbol BME680_FILTER_64 (defined at drivers/sensor/bosch/bme
 
 warning: the choice symbol BME680_FILTER_128 (defined at drivers/sensor/bosch/bme680/Kconfig:92, drivers/sensor/bosch/bme680/Kconfig:92) is defined with a prompt outside the choice
 
-warning: the default selection BME680_HEATR_TEMP_LP (defined at drivers/sensor/bosch/bme680/Kconfig:101, drivers/sensor/bosch/bme680/Kconfig:101) of <choice> (defined at drivers/sensor/bosch/bme680/Kconfig:96) is not contained in the choice
+warning: the default selection BME680_HEATR_TEMP_LP (defined at drivers/sensor/bosch/bme680/Kconfig:101, drivers/sensor/bosch/bme680/Kconfig:101) of &lt;choice&gt; (defined at drivers/sensor/bosch/bme680/Kconfig:96) is not contained in the choice
 
 warning: the choice symbol BME680_HEATR_TEMP_LP (defined at drivers/sensor/bosch/bme680/Kconfig:101, drivers/sensor/bosch/bme680/Kconfig:101) is defined with a prompt outside the choice
 
 warning: the choice symbol BME680_HEATR_TEMP_ULP (defined at drivers/sensor/bosch/bme680/Kconfig:103, drivers/sensor/bosch/bme680/Kconfig:103) is defined with a prompt outside the choice
 
-warning: the default selection BME680_HEATR_DUR_LP (defined at drivers/sensor/bosch/bme680/Kconfig:112, drivers/sensor/bosch/bme680/Kconfig:112) of <choice> (defined at drivers/sensor/bosch/bme680/Kconfig:107) is not contained in the choice
+warning: the default selection BME680_HEATR_DUR_LP (defined at drivers/sensor/bosch/bme680/Kconfig:112, drivers/sensor/bosch/bme680/Kconfig:112) of &lt;choice&gt; (defined at drivers/sensor/bosch/bme680/Kconfig:107) is not contained in the choice
 
 warning: the choice symbol BME680_HEATR_DUR_LP (defined at drivers/sensor/bosch/bme680/Kconfig:112, drivers/sensor/bosch/bme680/Kconfig:112) is defined with a prompt outside the choice
 
 warning: the choice symbol BME680_HEATR_DUR_ULP (defined at drivers/sensor/bosch/bme680/Kconfig:114, drivers/sensor/bosch/bme680/Kconfig:114) is defined with a prompt outside the choice
 
-warning: the default selection BMG160_I2C_SPEED_STANDARD (defined at drivers/sensor/bosch/bmg160/Kconfig:20, drivers/sensor/bosch/bmg160/Kconfig:20) of <choice> (defined at drivers/sensor/bosch/bmg160/Kconfig:16) is not contained in the choice
+warning: the default selection BMG160_I2C_SPEED_STANDARD (defined at drivers/sensor/bosch/bmg160/Kconfig:20, drivers/sensor/bosch/bmg160/Kconfig:20) of &lt;choice&gt; (defined at drivers/sensor/bosch/bmg160/Kconfig:16) is not contained in the choice
 
 warning: the choice symbol BMG160_I2C_SPEED_STANDARD (defined at drivers/sensor/bosch/bmg160/Kconfig:20, drivers/sensor/bosch/bmg160/Kconfig:20) is defined with a prompt outside the choice
 
 warning: the choice symbol BMG160_I2C_SPEED_FAST (defined at drivers/sensor/bosch/bmg160/Kconfig:25, drivers/sensor/bosch/bmg160/Kconfig:25) is defined with a prompt outside the choice
 
-warning: the default selection BMG160_TRIGGER_GLOBAL_THREAD (defined at drivers/sensor/bosch/bmg160/Kconfig:40, drivers/sensor/bosch/bmg160/Kconfig:40) of <choice> (defined at drivers/sensor/bosch/bmg160/Kconfig:31) is not contained in the choice
+warning: the default selection BMG160_TRIGGER_GLOBAL_THREAD (defined at drivers/sensor/bosch/bmg160/Kconfig:40, drivers/sensor/bosch/bmg160/Kconfig:40) of &lt;choice&gt; (defined at drivers/sensor/bosch/bmg160/Kconfig:31) is not contained in the choice
 
 warning: the choice symbol BMG160_TRIGGER_NONE (defined at drivers/sensor/bosch/bmg160/Kconfig:37, drivers/sensor/bosch/bmg160/Kconfig:37) is defined with a prompt outside the choice
 
@@ -531,7 +510,7 @@ warning: the choice symbol BMG160_TRIGGER_GLOBAL_THREAD (defined at drivers/sens
 
 warning: the choice symbol BMG160_TRIGGER_OWN_THREAD (defined at drivers/sensor/bosch/bmg160/Kconfig:46, drivers/sensor/bosch/bmg160/Kconfig:46) is defined with a prompt outside the choice
 
-warning: the default selection BMG160_RANGE_RUNTIME (defined at drivers/sensor/bosch/bmg160/Kconfig:74, drivers/sensor/bosch/bmg160/Kconfig:74) of <choice> (defined at drivers/sensor/bosch/bmg160/Kconfig:70) is not contained in the choice
+warning: the default selection BMG160_RANGE_RUNTIME (defined at drivers/sensor/bosch/bmg160/Kconfig:74, drivers/sensor/bosch/bmg160/Kconfig:74) of &lt;choice&gt; (defined at drivers/sensor/bosch/bmg160/Kconfig:70) is not contained in the choice
 
 warning: the choice symbol BMG160_RANGE_RUNTIME (defined at drivers/sensor/bosch/bmg160/Kconfig:74, drivers/sensor/bosch/bmg160/Kconfig:74) is defined with a prompt outside the choice
 
@@ -545,7 +524,7 @@ warning: the choice symbol BMG160_RANGE_250DPS (defined at drivers/sensor/bosch/
 
 warning: the choice symbol BMG160_RANGE_125DPS (defined at drivers/sensor/bosch/bmg160/Kconfig:89, drivers/sensor/bosch/bmg160/Kconfig:89) is defined with a prompt outside the choice
 
-warning: the default selection BMG160_ODR_RUNTIME (defined at drivers/sensor/bosch/bmg160/Kconfig:97, drivers/sensor/bosch/bmg160/Kconfig:97) of <choice> (defined at drivers/sensor/bosch/bmg160/Kconfig:93) is not contained in the choice
+warning: the default selection BMG160_ODR_RUNTIME (defined at drivers/sensor/bosch/bmg160/Kconfig:97, drivers/sensor/bosch/bmg160/Kconfig:97) of &lt;choice&gt; (defined at drivers/sensor/bosch/bmg160/Kconfig:93) is not contained in the choice
 
 warning: the choice symbol BMG160_ODR_RUNTIME (defined at drivers/sensor/bosch/bmg160/Kconfig:97, drivers/sensor/bosch/bmg160/Kconfig:97) is defined with a prompt outside the choice
 
@@ -559,7 +538,7 @@ warning: the choice symbol BMG160_ODR_1000 (defined at drivers/sensor/bosch/bmg1
 
 warning: the choice symbol BMG160_ODR_2000 (defined at drivers/sensor/bosch/bmg160/Kconfig:112, drivers/sensor/bosch/bmg160/Kconfig:112) is defined with a prompt outside the choice
 
-warning: the default selection BMI160_TRIGGER_GLOBAL_THREAD (defined at drivers/sensor/bosch/bmi160/Kconfig:27, drivers/sensor/bosch/bmi160/Kconfig:27) of <choice> (defined at drivers/sensor/bosch/bmi160/Kconfig:18) is not contained in the choice
+warning: the default selection BMI160_TRIGGER_GLOBAL_THREAD (defined at drivers/sensor/bosch/bmi160/Kconfig:27, drivers/sensor/bosch/bmi160/Kconfig:27) of &lt;choice&gt; (defined at drivers/sensor/bosch/bmi160/Kconfig:18) is not contained in the choice
 
 warning: the choice symbol BMI160_TRIGGER_NONE (defined at drivers/sensor/bosch/bmi160/Kconfig:24, drivers/sensor/bosch/bmi160/Kconfig:24) is defined with a prompt outside the choice
 
@@ -567,7 +546,7 @@ warning: the choice symbol BMI160_TRIGGER_GLOBAL_THREAD (defined at drivers/sens
 
 warning: the choice symbol BMI160_TRIGGER_OWN_THREAD (defined at drivers/sensor/bosch/bmi160/Kconfig:33, drivers/sensor/bosch/bmi160/Kconfig:33) is defined with a prompt outside the choice
 
-warning: the default selection BMI160_ACCEL_PMU_RUNTIME (defined at drivers/sensor/bosch/bmi160/Kconfig:61, drivers/sensor/bosch/bmi160/Kconfig:61) of <choice> (defined at drivers/sensor/bosch/bmi160/Kconfig:57) is not contained in the choice
+warning: the default selection BMI160_ACCEL_PMU_RUNTIME (defined at drivers/sensor/bosch/bmi160/Kconfig:61, drivers/sensor/bosch/bmi160/Kconfig:61) of &lt;choice&gt; (defined at drivers/sensor/bosch/bmi160/Kconfig:57) is not contained in the choice
 
 warning: the choice symbol BMI160_ACCEL_PMU_RUNTIME (defined at drivers/sensor/bosch/bmi160/Kconfig:61, drivers/sensor/bosch/bmi160/Kconfig:61) is defined with a prompt outside the choice
 
@@ -577,7 +556,7 @@ warning: the choice symbol BMI160_ACCEL_PMU_NORMAL (defined at drivers/sensor/bo
 
 warning: the choice symbol BMI160_ACCEL_PMU_LOW_POWER (defined at drivers/sensor/bosch/bmi160/Kconfig:70, drivers/sensor/bosch/bmi160/Kconfig:70) is defined with a prompt outside the choice
 
-warning: the default selection BMI160_ACCEL_RANGE_RUNTIME (defined at drivers/sensor/bosch/bmi160/Kconfig:79, drivers/sensor/bosch/bmi160/Kconfig:79) of <choice> (defined at drivers/sensor/bosch/bmi160/Kconfig:74) is not contained in the choice
+warning: the default selection BMI160_ACCEL_RANGE_RUNTIME (defined at drivers/sensor/bosch/bmi160/Kconfig:79, drivers/sensor/bosch/bmi160/Kconfig:79) of &lt;choice&gt; (defined at drivers/sensor/bosch/bmi160/Kconfig:74) is not contained in the choice
 
 warning: the choice symbol BMI160_ACCEL_RANGE_RUNTIME (defined at drivers/sensor/bosch/bmi160/Kconfig:79, drivers/sensor/bosch/bmi160/Kconfig:79) is defined with a prompt outside the choice
 
@@ -589,7 +568,7 @@ warning: the choice symbol BMI160_ACCEL_RANGE_8G (defined at drivers/sensor/bosc
 
 warning: the choice symbol BMI160_ACCEL_RANGE_16G (defined at drivers/sensor/bosch/bmi160/Kconfig:91, drivers/sensor/bosch/bmi160/Kconfig:91) is defined with a prompt outside the choice
 
-warning: the default selection BMI160_ACCEL_ODR_RUNTIME (defined at drivers/sensor/bosch/bmi160/Kconfig:100, drivers/sensor/bosch/bmi160/Kconfig:100) of <choice> (defined at drivers/sensor/bosch/bmi160/Kconfig:95) is not contained in the choice
+warning: the default selection BMI160_ACCEL_ODR_RUNTIME (defined at drivers/sensor/bosch/bmi160/Kconfig:100, drivers/sensor/bosch/bmi160/Kconfig:100) of &lt;choice&gt; (defined at drivers/sensor/bosch/bmi160/Kconfig:95) is not contained in the choice
 
 warning: the choice symbol BMI160_ACCEL_ODR_RUNTIME (defined at drivers/sensor/bosch/bmi160/Kconfig:100, drivers/sensor/bosch/bmi160/Kconfig:100) is defined with a prompt outside the choice
 
@@ -617,7 +596,7 @@ warning: the choice symbol BMI160_ACCEL_ODR_800 (defined at drivers/sensor/bosch
 
 warning: the choice symbol BMI160_ACCEL_ODR_1600 (defined at drivers/sensor/bosch/bmi160/Kconfig:140, drivers/sensor/bosch/bmi160/Kconfig:140) is defined with a prompt outside the choice
 
-warning: the default selection BMI160_GYRO_PMU_RUNTIME (defined at drivers/sensor/bosch/bmi160/Kconfig:148, drivers/sensor/bosch/bmi160/Kconfig:148) of <choice> (defined at drivers/sensor/bosch/bmi160/Kconfig:144) is not contained in the choice
+warning: the default selection BMI160_GYRO_PMU_RUNTIME (defined at drivers/sensor/bosch/bmi160/Kconfig:148, drivers/sensor/bosch/bmi160/Kconfig:148) of &lt;choice&gt; (defined at drivers/sensor/bosch/bmi160/Kconfig:144) is not contained in the choice
 
 warning: the choice symbol BMI160_GYRO_PMU_RUNTIME (defined at drivers/sensor/bosch/bmi160/Kconfig:148, drivers/sensor/bosch/bmi160/Kconfig:148) is defined with a prompt outside the choice
 
@@ -627,7 +606,7 @@ warning: the choice symbol BMI160_GYRO_PMU_NORMAL (defined at drivers/sensor/bos
 
 warning: the choice symbol BMI160_GYRO_PMU_FAST_STARTUP (defined at drivers/sensor/bosch/bmi160/Kconfig:157, drivers/sensor/bosch/bmi160/Kconfig:157) is defined with a prompt outside the choice
 
-warning: the default selection BMI160_GYRO_RANGE_RUNTIME (defined at drivers/sensor/bosch/bmi160/Kconfig:166, drivers/sensor/bosch/bmi160/Kconfig:166) of <choice> (defined at drivers/sensor/bosch/bmi160/Kconfig:161) is not contained in the choice
+warning: the default selection BMI160_GYRO_RANGE_RUNTIME (defined at drivers/sensor/bosch/bmi160/Kconfig:166, drivers/sensor/bosch/bmi160/Kconfig:166) of &lt;choice&gt; (defined at drivers/sensor/bosch/bmi160/Kconfig:161) is not contained in the choice
 
 warning: the choice symbol BMI160_GYRO_RANGE_RUNTIME (defined at drivers/sensor/bosch/bmi160/Kconfig:166, drivers/sensor/bosch/bmi160/Kconfig:166) is defined with a prompt outside the choice
 
@@ -641,7 +620,7 @@ warning: the choice symbol BMI160_GYRO_RANGE_250DPS (defined at drivers/sensor/b
 
 warning: the choice symbol BMI160_GYRO_RANGE_125DPS (defined at drivers/sensor/bosch/bmi160/Kconfig:181, drivers/sensor/bosch/bmi160/Kconfig:181) is defined with a prompt outside the choice
 
-warning: the default selection BMI160_GYRO_ODR_RUNTIME (defined at drivers/sensor/bosch/bmi160/Kconfig:190, drivers/sensor/bosch/bmi160/Kconfig:190) of <choice> (defined at drivers/sensor/bosch/bmi160/Kconfig:185) is not contained in the choice
+warning: the default selection BMI160_GYRO_ODR_RUNTIME (defined at drivers/sensor/bosch/bmi160/Kconfig:190, drivers/sensor/bosch/bmi160/Kconfig:190) of &lt;choice&gt; (defined at drivers/sensor/bosch/bmi160/Kconfig:185) is not contained in the choice
 
 warning: the choice symbol BMI160_GYRO_ODR_RUNTIME (defined at drivers/sensor/bosch/bmi160/Kconfig:190, drivers/sensor/bosch/bmi160/Kconfig:190) is defined with a prompt outside the choice
 
@@ -661,7 +640,7 @@ warning: the choice symbol BMI160_GYRO_ODR_1600 (defined at drivers/sensor/bosch
 
 warning: the choice symbol BMI160_GYRO_ODR_3200 (defined at drivers/sensor/bosch/bmi160/Kconfig:214, drivers/sensor/bosch/bmi160/Kconfig:214) is defined with a prompt outside the choice
 
-warning: the default selection BMM150_PRESET_REGULAR (defined at drivers/sensor/bosch/bmm150/Kconfig:25, drivers/sensor/bosch/bmm150/Kconfig:25) of <choice> (defined at drivers/sensor/bosch/bmm150/Kconfig:15) is not contained in the choice
+warning: the default selection BMM150_PRESET_REGULAR (defined at drivers/sensor/bosch/bmm150/Kconfig:25, drivers/sensor/bosch/bmm150/Kconfig:25) of &lt;choice&gt; (defined at drivers/sensor/bosch/bmm150/Kconfig:15) is not contained in the choice
 
 warning: the choice symbol BMM150_PRESET_LOW_POWER (defined at drivers/sensor/bosch/bmm150/Kconfig:22, drivers/sensor/bosch/bmm150/Kconfig:22) is defined with a prompt outside the choice
 
@@ -671,7 +650,7 @@ warning: the choice symbol BMM150_PRESET_ENHANCED_REGULAR (defined at drivers/se
 
 warning: the choice symbol BMM150_PRESET_HIGH_ACCURACY (defined at drivers/sensor/bosch/bmm150/Kconfig:31, drivers/sensor/bosch/bmm150/Kconfig:31) is defined with a prompt outside the choice
 
-warning: the default selection HMC5883L_TRIGGER_GLOBAL_THREAD (defined at drivers/sensor/honeywell/hmc5883l/Kconfig:23, drivers/sensor/honeywell/hmc5883l/Kconfig:23) of <choice> (defined at drivers/sensor/honeywell/hmc5883l/Kconfig:14) is not contained in the choice
+warning: the default selection HMC5883L_TRIGGER_GLOBAL_THREAD (defined at drivers/sensor/honeywell/hmc5883l/Kconfig:23, drivers/sensor/honeywell/hmc5883l/Kconfig:23) of &lt;choice&gt; (defined at drivers/sensor/honeywell/hmc5883l/Kconfig:14) is not contained in the choice
 
 warning: the choice symbol HMC5883L_TRIGGER_NONE (defined at drivers/sensor/honeywell/hmc5883l/Kconfig:20, drivers/sensor/honeywell/hmc5883l/Kconfig:20) is defined with a prompt outside the choice
 
@@ -679,7 +658,7 @@ warning: the choice symbol HMC5883L_TRIGGER_GLOBAL_THREAD (defined at drivers/se
 
 warning: the choice symbol HMC5883L_TRIGGER_OWN_THREAD (defined at drivers/sensor/honeywell/hmc5883l/Kconfig:29, drivers/sensor/honeywell/hmc5883l/Kconfig:29) is defined with a prompt outside the choice
 
-warning: the default selection MPR_PRESSURE_RANGE_0025 (defined at drivers/sensor/honeywell/mpr/Kconfig:27, drivers/sensor/honeywell/mpr/Kconfig:27) of <choice> (defined at drivers/sensor/honeywell/mpr/Kconfig:16) is not contained in the choice
+warning: the default selection MPR_PRESSURE_RANGE_0025 (defined at drivers/sensor/honeywell/mpr/Kconfig:27, drivers/sensor/honeywell/mpr/Kconfig:27) of &lt;choice&gt; (defined at drivers/sensor/honeywell/mpr/Kconfig:16) is not contained in the choice
 
 warning: the choice symbol MPR_PRESSURE_RANGE_0001 (defined at drivers/sensor/honeywell/mpr/Kconfig:19, drivers/sensor/honeywell/mpr/Kconfig:19) is defined with a prompt outside the choice
 
@@ -705,7 +684,7 @@ warning: the choice symbol MPR_PRESSURE_RANGE_0400 (defined at drivers/sensor/ho
 
 warning: the choice symbol MPR_PRESSURE_RANGE_0600 (defined at drivers/sensor/honeywell/mpr/Kconfig:41, drivers/sensor/honeywell/mpr/Kconfig:41) is defined with a prompt outside the choice
 
-warning: the default selection MPR_PRESSURE_UNIT_P (defined at drivers/sensor/honeywell/mpr/Kconfig:48, drivers/sensor/honeywell/mpr/Kconfig:48) of <choice> (defined at drivers/sensor/honeywell/mpr/Kconfig:45) is not contained in the choice
+warning: the default selection MPR_PRESSURE_UNIT_P (defined at drivers/sensor/honeywell/mpr/Kconfig:48, drivers/sensor/honeywell/mpr/Kconfig:48) of &lt;choice&gt; (defined at drivers/sensor/honeywell/mpr/Kconfig:45) is not contained in the choice
 
 warning: the choice symbol MPR_PRESSURE_UNIT_P (defined at drivers/sensor/honeywell/mpr/Kconfig:48, drivers/sensor/honeywell/mpr/Kconfig:48) is defined with a prompt outside the choice
 
@@ -715,7 +694,7 @@ warning: the choice symbol MPR_PRESSURE_UNIT_B (defined at drivers/sensor/honeyw
 
 warning: the choice symbol MPR_PRESSURE_UNIT_M (defined at drivers/sensor/honeywell/mpr/Kconfig:54, drivers/sensor/honeywell/mpr/Kconfig:54) is defined with a prompt outside the choice
 
-warning: the default selection MPR_TRANSFER_FUNCTION_A (defined at drivers/sensor/honeywell/mpr/Kconfig:61, drivers/sensor/honeywell/mpr/Kconfig:61) of <choice> (defined at drivers/sensor/honeywell/mpr/Kconfig:58) is not contained in the choice
+warning: the default selection MPR_TRANSFER_FUNCTION_A (defined at drivers/sensor/honeywell/mpr/Kconfig:61, drivers/sensor/honeywell/mpr/Kconfig:61) of &lt;choice&gt; (defined at drivers/sensor/honeywell/mpr/Kconfig:58) is not contained in the choice
 
 warning: the choice symbol MPR_TRANSFER_FUNCTION_A (defined at drivers/sensor/honeywell/mpr/Kconfig:61, drivers/sensor/honeywell/mpr/Kconfig:61) is defined with a prompt outside the choice
 
@@ -723,7 +702,7 @@ warning: the choice symbol MPR_TRANSFER_FUNCTION_B (defined at drivers/sensor/ho
 
 warning: the choice symbol MPR_TRANSFER_FUNCTION_C (defined at drivers/sensor/honeywell/mpr/Kconfig:65, drivers/sensor/honeywell/mpr/Kconfig:65) is defined with a prompt outside the choice
 
-warning: the default selection DPS310_TEMP_OSR_8X (defined at drivers/sensor/infineon/dps310/Kconfig:30, drivers/sensor/infineon/dps310/Kconfig:30) of <choice> (defined at drivers/sensor/infineon/dps310/Kconfig:18) is not contained in the choice
+warning: the default selection DPS310_TEMP_OSR_8X (defined at drivers/sensor/infineon/dps310/Kconfig:30, drivers/sensor/infineon/dps310/Kconfig:30) of &lt;choice&gt; (defined at drivers/sensor/infineon/dps310/Kconfig:18) is not contained in the choice
 
 warning: the choice symbol DPS310_TEMP_OSR_1X (defined at drivers/sensor/infineon/dps310/Kconfig:24, drivers/sensor/infineon/dps310/Kconfig:24) is defined with a prompt outside the choice
 
@@ -741,7 +720,7 @@ warning: the choice symbol DPS310_TEMP_OSR_64X (defined at drivers/sensor/infine
 
 warning: the choice symbol DPS310_TEMP_OSR_128X (defined at drivers/sensor/infineon/dps310/Kconfig:38, drivers/sensor/infineon/dps310/Kconfig:38) is defined with a prompt outside the choice
 
-warning: the default selection DPS310_PRESS_OSR_8X (defined at drivers/sensor/infineon/dps310/Kconfig:54, drivers/sensor/infineon/dps310/Kconfig:54) of <choice> (defined at drivers/sensor/infineon/dps310/Kconfig:42) is not contained in the choice
+warning: the default selection DPS310_PRESS_OSR_8X (defined at drivers/sensor/infineon/dps310/Kconfig:54, drivers/sensor/infineon/dps310/Kconfig:54) of &lt;choice&gt; (defined at drivers/sensor/infineon/dps310/Kconfig:42) is not contained in the choice
 
 warning: the choice symbol DPS310_PRESS_OSR_1X (defined at drivers/sensor/infineon/dps310/Kconfig:48, drivers/sensor/infineon/dps310/Kconfig:48) is defined with a prompt outside the choice
 
@@ -759,7 +738,7 @@ warning: the choice symbol DPS310_PRESS_OSR_64X (defined at drivers/sensor/infin
 
 warning: the choice symbol DPS310_PRESS_OSR_128X (defined at drivers/sensor/infineon/dps310/Kconfig:62, drivers/sensor/infineon/dps310/Kconfig:62) is defined with a prompt outside the choice
 
-warning: the default selection JC42_TRIGGER_NONE (defined at drivers/sensor/jedec/jc42/Kconfig:21, drivers/sensor/jedec/jc42/Kconfig:21) of <choice> (defined at drivers/sensor/jedec/jc42/Kconfig:17) is not contained in the choice
+warning: the default selection JC42_TRIGGER_NONE (defined at drivers/sensor/jedec/jc42/Kconfig:21, drivers/sensor/jedec/jc42/Kconfig:21) of &lt;choice&gt; (defined at drivers/sensor/jedec/jc42/Kconfig:17) is not contained in the choice
 
 warning: the choice symbol JC42_TRIGGER_NONE (defined at drivers/sensor/jedec/jc42/Kconfig:21, drivers/sensor/jedec/jc42/Kconfig:21) is defined with a prompt outside the choice
 
@@ -767,7 +746,7 @@ warning: the choice symbol JC42_TRIGGER_GLOBAL_THREAD (defined at drivers/sensor
 
 warning: the choice symbol JC42_TRIGGER_OWN_THREAD (defined at drivers/sensor/jedec/jc42/Kconfig:30, drivers/sensor/jedec/jc42/Kconfig:30) is defined with a prompt outside the choice
 
-warning: the default selection MS5607_PRES_OVER_2048X (defined at drivers/sensor/meas/ms5607/Kconfig:30, drivers/sensor/meas/ms5607/Kconfig:30) of <choice> (defined at drivers/sensor/meas/ms5607/Kconfig:17) is not contained in the choice
+warning: the default selection MS5607_PRES_OVER_2048X (defined at drivers/sensor/meas/ms5607/Kconfig:30, drivers/sensor/meas/ms5607/Kconfig:30) of &lt;choice&gt; (defined at drivers/sensor/meas/ms5607/Kconfig:17) is not contained in the choice
 
 warning: the choice symbol MS5607_PRES_OVER_256X (defined at drivers/sensor/meas/ms5607/Kconfig:21, drivers/sensor/meas/ms5607/Kconfig:21) is defined with a prompt outside the choice
 
@@ -779,7 +758,7 @@ warning: the choice symbol MS5607_PRES_OVER_2048X (defined at drivers/sensor/mea
 
 warning: the choice symbol MS5607_PRES_OVER_4096X (defined at drivers/sensor/meas/ms5607/Kconfig:33, drivers/sensor/meas/ms5607/Kconfig:33) is defined with a prompt outside the choice
 
-warning: the default selection MS5607_TEMP_OVER_2048X (defined at drivers/sensor/meas/ms5607/Kconfig:52, drivers/sensor/meas/ms5607/Kconfig:52) of <choice> (defined at drivers/sensor/meas/ms5607/Kconfig:39) is not contained in the choice
+warning: the default selection MS5607_TEMP_OVER_2048X (defined at drivers/sensor/meas/ms5607/Kconfig:52, drivers/sensor/meas/ms5607/Kconfig:52) of &lt;choice&gt; (defined at drivers/sensor/meas/ms5607/Kconfig:39) is not contained in the choice
 
 warning: the choice symbol MS5607_TEMP_OVER_256X (defined at drivers/sensor/meas/ms5607/Kconfig:43, drivers/sensor/meas/ms5607/Kconfig:43) is defined with a prompt outside the choice
 
@@ -791,7 +770,7 @@ warning: the choice symbol MS5607_TEMP_OVER_2048X (defined at drivers/sensor/mea
 
 warning: the choice symbol MS5607_TEMP_OVER_4096X (defined at drivers/sensor/meas/ms5607/Kconfig:55, drivers/sensor/meas/ms5607/Kconfig:55) is defined with a prompt outside the choice
 
-warning: the default selection TACH_XEC_5_TACH_EDGES (defined at drivers/sensor/microchip/mchp_tach_xec/Kconfig:28, drivers/sensor/microchip/mchp_tach_xec/Kconfig:28) of <choice> (defined at drivers/sensor/microchip/mchp_tach_xec/Kconfig:17) is not contained in the choice
+warning: the default selection TACH_XEC_5_TACH_EDGES (defined at drivers/sensor/microchip/mchp_tach_xec/Kconfig:28, drivers/sensor/microchip/mchp_tach_xec/Kconfig:28) of &lt;choice&gt; (defined at drivers/sensor/microchip/mchp_tach_xec/Kconfig:17) is not contained in the choice
 
 warning: the choice symbol TACH_XEC_9_TACH_EDGES (defined at drivers/sensor/microchip/mchp_tach_xec/Kconfig:25, drivers/sensor/microchip/mchp_tach_xec/Kconfig:25) is defined with a prompt outside the choice
 
@@ -801,7 +780,7 @@ warning: the choice symbol TACH_XEC_3_TACH_EDGES (defined at drivers/sensor/micr
 
 warning: the choice symbol TACH_XEC_2_TACH_EDGES (defined at drivers/sensor/microchip/mchp_tach_xec/Kconfig:34, drivers/sensor/microchip/mchp_tach_xec/Kconfig:34) is defined with a prompt outside the choice
 
-warning: the default selection TCN75A_TRIGGER_NONE (defined at drivers/sensor/microchip/tcn75a/Kconfig:18, drivers/sensor/microchip/tcn75a/Kconfig:18) of <choice> (defined at drivers/sensor/microchip/tcn75a/Kconfig:14) is not contained in the choice
+warning: the default selection TCN75A_TRIGGER_NONE (defined at drivers/sensor/microchip/tcn75a/Kconfig:18, drivers/sensor/microchip/tcn75a/Kconfig:18) of &lt;choice&gt; (defined at drivers/sensor/microchip/tcn75a/Kconfig:14) is not contained in the choice
 
 warning: the choice symbol TCN75A_TRIGGER_NONE (defined at drivers/sensor/microchip/tcn75a/Kconfig:18, drivers/sensor/microchip/tcn75a/Kconfig:18) is defined with a prompt outside the choice
 
@@ -809,7 +788,7 @@ warning: the choice symbol TCN75A_TRIGGER_OWN_THREAD (defined at drivers/sensor/
 
 warning: the choice symbol TCN75A_TRIGGER_GLOBAL_THREAD (defined at drivers/sensor/microchip/tcn75a/Kconfig:27, drivers/sensor/microchip/tcn75a/Kconfig:27) is defined with a prompt outside the choice
 
-warning: the default selection FXAS21002_TRIGGER_NONE (defined at drivers/sensor/nxp/fxas21002/Kconfig:56, drivers/sensor/nxp/fxas21002/Kconfig:56) of <choice> (defined at drivers/sensor/nxp/fxas21002/Kconfig:52) is not contained in the choice
+warning: the default selection FXAS21002_TRIGGER_NONE (defined at drivers/sensor/nxp/fxas21002/Kconfig:56, drivers/sensor/nxp/fxas21002/Kconfig:56) of &lt;choice&gt; (defined at drivers/sensor/nxp/fxas21002/Kconfig:52) is not contained in the choice
 
 warning: the choice symbol FXAS21002_TRIGGER_NONE (defined at drivers/sensor/nxp/fxas21002/Kconfig:56, drivers/sensor/nxp/fxas21002/Kconfig:56) is defined with a prompt outside the choice
 
@@ -817,7 +796,7 @@ warning: the choice symbol FXAS21002_TRIGGER_GLOBAL_THREAD (defined at drivers/s
 
 warning: the choice symbol FXAS21002_TRIGGER_OWN_THREAD (defined at drivers/sensor/nxp/fxas21002/Kconfig:66, drivers/sensor/nxp/fxas21002/Kconfig:66) is defined with a prompt outside the choice
 
-warning: the default selection FXLS8974_TRIGGER_NONE (defined at drivers/sensor/nxp/fxls8974/Kconfig:21, drivers/sensor/nxp/fxls8974/Kconfig:21) of <choice> (defined at drivers/sensor/nxp/fxls8974/Kconfig:17) is not contained in the choice
+warning: the default selection FXLS8974_TRIGGER_NONE (defined at drivers/sensor/nxp/fxls8974/Kconfig:21, drivers/sensor/nxp/fxls8974/Kconfig:21) of &lt;choice&gt; (defined at drivers/sensor/nxp/fxls8974/Kconfig:17) is not contained in the choice
 
 warning: the choice symbol FXLS8974_TRIGGER_NONE (defined at drivers/sensor/nxp/fxls8974/Kconfig:21, drivers/sensor/nxp/fxls8974/Kconfig:21) is defined with a prompt outside the choice
 
@@ -825,7 +804,7 @@ warning: the choice symbol FXLS8974_TRIGGER_GLOBAL_THREAD (defined at drivers/se
 
 warning: the choice symbol FXLS8974_TRIGGER_OWN_THREAD (defined at drivers/sensor/nxp/fxls8974/Kconfig:31, drivers/sensor/nxp/fxls8974/Kconfig:31) is defined with a prompt outside the choice
 
-warning: the default selection FXOS8700_TRIGGER_NONE (defined at drivers/sensor/nxp/fxos8700/Kconfig:47, drivers/sensor/nxp/fxos8700/Kconfig:47) of <choice> (defined at drivers/sensor/nxp/fxos8700/Kconfig:43) is not contained in the choice
+warning: the default selection FXOS8700_TRIGGER_NONE (defined at drivers/sensor/nxp/fxos8700/Kconfig:47, drivers/sensor/nxp/fxos8700/Kconfig:47) of &lt;choice&gt; (defined at drivers/sensor/nxp/fxos8700/Kconfig:43) is not contained in the choice
 
 warning: the choice symbol FXOS8700_TRIGGER_NONE (defined at drivers/sensor/nxp/fxos8700/Kconfig:47, drivers/sensor/nxp/fxos8700/Kconfig:47) is defined with a prompt outside the choice
 
@@ -833,7 +812,7 @@ warning: the choice symbol FXOS8700_TRIGGER_GLOBAL_THREAD (defined at drivers/se
 
 warning: the choice symbol FXOS8700_TRIGGER_OWN_THREAD (defined at drivers/sensor/nxp/fxos8700/Kconfig:57, drivers/sensor/nxp/fxos8700/Kconfig:57) is defined with a prompt outside the choice
 
-warning: the default selection QMI8658A_TRIGGER_NONE (defined at drivers/sensor/qst/qmi8658a/Kconfig:22, drivers/sensor/qst/qmi8658a/Kconfig:22) of <choice> (defined at drivers/sensor/qst/qmi8658a/Kconfig:16) is not contained in the choice
+warning: the default selection QMI8658A_TRIGGER_NONE (defined at drivers/sensor/qst/qmi8658a/Kconfig:22, drivers/sensor/qst/qmi8658a/Kconfig:22) of &lt;choice&gt; (defined at drivers/sensor/qst/qmi8658a/Kconfig:16) is not contained in the choice
 
 warning: the choice symbol QMI8658A_TRIGGER_NONE (defined at drivers/sensor/qst/qmi8658a/Kconfig:22, drivers/sensor/qst/qmi8658a/Kconfig:22) is defined with a prompt outside the choice
 
@@ -841,7 +820,7 @@ warning: the choice symbol QMI8658A_TRIGGER_GLOBAL_THREAD (defined at drivers/se
 
 warning: the choice symbol QMI8658A_TRIGGER_OWN_THREAD (defined at drivers/sensor/qst/qmi8658a/Kconfig:31, drivers/sensor/qst/qmi8658a/Kconfig:31) is defined with a prompt outside the choice
 
-warning: the default selection ISL29035_LUX_RANGE_1K (defined at drivers/sensor/renesas/isl29035/Kconfig:29, drivers/sensor/renesas/isl29035/Kconfig:29) of <choice> (defined at drivers/sensor/renesas/isl29035/Kconfig:22) is not contained in the choice
+warning: the default selection ISL29035_LUX_RANGE_1K (defined at drivers/sensor/renesas/isl29035/Kconfig:29, drivers/sensor/renesas/isl29035/Kconfig:29) of &lt;choice&gt; (defined at drivers/sensor/renesas/isl29035/Kconfig:22) is not contained in the choice
 
 warning: the choice symbol ISL29035_LUX_RANGE_1K (defined at drivers/sensor/renesas/isl29035/Kconfig:29, drivers/sensor/renesas/isl29035/Kconfig:29) is defined with a prompt outside the choice
 
@@ -851,7 +830,7 @@ warning: the choice symbol ISL29035_LUX_RANGE_16K (defined at drivers/sensor/ren
 
 warning: the choice symbol ISL29035_LUX_RANGE_64K (defined at drivers/sensor/renesas/isl29035/Kconfig:38, drivers/sensor/renesas/isl29035/Kconfig:38) is defined with a prompt outside the choice
 
-warning: the default selection ISL29035_INTEGRATION_TIME_105K (defined at drivers/sensor/renesas/isl29035/Kconfig:59, drivers/sensor/renesas/isl29035/Kconfig:59) of <choice> (defined at drivers/sensor/renesas/isl29035/Kconfig:43) is not contained in the choice
+warning: the default selection ISL29035_INTEGRATION_TIME_105K (defined at drivers/sensor/renesas/isl29035/Kconfig:59, drivers/sensor/renesas/isl29035/Kconfig:59) of &lt;choice&gt; (defined at drivers/sensor/renesas/isl29035/Kconfig:43) is not contained in the choice
 
 warning: the choice symbol ISL29035_INTEGRATION_TIME_26 (defined at drivers/sensor/renesas/isl29035/Kconfig:50, drivers/sensor/renesas/isl29035/Kconfig:50) is defined with a prompt outside the choice
 
@@ -861,13 +840,13 @@ warning: the choice symbol ISL29035_INTEGRATION_TIME_6500 (defined at drivers/se
 
 warning: the choice symbol ISL29035_INTEGRATION_TIME_105K (defined at drivers/sensor/renesas/isl29035/Kconfig:59, drivers/sensor/renesas/isl29035/Kconfig:59) is defined with a prompt outside the choice
 
-warning: the default selection ISL29035_MODE_ALS (defined at drivers/sensor/renesas/isl29035/Kconfig:71, drivers/sensor/renesas/isl29035/Kconfig:71) of <choice> (defined at drivers/sensor/renesas/isl29035/Kconfig:64) is not contained in the choice
+warning: the default selection ISL29035_MODE_ALS (defined at drivers/sensor/renesas/isl29035/Kconfig:71, drivers/sensor/renesas/isl29035/Kconfig:71) of &lt;choice&gt; (defined at drivers/sensor/renesas/isl29035/Kconfig:64) is not contained in the choice
 
 warning: the choice symbol ISL29035_MODE_ALS (defined at drivers/sensor/renesas/isl29035/Kconfig:71, drivers/sensor/renesas/isl29035/Kconfig:71) is defined with a prompt outside the choice
 
 warning: the choice symbol ISL29035_MODE_IR (defined at drivers/sensor/renesas/isl29035/Kconfig:76, drivers/sensor/renesas/isl29035/Kconfig:76) is defined with a prompt outside the choice
 
-warning: the default selection ISL29035_TRIGGER_NONE (defined at drivers/sensor/renesas/isl29035/Kconfig:91, drivers/sensor/renesas/isl29035/Kconfig:91) of <choice> (defined at drivers/sensor/renesas/isl29035/Kconfig:83) is not contained in the choice
+warning: the default selection ISL29035_TRIGGER_NONE (defined at drivers/sensor/renesas/isl29035/Kconfig:91, drivers/sensor/renesas/isl29035/Kconfig:91) of &lt;choice&gt; (defined at drivers/sensor/renesas/isl29035/Kconfig:83) is not contained in the choice
 
 warning: the choice symbol ISL29035_TRIGGER_NONE (defined at drivers/sensor/renesas/isl29035/Kconfig:91, drivers/sensor/renesas/isl29035/Kconfig:91) is defined with a prompt outside the choice
 
@@ -875,7 +854,7 @@ warning: the choice symbol ISL29035_TRIGGER_GLOBAL_THREAD (defined at drivers/se
 
 warning: the choice symbol ISL29035_TRIGGER_OWN_THREAD (defined at drivers/sensor/renesas/isl29035/Kconfig:100, drivers/sensor/renesas/isl29035/Kconfig:100) is defined with a prompt outside the choice
 
-warning: the default selection ISL29035_INT_PERSIST_1 (defined at drivers/sensor/renesas/isl29035/Kconfig:134, drivers/sensor/renesas/isl29035/Kconfig:134) of <choice> (defined at drivers/sensor/renesas/isl29035/Kconfig:125) is not contained in the choice
+warning: the default selection ISL29035_INT_PERSIST_1 (defined at drivers/sensor/renesas/isl29035/Kconfig:134, drivers/sensor/renesas/isl29035/Kconfig:134) of &lt;choice&gt; (defined at drivers/sensor/renesas/isl29035/Kconfig:125) is not contained in the choice
 
 warning: the choice symbol ISL29035_INT_PERSIST_1 (defined at drivers/sensor/renesas/isl29035/Kconfig:134, drivers/sensor/renesas/isl29035/Kconfig:134) is defined with a prompt outside the choice
 
@@ -885,7 +864,7 @@ warning: the choice symbol ISL29035_INT_PERSIST_8 (defined at drivers/sensor/ren
 
 warning: the choice symbol ISL29035_INT_PERSIST_16 (defined at drivers/sensor/renesas/isl29035/Kconfig:143, drivers/sensor/renesas/isl29035/Kconfig:143) is defined with a prompt outside the choice
 
-warning: the default selection LSM9DS0_GYRO_FULLSCALE_245 (defined at drivers/sensor/st/lsm9ds0_gyro/Kconfig:24, drivers/sensor/st/lsm9ds0_gyro/Kconfig:24) of <choice> (defined at drivers/sensor/st/lsm9ds0_gyro/Kconfig:18) is not contained in the choice
+warning: the default selection LSM9DS0_GYRO_FULLSCALE_245 (defined at drivers/sensor/st/lsm9ds0_gyro/Kconfig:24, drivers/sensor/st/lsm9ds0_gyro/Kconfig:24) of &lt;choice&gt; (defined at drivers/sensor/st/lsm9ds0_gyro/Kconfig:18) is not contained in the choice
 
 warning: the choice symbol LSM9DS0_GYRO_FULLSCALE_245 (defined at drivers/sensor/st/lsm9ds0_gyro/Kconfig:24, drivers/sensor/st/lsm9ds0_gyro/Kconfig:24) is defined with a prompt outside the choice
 
@@ -893,7 +872,7 @@ warning: the choice symbol LSM9DS0_GYRO_FULLSCALE_500 (defined at drivers/sensor
 
 warning: the choice symbol LSM9DS0_GYRO_FULLSCALE_2000 (defined at drivers/sensor/st/lsm9ds0_gyro/Kconfig:30, drivers/sensor/st/lsm9ds0_gyro/Kconfig:30) is defined with a prompt outside the choice
 
-warning: the default selection LSM9DS0_GYRO_SAMPLING_RATE_95 (defined at drivers/sensor/st/lsm9ds0_gyro/Kconfig:46, drivers/sensor/st/lsm9ds0_gyro/Kconfig:46) of <choice> (defined at drivers/sensor/st/lsm9ds0_gyro/Kconfig:40) is not contained in the choice
+warning: the default selection LSM9DS0_GYRO_SAMPLING_RATE_95 (defined at drivers/sensor/st/lsm9ds0_gyro/Kconfig:46, drivers/sensor/st/lsm9ds0_gyro/Kconfig:46) of &lt;choice&gt; (defined at drivers/sensor/st/lsm9ds0_gyro/Kconfig:40) is not contained in the choice
 
 warning: the choice symbol LSM9DS0_GYRO_SAMPLING_RATE_95 (defined at drivers/sensor/st/lsm9ds0_gyro/Kconfig:46, drivers/sensor/st/lsm9ds0_gyro/Kconfig:46) is defined with a prompt outside the choice
 
@@ -903,7 +882,7 @@ warning: the choice symbol LSM9DS0_GYRO_SAMPLING_RATE_380 (defined at drivers/se
 
 warning: the choice symbol LSM9DS0_GYRO_SAMPLING_RATE_760 (defined at drivers/sensor/st/lsm9ds0_gyro/Kconfig:55, drivers/sensor/st/lsm9ds0_gyro/Kconfig:55) is defined with a prompt outside the choice
 
-warning: the default selection LSM9DS0_MFD_ACCEL_SAMPLING_RATE_25 (defined at drivers/sensor/st/lsm9ds0_mfd/Kconfig:57, drivers/sensor/st/lsm9ds0_mfd/Kconfig:57) of <choice> (defined at drivers/sensor/st/lsm9ds0_mfd/Kconfig:38) is not contained in the choice
+warning: the default selection LSM9DS0_MFD_ACCEL_SAMPLING_RATE_25 (defined at drivers/sensor/st/lsm9ds0_mfd/Kconfig:57, drivers/sensor/st/lsm9ds0_mfd/Kconfig:57) of &lt;choice&gt; (defined at drivers/sensor/st/lsm9ds0_mfd/Kconfig:38) is not contained in the choice
 
 warning: the choice symbol LSM9DS0_MFD_ACCEL_SAMPLING_RATE_0 (defined at drivers/sensor/st/lsm9ds0_mfd/Kconfig:45, drivers/sensor/st/lsm9ds0_mfd/Kconfig:45) is defined with a prompt outside the choice
 
@@ -927,7 +906,7 @@ warning: the choice symbol LSM9DS0_MFD_ACCEL_SAMPLING_RATE_800 (defined at drive
 
 warning: the choice symbol LSM9DS0_MFD_ACCEL_SAMPLING_RATE_1600 (defined at drivers/sensor/st/lsm9ds0_mfd/Kconfig:75, drivers/sensor/st/lsm9ds0_mfd/Kconfig:75) is defined with a prompt outside the choice
 
-warning: the default selection LSM9DS0_MFD_ACCEL_FULL_SCALE_2 (defined at drivers/sensor/st/lsm9ds0_mfd/Kconfig:94, drivers/sensor/st/lsm9ds0_mfd/Kconfig:94) of <choice> (defined at drivers/sensor/st/lsm9ds0_mfd/Kconfig:87) is not contained in the choice
+warning: the default selection LSM9DS0_MFD_ACCEL_FULL_SCALE_2 (defined at drivers/sensor/st/lsm9ds0_mfd/Kconfig:94, drivers/sensor/st/lsm9ds0_mfd/Kconfig:94) of &lt;choice&gt; (defined at drivers/sensor/st/lsm9ds0_mfd/Kconfig:87) is not contained in the choice
 
 warning: the choice symbol LSM9DS0_MFD_ACCEL_FULL_SCALE_2 (defined at drivers/sensor/st/lsm9ds0_mfd/Kconfig:94, drivers/sensor/st/lsm9ds0_mfd/Kconfig:94) is defined with a prompt outside the choice
 
@@ -939,7 +918,7 @@ warning: the choice symbol LSM9DS0_MFD_ACCEL_FULL_SCALE_8 (defined at drivers/se
 
 warning: the choice symbol LSM9DS0_MFD_ACCEL_FULL_SCALE_16 (defined at drivers/sensor/st/lsm9ds0_mfd/Kconfig:106, drivers/sensor/st/lsm9ds0_mfd/Kconfig:106) is defined with a prompt outside the choice
 
-warning: the default selection LSM9DS0_MFD_MAGN_SAMPLING_RATE_25 (defined at drivers/sensor/st/lsm9ds0_mfd/Kconfig:149, drivers/sensor/st/lsm9ds0_mfd/Kconfig:149) of <choice> (defined at drivers/sensor/st/lsm9ds0_mfd/Kconfig:133) is not contained in the choice
+warning: the default selection LSM9DS0_MFD_MAGN_SAMPLING_RATE_25 (defined at drivers/sensor/st/lsm9ds0_mfd/Kconfig:149, drivers/sensor/st/lsm9ds0_mfd/Kconfig:149) of &lt;choice&gt; (defined at drivers/sensor/st/lsm9ds0_mfd/Kconfig:133) is not contained in the choice
 
 warning: the choice symbol LSM9DS0_MFD_MAGN_SAMPLING_RATE_3_125 (defined at drivers/sensor/st/lsm9ds0_mfd/Kconfig:140, drivers/sensor/st/lsm9ds0_mfd/Kconfig:140) is defined with a prompt outside the choice
 
@@ -953,7 +932,7 @@ warning: the choice symbol LSM9DS0_MFD_MAGN_SAMPLING_RATE_50 (defined at drivers
 
 warning: the choice symbol LSM9DS0_MFD_MAGN_SAMPLING_RATE_100 (defined at drivers/sensor/st/lsm9ds0_mfd/Kconfig:155, drivers/sensor/st/lsm9ds0_mfd/Kconfig:155) is defined with a prompt outside the choice
 
-warning: the default selection LSM9DS0_MFD_MAGN_FULL_SCALE_2 (defined at drivers/sensor/st/lsm9ds0_mfd/Kconfig:174, drivers/sensor/st/lsm9ds0_mfd/Kconfig:174) of <choice> (defined at drivers/sensor/st/lsm9ds0_mfd/Kconfig:167) is not contained in the choice
+warning: the default selection LSM9DS0_MFD_MAGN_FULL_SCALE_2 (defined at drivers/sensor/st/lsm9ds0_mfd/Kconfig:174, drivers/sensor/st/lsm9ds0_mfd/Kconfig:174) of &lt;choice&gt; (defined at drivers/sensor/st/lsm9ds0_mfd/Kconfig:167) is not contained in the choice
 
 warning: the choice symbol LSM9DS0_MFD_MAGN_FULL_SCALE_2 (defined at drivers/sensor/st/lsm9ds0_mfd/Kconfig:174, drivers/sensor/st/lsm9ds0_mfd/Kconfig:174) is defined with a prompt outside the choice
 
@@ -963,9 +942,9 @@ warning: the choice symbol LSM9DS0_MFD_MAGN_FULL_SCALE_8 (defined at drivers/sen
 
 warning: the choice symbol LSM9DS0_MFD_MAGN_FULL_SCALE_12 (defined at drivers/sensor/st/lsm9ds0_mfd/Kconfig:183, drivers/sensor/st/lsm9ds0_mfd/Kconfig:183) is defined with a prompt outside the choice
 
-warning: the default selection ICM4268X_TRIGGER_NONE (defined at drivers/sensor/tdk/icm4268x/Kconfig:42, drivers/sensor/tdk/icm4268x/Kconfig:42) of <choice> (defined at drivers/sensor/tdk/icm4268x/Kconfig:35) is not contained in the choice
+warning: the default selection ICM4268X_TRIGGER_NONE (defined at drivers/sensor/tdk/icm4268x/Kconfig:42, drivers/sensor/tdk/icm4268x/Kconfig:42) of &lt;choice&gt; (defined at drivers/sensor/tdk/icm4268x/Kconfig:35) is not contained in the choice
 
-warning: the default selection ICM4268X_TRIGGER_GLOBAL_THREAD (defined at drivers/sensor/tdk/icm4268x/Kconfig:45, drivers/sensor/tdk/icm4268x/Kconfig:45) of <choice> (defined at drivers/sensor/tdk/icm4268x/Kconfig:35) is not contained in the choice
+warning: the default selection ICM4268X_TRIGGER_GLOBAL_THREAD (defined at drivers/sensor/tdk/icm4268x/Kconfig:45, drivers/sensor/tdk/icm4268x/Kconfig:45) of &lt;choice&gt; (defined at drivers/sensor/tdk/icm4268x/Kconfig:35) is not contained in the choice
 
 warning: the choice symbol ICM4268X_TRIGGER_NONE (defined at drivers/sensor/tdk/icm4268x/Kconfig:42, drivers/sensor/tdk/icm4268x/Kconfig:42) is defined with a prompt outside the choice
 
@@ -973,7 +952,7 @@ warning: the choice symbol ICM4268X_TRIGGER_GLOBAL_THREAD (defined at drivers/se
 
 warning: the choice symbol ICM4268X_TRIGGER_OWN_THREAD (defined at drivers/sensor/tdk/icm4268x/Kconfig:51, drivers/sensor/tdk/icm4268x/Kconfig:51) is defined with a prompt outside the choice
 
-warning: the default selection ICM45686_TRIGGER_GLOBAL_THREAD (defined at drivers/sensor/tdk/icm45686/Kconfig:63, drivers/sensor/tdk/icm45686/Kconfig:63) of <choice> (defined at drivers/sensor/tdk/icm45686/Kconfig:54) is not contained in the choice
+warning: the default selection ICM45686_TRIGGER_GLOBAL_THREAD (defined at drivers/sensor/tdk/icm45686/Kconfig:63, drivers/sensor/tdk/icm45686/Kconfig:63) of &lt;choice&gt; (defined at drivers/sensor/tdk/icm45686/Kconfig:54) is not contained in the choice
 
 warning: the choice symbol ICM45686_TRIGGER_NONE (defined at drivers/sensor/tdk/icm45686/Kconfig:60, drivers/sensor/tdk/icm45686/Kconfig:60) is defined with a prompt outside the choice
 
@@ -981,7 +960,7 @@ warning: the choice symbol ICM45686_TRIGGER_GLOBAL_THREAD (defined at drivers/se
 
 warning: the choice symbol ICM45686_TRIGGER_OWN_THREAD (defined at drivers/sensor/tdk/icm45686/Kconfig:75, drivers/sensor/tdk/icm45686/Kconfig:75) is defined with a prompt outside the choice
 
-warning: the default selection MPU6050_TRIGGER_GLOBAL_THREAD (defined at drivers/sensor/tdk/mpu6050/Kconfig:25, drivers/sensor/tdk/mpu6050/Kconfig:25) of <choice> (defined at drivers/sensor/tdk/mpu6050/Kconfig:16) is not contained in the choice
+warning: the default selection MPU6050_TRIGGER_GLOBAL_THREAD (defined at drivers/sensor/tdk/mpu6050/Kconfig:25, drivers/sensor/tdk/mpu6050/Kconfig:25) of &lt;choice&gt; (defined at drivers/sensor/tdk/mpu6050/Kconfig:16) is not contained in the choice
 
 warning: the choice symbol MPU6050_TRIGGER_NONE (defined at drivers/sensor/tdk/mpu6050/Kconfig:22, drivers/sensor/tdk/mpu6050/Kconfig:22) is defined with a prompt outside the choice
 
@@ -989,7 +968,7 @@ warning: the choice symbol MPU6050_TRIGGER_GLOBAL_THREAD (defined at drivers/sen
 
 warning: the choice symbol MPU6050_TRIGGER_OWN_THREAD (defined at drivers/sensor/tdk/mpu6050/Kconfig:31, drivers/sensor/tdk/mpu6050/Kconfig:31) is defined with a prompt outside the choice
 
-warning: the default selection MPU9250_TRIGGER_GLOBAL_THREAD (defined at drivers/sensor/tdk/mpu9250/Kconfig:25, drivers/sensor/tdk/mpu9250/Kconfig:25) of <choice> (defined at drivers/sensor/tdk/mpu9250/Kconfig:16) is not contained in the choice
+warning: the default selection MPU9250_TRIGGER_GLOBAL_THREAD (defined at drivers/sensor/tdk/mpu9250/Kconfig:25, drivers/sensor/tdk/mpu9250/Kconfig:25) of &lt;choice&gt; (defined at drivers/sensor/tdk/mpu9250/Kconfig:16) is not contained in the choice
 
 warning: the choice symbol MPU9250_TRIGGER_NONE (defined at drivers/sensor/tdk/mpu9250/Kconfig:22, drivers/sensor/tdk/mpu9250/Kconfig:22) is defined with a prompt outside the choice
 
@@ -997,7 +976,7 @@ warning: the choice symbol MPU9250_TRIGGER_GLOBAL_THREAD (defined at drivers/sen
 
 warning: the choice symbol MPU9250_TRIGGER_OWN_THREAD (defined at drivers/sensor/tdk/mpu9250/Kconfig:31, drivers/sensor/tdk/mpu9250/Kconfig:31) is defined with a prompt outside the choice
 
-warning: the default selection FDC2X1X_TRIGGER_NONE (defined at drivers/sensor/ti/fdc2x1x/Kconfig:23, drivers/sensor/ti/fdc2x1x/Kconfig:23) of <choice> (defined at drivers/sensor/ti/fdc2x1x/Kconfig:17) is not contained in the choice
+warning: the default selection FDC2X1X_TRIGGER_NONE (defined at drivers/sensor/ti/fdc2x1x/Kconfig:23, drivers/sensor/ti/fdc2x1x/Kconfig:23) of &lt;choice&gt; (defined at drivers/sensor/ti/fdc2x1x/Kconfig:17) is not contained in the choice
 
 warning: the choice symbol FDC2X1X_TRIGGER_NONE (defined at drivers/sensor/ti/fdc2x1x/Kconfig:23, drivers/sensor/ti/fdc2x1x/Kconfig:23) is defined with a prompt outside the choice
 
@@ -1005,7 +984,7 @@ warning: the choice symbol FDC2X1X_TRIGGER_GLOBAL_THREAD (defined at drivers/sen
 
 warning: the choice symbol FDC2X1X_TRIGGER_OWN_THREAD (defined at drivers/sensor/ti/fdc2x1x/Kconfig:32, drivers/sensor/ti/fdc2x1x/Kconfig:32) is defined with a prompt outside the choice
 
-warning: the default selection TMP007_TRIGGER_NONE (defined at drivers/sensor/ti/tmp007/Kconfig:22, drivers/sensor/ti/tmp007/Kconfig:22) of <choice> (defined at drivers/sensor/ti/tmp007/Kconfig:16) is not contained in the choice
+warning: the default selection TMP007_TRIGGER_NONE (defined at drivers/sensor/ti/tmp007/Kconfig:22, drivers/sensor/ti/tmp007/Kconfig:22) of &lt;choice&gt; (defined at drivers/sensor/ti/tmp007/Kconfig:16) is not contained in the choice
 
 warning: the choice symbol TMP007_TRIGGER_NONE (defined at drivers/sensor/ti/tmp007/Kconfig:22, drivers/sensor/ti/tmp007/Kconfig:22) is defined with a prompt outside the choice
 
@@ -1013,7 +992,7 @@ warning: the choice symbol TMP007_TRIGGER_GLOBAL_THREAD (defined at drivers/sens
 
 warning: the choice symbol TMP007_TRIGGER_OWN_THREAD (defined at drivers/sensor/ti/tmp007/Kconfig:31, drivers/sensor/ti/tmp007/Kconfig:31) is defined with a prompt outside the choice
 
-warning: the default selection AMG88XX_TRIGGER_NONE (defined at drivers/sensor/amg88xx/Kconfig:22, drivers/sensor/amg88xx/Kconfig:22) of <choice> (defined at drivers/sensor/amg88xx/Kconfig:16) is not contained in the choice
+warning: the default selection AMG88XX_TRIGGER_NONE (defined at drivers/sensor/amg88xx/Kconfig:22, drivers/sensor/amg88xx/Kconfig:22) of &lt;choice&gt; (defined at drivers/sensor/amg88xx/Kconfig:16) is not contained in the choice
 
 warning: the choice symbol AMG88XX_TRIGGER_NONE (defined at drivers/sensor/amg88xx/Kconfig:22, drivers/sensor/amg88xx/Kconfig:22) is defined with a prompt outside the choice
 
@@ -1021,13 +1000,13 @@ warning: the choice symbol AMG88XX_TRIGGER_GLOBAL_THREAD (defined at drivers/sen
 
 warning: the choice symbol AMG88XX_TRIGGER_OWN_THREAD (defined at drivers/sensor/amg88xx/Kconfig:31, drivers/sensor/amg88xx/Kconfig:31) is defined with a prompt outside the choice
 
-warning: the default selection APDS9960_TRIGGER_NONE (defined at drivers/sensor/apds9960/Kconfig:21, drivers/sensor/apds9960/Kconfig:21) of <choice> (defined at drivers/sensor/apds9960/Kconfig:15) is not contained in the choice
+warning: the default selection APDS9960_TRIGGER_NONE (defined at drivers/sensor/apds9960/Kconfig:21, drivers/sensor/apds9960/Kconfig:21) of &lt;choice&gt; (defined at drivers/sensor/apds9960/Kconfig:15) is not contained in the choice
 
 warning: the choice symbol APDS9960_TRIGGER_NONE (defined at drivers/sensor/apds9960/Kconfig:21, drivers/sensor/apds9960/Kconfig:21) is defined with a prompt outside the choice
 
 warning: the choice symbol APDS9960_TRIGGER_GLOBAL_THREAD (defined at drivers/sensor/apds9960/Kconfig:24, drivers/sensor/apds9960/Kconfig:24) is defined with a prompt outside the choice
 
-warning: the default selection ENS160_TRIGGER_NONE (defined at drivers/sensor/ens160/Kconfig:21, drivers/sensor/ens160/Kconfig:21) of <choice> (defined at drivers/sensor/ens160/Kconfig:15) is not contained in the choice
+warning: the default selection ENS160_TRIGGER_NONE (defined at drivers/sensor/ens160/Kconfig:21, drivers/sensor/ens160/Kconfig:21) of &lt;choice&gt; (defined at drivers/sensor/ens160/Kconfig:15) is not contained in the choice
 
 warning: the choice symbol ENS160_TRIGGER_NONE (defined at drivers/sensor/ens160/Kconfig:21, drivers/sensor/ens160/Kconfig:21) is defined with a prompt outside the choice
 
@@ -1035,7 +1014,7 @@ warning: the choice symbol ENS160_TRIGGER_GLOBAL_THREAD (defined at drivers/sens
 
 warning: the choice symbol ENS160_TRIGGER_OWN_THREAD (defined at drivers/sensor/ens160/Kconfig:30, drivers/sensor/ens160/Kconfig:30) is defined with a prompt outside the choice
 
-warning: the default selection GROW_R502A_TRIGGER_NONE (defined at drivers/sensor/grow_r502a/Kconfig:31, drivers/sensor/grow_r502a/Kconfig:31) of <choice> (defined at drivers/sensor/grow_r502a/Kconfig:25) is not contained in the choice
+warning: the default selection GROW_R502A_TRIGGER_NONE (defined at drivers/sensor/grow_r502a/Kconfig:31, drivers/sensor/grow_r502a/Kconfig:31) of &lt;choice&gt; (defined at drivers/sensor/grow_r502a/Kconfig:25) is not contained in the choice
 
 warning: the choice symbol GROW_R502A_TRIGGER_NONE (defined at drivers/sensor/grow_r502a/Kconfig:31, drivers/sensor/grow_r502a/Kconfig:31) is defined with a prompt outside the choice
 
@@ -1043,13 +1022,13 @@ warning: the choice symbol GROW_R502A_TRIGGER_GLOBAL_THREAD (defined at drivers/
 
 warning: the choice symbol GROW_R502A_TRIGGER_OWN_THREAD (defined at drivers/sensor/grow_r502a/Kconfig:39, drivers/sensor/grow_r502a/Kconfig:39) is defined with a prompt outside the choice
 
-warning: the default selection LM75_TRIGGER_NONE (defined at drivers/sensor/lm75/Kconfig:23, drivers/sensor/lm75/Kconfig:23) of <choice> (defined at drivers/sensor/lm75/Kconfig:17) is not contained in the choice
+warning: the default selection LM75_TRIGGER_NONE (defined at drivers/sensor/lm75/Kconfig:23, drivers/sensor/lm75/Kconfig:23) of &lt;choice&gt; (defined at drivers/sensor/lm75/Kconfig:17) is not contained in the choice
 
 warning: the choice symbol LM75_TRIGGER_NONE (defined at drivers/sensor/lm75/Kconfig:23, drivers/sensor/lm75/Kconfig:23) is defined with a prompt outside the choice
 
 warning: the choice symbol LM75_TRIGGER_GLOBAL_THREAD (defined at drivers/sensor/lm75/Kconfig:26, drivers/sensor/lm75/Kconfig:26) is defined with a prompt outside the choice
 
-warning: the default selection SX9500_TRIGGER_GLOBAL_THREAD (defined at drivers/sensor/sx9500/Kconfig:30, drivers/sensor/sx9500/Kconfig:30) of <choice> (defined at drivers/sensor/sx9500/Kconfig:23) is not contained in the choice
+warning: the default selection SX9500_TRIGGER_GLOBAL_THREAD (defined at drivers/sensor/sx9500/Kconfig:30, drivers/sensor/sx9500/Kconfig:30) of &lt;choice&gt; (defined at drivers/sensor/sx9500/Kconfig:23) is not contained in the choice
 
 warning: the choice symbol SX9500_TRIGGER_NONE (defined at drivers/sensor/sx9500/Kconfig:27, drivers/sensor/sx9500/Kconfig:27) is defined with a prompt outside the choice
 
@@ -1057,13 +1036,13 @@ warning: the choice symbol SX9500_TRIGGER_GLOBAL_THREAD (defined at drivers/sens
 
 warning: the choice symbol SX9500_TRIGGER_OWN_THREAD (defined at drivers/sensor/sx9500/Kconfig:36, drivers/sensor/sx9500/Kconfig:36) is defined with a prompt outside the choice
 
-warning: the default selection CC23X0_SYSTIM_TIMER (defined at drivers/timer/Kconfig.cc23x0:13, drivers/timer/Kconfig.cc23x0:13) of <choice> (defined at drivers/timer/Kconfig.cc23x0:6) is not contained in the choice
+warning: the default selection CC23X0_SYSTIM_TIMER (defined at drivers/timer/Kconfig.cc23x0:13, drivers/timer/Kconfig.cc23x0:13) of &lt;choice&gt; (defined at drivers/timer/Kconfig.cc23x0:6) is not contained in the choice
 
 warning: the choice symbol CC23X0_SYSTIM_TIMER (defined at drivers/timer/Kconfig.cc23x0:13, drivers/timer/Kconfig.cc23x0:13) is defined with a prompt outside the choice
 
 warning: the choice symbol CC23X0_RTC_TIMER (defined at drivers/timer/Kconfig.cc23x0:20, drivers/timer/Kconfig.cc23x0:20) is defined with a prompt outside the choice
 
-warning: the default selection SYSTEM_CLOCK_WAIT_FOR_STABILITY (defined at drivers/timer/Kconfig.nrf_xrtc:30, drivers/timer/Kconfig.nrf_xrtc:30) of <choice> (defined at drivers/timer/Kconfig.nrf_xrtc:7) is not contained in the choice
+warning: the default selection SYSTEM_CLOCK_WAIT_FOR_STABILITY (defined at drivers/timer/Kconfig.nrf_xrtc:30, drivers/timer/Kconfig.nrf_xrtc:30) of &lt;choice&gt; (defined at drivers/timer/Kconfig.nrf_xrtc:7) is not contained in the choice
 
 warning: the choice symbol SYSTEM_CLOCK_NO_WAIT (defined at drivers/timer/Kconfig.nrf_xrtc:11, drivers/timer/Kconfig.nrf_xrtc:11) is defined with a prompt outside the choice
 
@@ -1071,9 +1050,9 @@ warning: the choice symbol SYSTEM_CLOCK_WAIT_FOR_AVAILABILITY (defined at driver
 
 warning: the choice symbol SYSTEM_CLOCK_WAIT_FOR_STABILITY (defined at drivers/timer/Kconfig.nrf_xrtc:30, drivers/timer/Kconfig.nrf_xrtc:30) is defined with a prompt outside the choice
 
-warning: the default selection HPET_TIMER (defined at drivers/timer/Kconfig.x86:14, drivers/timer/Kconfig.x86:14) of <choice> (defined at drivers/timer/Kconfig.x86:6) is not contained in the choice
+warning: the default selection HPET_TIMER (defined at drivers/timer/Kconfig.x86:14, drivers/timer/Kconfig.x86:14) of &lt;choice&gt; (defined at drivers/timer/Kconfig.x86:6) is not contained in the choice
 
-warning: the default selection APIC_TSC_DEADLINE_TIMER (defined at drivers/timer/Kconfig.x86:38, drivers/timer/Kconfig.x86:38) of <choice> (defined at drivers/timer/Kconfig.x86:6) is not contained in the choice
+warning: the default selection APIC_TSC_DEADLINE_TIMER (defined at drivers/timer/Kconfig.x86:38, drivers/timer/Kconfig.x86:38) of &lt;choice&gt; (defined at drivers/timer/Kconfig.x86:6) is not contained in the choice
 
 warning: the choice symbol HPET_TIMER (defined at drivers/timer/Kconfig.x86:14, drivers/timer/Kconfig.x86:14) is defined with a prompt outside the choice
 
@@ -1083,31 +1062,31 @@ warning: the choice symbol APIC_TSC_DEADLINE_TIMER (defined at drivers/timer/Kco
 
 warning: the choice symbol APIC_TIMER_TSC (defined at drivers/timer/Kconfig.x86:54, drivers/timer/Kconfig.x86:54) is defined with a prompt outside the choice
 
-warning: the default selection WDT_RENESAS_RX_IWDT_REGISTER_START_MODE (defined at drivers/watchdog/Kconfig.renesas_rx:36, drivers/watchdog/Kconfig.renesas_rx:36) of <choice> (defined at drivers/watchdog/Kconfig.renesas_rx:23) is not contained in the choice
+warning: the default selection WDT_RENESAS_RX_IWDT_REGISTER_START_MODE (defined at drivers/watchdog/Kconfig.renesas_rx:36, drivers/watchdog/Kconfig.renesas_rx:36) of &lt;choice&gt; (defined at drivers/watchdog/Kconfig.renesas_rx:23) is not contained in the choice
 
 warning: the choice symbol WDT_RENESAS_RX_IWDT_AUTO_START_MODE (defined at drivers/watchdog/Kconfig.renesas_rx:33, drivers/watchdog/Kconfig.renesas_rx:33) is defined with a prompt outside the choice
 
 warning: the choice symbol WDT_RENESAS_RX_IWDT_REGISTER_START_MODE (defined at drivers/watchdog/Kconfig.renesas_rx:36, drivers/watchdog/Kconfig.renesas_rx:36) is defined with a prompt outside the choice
 
-warning: the default selection WIFI_ESP_AT_IP_DHCP (defined at drivers/wifi/esp_at/Kconfig.esp_at:117, drivers/wifi/esp_at/Kconfig.esp_at:117) of <choice> (defined at drivers/wifi/esp_at/Kconfig.esp_at:110) is not contained in the choice
+warning: the default selection WIFI_ESP_AT_IP_DHCP (defined at drivers/wifi/esp_at/Kconfig.esp_at:117, drivers/wifi/esp_at/Kconfig.esp_at:117) of &lt;choice&gt; (defined at drivers/wifi/esp_at/Kconfig.esp_at:110) is not contained in the choice
 
 warning: the choice symbol WIFI_ESP_AT_IP_DHCP (defined at drivers/wifi/esp_at/Kconfig.esp_at:117, drivers/wifi/esp_at/Kconfig.esp_at:117) is defined with a prompt outside the choice
 
 warning: the choice symbol WIFI_ESP_AT_IP_STATIC (defined at drivers/wifi/esp_at/Kconfig.esp_at:122, drivers/wifi/esp_at/Kconfig.esp_at:122) is defined with a prompt outside the choice
 
-warning: the default selection NXP_WIFI_SM_IP_DHCP (defined at drivers/wifi/nxp/Kconfig.nxp:1224, drivers/wifi/nxp/Kconfig.nxp:1224) of <choice> (defined at drivers/wifi/nxp/Kconfig.nxp:1217) is not contained in the choice
+warning: the default selection NXP_WIFI_SM_IP_DHCP (defined at drivers/wifi/nxp/Kconfig.nxp:1224, drivers/wifi/nxp/Kconfig.nxp:1224) of &lt;choice&gt; (defined at drivers/wifi/nxp/Kconfig.nxp:1217) is not contained in the choice
 
 warning: the choice symbol NXP_WIFI_SM_IP_DHCP (defined at drivers/wifi/nxp/Kconfig.nxp:1224, drivers/wifi/nxp/Kconfig.nxp:1224) is defined with a prompt outside the choice
 
 warning: the choice symbol NXP_WIFI_SM_IP_STATIC (defined at drivers/wifi/nxp/Kconfig.nxp:1229, drivers/wifi/nxp/Kconfig.nxp:1229) is defined with a prompt outside the choice
 
-warning: the default selection WIFI_SILABS_SIWX91X_NET_STACK_NATIVE (defined at drivers/wifi/siwx91x/Kconfig.siwx91x:43, drivers/wifi/siwx91x/Kconfig.siwx91x:43) of <choice> (defined at drivers/wifi/siwx91x/Kconfig.siwx91x:35) is not contained in the choice
+warning: the default selection WIFI_SILABS_SIWX91X_NET_STACK_NATIVE (defined at drivers/wifi/siwx91x/Kconfig.siwx91x:43, drivers/wifi/siwx91x/Kconfig.siwx91x:43) of &lt;choice&gt; (defined at drivers/wifi/siwx91x/Kconfig.siwx91x:35) is not contained in the choice
 
 warning: the choice symbol WIFI_SILABS_SIWX91X_NET_STACK_NATIVE (defined at drivers/wifi/siwx91x/Kconfig.siwx91x:43, drivers/wifi/siwx91x/Kconfig.siwx91x:43) is defined with a prompt outside the choice
 
 warning: the choice symbol WIFI_SILABS_SIWX91X_NET_STACK_OFFLOAD (defined at drivers/wifi/siwx91x/Kconfig.siwx91x:48, drivers/wifi/siwx91x/Kconfig.siwx91x:48) is defined with a prompt outside the choice
 
-warning: the default selection WIFI_WINC1500_REGION_NORTH_AMERICA (defined at drivers/wifi/winc1500/Kconfig.winc1500:74, drivers/wifi/winc1500/Kconfig.winc1500:74) of <choice> (defined at drivers/wifi/winc1500/Kconfig.winc1500:70) is not contained in the choice
+warning: the default selection WIFI_WINC1500_REGION_NORTH_AMERICA (defined at drivers/wifi/winc1500/Kconfig.winc1500:74, drivers/wifi/winc1500/Kconfig.winc1500:74) of &lt;choice&gt; (defined at drivers/wifi/winc1500/Kconfig.winc1500:70) is not contained in the choice
 
 warning: the choice symbol WIFI_WINC1500_REGION_NORTH_AMERICA (defined at drivers/wifi/winc1500/Kconfig.winc1500:74, drivers/wifi/winc1500/Kconfig.winc1500:74) is defined with a prompt outside the choice
 
@@ -1115,9 +1094,9 @@ warning: the choice symbol WIFI_WINC1500_REGION_EUROPE (defined at drivers/wifi/
 
 warning: the choice symbol WIFI_WINC1500_REGION_ASIA (defined at drivers/wifi/winc1500/Kconfig.winc1500:80, drivers/wifi/winc1500/Kconfig.winc1500:80) is defined with a prompt outside the choice
 
-warning: the default selection SYS_HEAP_SMALL_ONLY (defined at lib/heap/Kconfig:186, lib/heap/Kconfig:186) of <choice> (defined at lib/heap/Kconfig:160) is not contained in the choice
+warning: the default selection SYS_HEAP_SMALL_ONLY (defined at lib/heap/Kconfig:186, lib/heap/Kconfig:186) of &lt;choice&gt; (defined at lib/heap/Kconfig:160) is not contained in the choice
 
-warning: the default selection SYS_HEAP_AUTO (defined at lib/heap/Kconfig:199, lib/heap/Kconfig:199) of <choice> (defined at lib/heap/Kconfig:160) is not contained in the choice
+warning: the default selection SYS_HEAP_AUTO (defined at lib/heap/Kconfig:199, lib/heap/Kconfig:199) of &lt;choice&gt; (defined at lib/heap/Kconfig:160) is not contained in the choice
 
 warning: the choice symbol SYS_HEAP_SMALL_ONLY (defined at lib/heap/Kconfig:186, lib/heap/Kconfig:186) is defined with a prompt outside the choice
 
@@ -1995,25 +1974,7 @@ Call Stack (most recent call first):
 
 
 -- Configuring incomplete, errors occurred!
-
-2026-07-18 12:35:05,634 - twister - INFO - /home/runner/work/altruist-zephyr-firmware/altruist-zephyr-firmware/twister-out/native_sim_native/host_gnu/altruist-zephyr-firmware/tests/smoke/native_sim/altruist.wp01.smoke.native_sim/build.log
-2026-07-18 12:35:05,639 - twister - INFO - 1 test scenarios (1 configurations) selected, 0 configurations filtered (0 by static filter, 0 at runtime).
-2026-07-18 12:35:05,644 - twister - INFO - [32m0 of 1[39m executed test configurations passed (0.00%), 0 built (not run), 0 failed, [31m1[39m errored, with no warnings in 6.74 seconds.
-2026-07-18 12:35:05,644 - twister - INFO - 0 of 1 executed test cases passed (0.00%), 1 errored on 1 out of total 1473 platforms (0.07%).
-2026-07-18 12:35:05,644 - twister - INFO - [32m0[39m test configurations executed on platforms, [36m1[39m test configurations were only built.
-2026-07-18 12:35:05,644 - twister - INFO - Saving reports...
-2026-07-18 12:35:05,644 - twister - INFO - Writing JSON report /home/runner/work/altruist-zephyr-firmware/altruist-zephyr-firmware/twister-out/twister.json
-2026-07-18 12:35:05,659 - twister - INFO - Writing xunit report /home/runner/work/altruist-zephyr-firmware/altruist-zephyr-firmware/twister-out/twister.xml...
-2026-07-18 12:35:05,661 - twister - INFO - Writing xunit report /home/runner/work/altruist-zephyr-firmware/altruist-zephyr-firmware/twister-out/twister_report.xml...
-2026-07-18 12:35:05,663 - twister - INFO - -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-2026-07-18 12:35:05,663 - twister - INFO - The following issues were found (showing the top 10 items):
-2026-07-18 12:35:05,663 - twister - INFO - 1) altruist.wp01.smoke.native_sim on native_sim/native error (CMake build failure - warning: the choice symbol SYS_HEAP_AUTO (defined at lib/heap/Kconfig:199, lib/heap/Kconfig:199) is defined with a prompt outside the choice)
-2026-07-18 12:35:05,663 - twister - INFO - 
-2026-07-18 12:35:05,663 - twister - INFO - To rerun the tests, call twister using the following commandline:
-2026-07-18 12:35:05,663 - twister - INFO - west twister -p <PLATFORM> -s <TEST ID>, for example:
-2026-07-18 12:35:05,663 - twister - INFO - 
-2026-07-18 12:35:05,663 - twister - INFO - west twister -p native_sim/native -s altruist.wp01.smoke.native_sim
-2026-07-18 12:35:05,663 - twister - INFO - or with west:
-2026-07-18 12:35:05,663 - twister - INFO - west build -p -b native_sim/native tests/smoke/native_sim -T altruist.wp01.smoke.native_sim
-2026-07-18 12:35:05,663 - twister - INFO - -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-2026-07-18 12:35:05,664 - twister - INFO - Run completed
+</error>
+		</testcase>
+	</testsuite>
+</testsuites>

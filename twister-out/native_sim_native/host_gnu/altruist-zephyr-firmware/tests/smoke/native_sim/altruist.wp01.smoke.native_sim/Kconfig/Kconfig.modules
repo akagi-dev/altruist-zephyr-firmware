@@ -1,0 +1,24 @@
+menu "altruist-zephyr-firmware (/home/runner/work/altruist-zephyr-firmware/altruist-zephyr-firmware)"
+osource "/home/runner/work/altruist-zephyr-firmware/altruist-zephyr-firmware/Kconfig"
+config ZEPHYR_ALTRUIST_ZEPHYR_FIRMWARE_MODULE
+	bool
+	default y
+endmenu
+menu "cmsis (/home/runner/work/altruist-zephyr-firmware/modules/hal/cmsis)"
+osource "$(ZEPHYR_CMSIS_KCONFIG)"
+config ZEPHYR_CMSIS_MODULE
+	bool
+	default y
+endmenu
+menu "hal_espressif (/home/runner/work/altruist-zephyr-firmware/modules/hal/espressif)"
+osource "$(ZEPHYR_HAL_ESPRESSIF_KCONFIG)"
+config ZEPHYR_HAL_ESPRESSIF_MODULE
+	bool
+	default y
+
+config ZEPHYR_HAL_ESPRESSIF_MODULE_BLOBS
+	bool
+endmenu
+config ZEPHYR_XTENSA_MODULE
+	bool
+	default y

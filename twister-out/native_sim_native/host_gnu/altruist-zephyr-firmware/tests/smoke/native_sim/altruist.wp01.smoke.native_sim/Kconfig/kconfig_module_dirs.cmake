@@ -1,0 +1,5 @@
+set(kconfig_env_dirs)
+list(APPEND kconfig_env_dirs ZEPHYR_ALTRUIST_ZEPHYR_FIRMWARE_MODULE_DIR=/home/runner/work/altruist-zephyr-firmware/altruist-zephyr-firmware)
+list(APPEND kconfig_env_dirs ZEPHYR_CMSIS_MODULE_DIR=/home/runner/work/altruist-zephyr-firmware/modules/hal/cmsis)
+list(APPEND kconfig_env_dirs ZEPHYR_HAL_ESPRESSIF_MODULE_DIR=/home/runner/work/altruist-zephyr-firmware/modules/hal/espressif)
+list(APPEND kconfig_env_dirs ZEPHYR_XTENSA_MODULE_DIR=/home/runner/work/altruist-zephyr-firmware/modules/hal/xtensa)

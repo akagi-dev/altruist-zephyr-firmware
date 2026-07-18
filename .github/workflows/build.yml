@@ -27,7 +27,7 @@ jobs:
         with:
           app-path: .
           toolchains: x86_64-zephyr-elf
-          ccache-cache-key: v1-${{ runner.os }}-${{ github.ref_name }}
+          ccache-cache-key: v1-tests-${{ runner.os }}-${{ hashFiles('tests/**/*') }}
 
       - name: Export Zephyr CMake package
         run: west zephyr-export
@@ -80,7 +80,7 @@ jobs:
         with:
           app-path: .
           toolchains: x86_64-zephyr-elf:riscv64-zephyr-elf:xtensa-espressif_esp32_zephyr-elf
-          ccache-cache-key: v1-${{ runner.os }}-${{ github.ref_name }}
+          ccache-cache-key: v1-build-${{ runner.os }}-${{ matrix.build-dir }}-${{ hashFiles('app/**/*.c', 'app/**/*.h', 'app/CMakeLists.txt', 'app/Kconfig*', 'app/prj*.conf') }}
 
       - name: Export Zephyr CMake package
         run: west zephyr-export
@@ -99,5 +99,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.build-dir }}-${{ github.run_id }}
-          path: ${{ matrix.build-dir }}
+          path: |
+            ${{ matrix.build-dir }}/zephyr/zephyr.bin
+            ${{ matrix.build-dir }}/zephyr/zephyr.elf
+            ${{ matrix.build-dir }}/zephyr/.config
           if-no-files-found: warn

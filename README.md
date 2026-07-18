@@ -1,53 +1,10 @@
-# Altruist Zephyr Firmware Port Plan
+# Altruist Zephyr Firmware
 
-Planning repository for porting Altruist environmental sensor station firmware from Arduino/PlatformIO (`airalab/altruist-firmware`, branch `esp32`) to Zephyr OS.
+**Status:** Work in progress
 
-## Documentation
+This repository contains the Zephyr-based firmware workspace for the Altruist environmental monitoring project.
 
-- [Source architecture baseline](docs/ARCHITECTURE.md)
-- [Target Zephyr architecture](docs/ZEPHYR_ARCHITECTURE.md)
-- [Master implementation plan](docs/IMPLEMENTATION_PLAN.md)
-- [Agent-ready work packages](docs/tasks/)
-
-## Zephyr workspace bootstrap (Nix flake)
-
-This repository now contains a Zephyr `west.yml` workspace manifest pinned to Zephyr `v3.7.0`, matching the pin in `flake.nix`.
-
-1. Enter the development shell:
-
-   ```sh
-   nix develop
-   ```
-
-2. Initialize west from this repository and fetch Zephyr/modules:
-
-   ```sh
-   west init -l .
-   west update
-   west zephyr-export
-   ```
-
-3. Build the baseline app:
-
-   ```sh
-   west build -b esp32c6_devkitc app
-   ```
-
-4. Run smoke tests on `native_sim`:
-
-   ```sh
-   west twister -T tests/smoke/native_sim
-   ```
-
-5. Build product variants:
-
-   ```sh
-   west build -b esp32c3_devkitm app -- -DEXTRA_CONF_FILE=prj_urban_c3.conf
-   west build -b esp32c6_devkitc app -- -DEXTRA_CONF_FILE=prj_urban_c6.conf
-   west build -b esp32c6_devkitc app -- -DEXTRA_CONF_FILE=prj_insight_c6.conf
-   ```
-
-## Work package status
+## Work package plan
 
 | WP | Title | Phase | Status |
 |---:|---|---|---|
@@ -77,6 +34,20 @@ This repository now contains a Zephyr `west.yml` workspace manifest pinned to Ze
 | 24 | SD card logging and retention | 5 | Planned |
 | 25 | Insight display, fonts, QR, screens | 6 | Planned |
 | 26 | Insight aggregation and analytics integration | 6 | Planned |
+
+## Getting started
+
+Requires a standard Zephyr development environment.
+
+```sh
+# Initialize workspace
+west init -m https://github.com/akagi-dev/altruist-zephyr-firmware --mr main my-workspace
+cd my-workspace/altruist-zephyr-firmware
+west update
+
+# Build for ESP32-C6
+west build -b esp32c6_devkitc/esp32c6/hpcore app
+```
 
 ## License
 

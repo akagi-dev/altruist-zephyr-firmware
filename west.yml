@@ -1,6 +1,9 @@
 manifest:
   version: 0.13
 
+  self:
+    path: altruist-zephyr-firmware
+
   remotes:
     - name: zephyrproject-rtos
       url-base: https://github.com/zephyrproject-rtos
@@ -8,10 +11,9 @@ manifest:
   projects:
     - name: zephyr
       remote: zephyrproject-rtos
-      revision: v3.7.0
+      revision: v4.4.1
       import:
-        path-prefix: modules
-
-  self:
-    path: .
-
+        name-allowlist:
+          - cmsis
+          - hal_espressif
+          - hal_xtensa

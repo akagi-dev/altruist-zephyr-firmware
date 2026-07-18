@@ -1,0 +1,11 @@
+sample:
+  name: Altruist Zephyr bootstrap
+
+tests:
+  altruist.app.esp32c6.build:
+    build_only: true
+    tags:
+      - smoke
+      - app
+    platform_allow:
+      - esp32c6_devkitc/esp32c6/hpcore

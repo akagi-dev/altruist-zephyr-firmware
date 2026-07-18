@@ -23,6 +23,7 @@ config ALTRUIST_WIFI_RECONNECT_INITIAL_BACKOFF_MS
 	help
 	  Delay used for the first reconnect retry after disconnect.
 	  Valid range is 100 ms to 60000 ms (60 seconds).
+	  If this exceeds max backoff, runtime clamps it to max backoff.
 
 config ALTRUIST_WIFI_RECONNECT_MAX_BACKOFF_MS
 	int "Maximum reconnect backoff (ms)"
@@ -32,6 +33,7 @@ config ALTRUIST_WIFI_RECONNECT_MAX_BACKOFF_MS
 	help
 	  Upper bound used by exponential reconnect backoff.
 	  Valid range is 1000 ms (1 second) to 600000 ms (10 minutes).
+	  Long ceilings are intended for unstable or rate-limited networks.
 
 config ALTRUIST_WIFI_MANAGER_TEST_SEAMS
 	bool

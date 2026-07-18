@@ -76,7 +76,7 @@ static struct k_work_delayable reconnect_work;
 static bool reconnect_work_initialized;
 K_MUTEX_DEFINE(wifi_manager_lock);
 
-#define WIFI_BOUNDED_INITIAL_BACKOFF_MS                                                 \
+#define WIFI_CLAMPED_INITIAL_BACKOFF_MS                                                 \
 	MIN(CONFIG_ALTRUIST_WIFI_RECONNECT_INITIAL_BACKOFF_MS,                          \
 	    CONFIG_ALTRUIST_WIFI_RECONNECT_MAX_BACKOFF_MS)
 
@@ -139,7 +139,7 @@ static void wifi_net_event_callback(struct net_mgmt_event_callback *cb,
 
 static void wifi_reset_backoff(void)
 {
-	next_backoff_ms = WIFI_BOUNDED_INITIAL_BACKOFF_MS;
+	next_backoff_ms = WIFI_CLAMPED_INITIAL_BACKOFF_MS;
 }
 
 static void wifi_cancel_reconnect(void)

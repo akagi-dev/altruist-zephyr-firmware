@@ -54,7 +54,7 @@ static int identity_generate_keypair(uint8_t *private_key, uint8_t *public_key)
 	}
 
 	/* Configure key attributes for Ed25519 */
-	psa_set_key_usage_flags(&attributes, PSA_KEY_USAGE_SIGN_HASH | PSA_KEY_USAGE_VERIFY_HASH |
+	psa_set_key_usage_flags(&attributes, PSA_KEY_USAGE_SIGN_MESSAGE | PSA_KEY_USAGE_VERIFY_MESSAGE |
 						  PSA_KEY_USAGE_EXPORT);
 	psa_set_key_algorithm(&attributes, PSA_ALG_PURE_EDDSA);
 	psa_set_key_type(&attributes, PSA_KEY_TYPE_ECC_KEY_PAIR(PSA_ECC_FAMILY_TWISTED_EDWARDS));
@@ -240,7 +240,7 @@ int altruist_identity_sign_detached(const uint8_t *private_key, size_t private_k
 	}
 
 	/* Configure key attributes for Ed25519 */
-	psa_set_key_usage_flags(&attributes, PSA_KEY_USAGE_SIGN_HASH);
+	psa_set_key_usage_flags(&attributes, PSA_KEY_USAGE_SIGN_MESSAGE);
 	psa_set_key_algorithm(&attributes, PSA_ALG_PURE_EDDSA);
 	psa_set_key_type(&attributes, PSA_KEY_TYPE_ECC_KEY_PAIR(PSA_ECC_FAMILY_TWISTED_EDWARDS));
 	psa_set_key_bits(&attributes, 255);
@@ -290,7 +290,7 @@ int altruist_identity_verify_detached(const uint8_t *public_key, size_t public_k
 	}
 
 	/* Configure key attributes for Ed25519 public key */
-	psa_set_key_usage_flags(&attributes, PSA_KEY_USAGE_VERIFY_HASH);
+	psa_set_key_usage_flags(&attributes, PSA_KEY_USAGE_VERIFY_MESSAGE);
 	psa_set_key_algorithm(&attributes, PSA_ALG_PURE_EDDSA);
 	psa_set_key_type(&attributes, PSA_KEY_TYPE_ECC_PUBLIC_KEY(PSA_ECC_FAMILY_TWISTED_EDWARDS));
 	psa_set_key_bits(&attributes, 255);

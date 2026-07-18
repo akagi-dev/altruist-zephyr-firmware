@@ -4,3 +4,6 @@
 /modules/
 /bootloader/
 /tools/
+
+# Twister test output directories
+/twister-out*

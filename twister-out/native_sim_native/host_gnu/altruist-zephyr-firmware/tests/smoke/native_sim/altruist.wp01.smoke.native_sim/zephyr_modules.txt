@@ -1,4 +1,0 @@
-"altruist-zephyr-firmware":"/home/runner/work/altruist-zephyr-firmware/altruist-zephyr-firmware":"/home/runner/work/altruist-zephyr-firmware/altruist-zephyr-firmware"
-"cmsis":"/home/runner/work/altruist-zephyr-firmware/modules/hal/cmsis":"${ZEPHYR_CMSIS_CMAKE_DIR}"
-"hal_espressif":"/home/runner/work/altruist-zephyr-firmware/modules/hal/espressif":"${ZEPHYR_HAL_ESPRESSIF_CMAKE_DIR}"
-"xtensa":"/home/runner/work/altruist-zephyr-firmware/modules/hal/xtensa":"/home/runner/work/altruist-zephyr-firmware/modules/hal/xtensa"

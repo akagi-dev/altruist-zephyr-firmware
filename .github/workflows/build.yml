@@ -67,6 +67,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: twister-out-${{ matrix.board }}-${{ github.run_id }}
+          name: twister-out-${{ matrix.build-dir }}-${{ github.run_id }}
           path: twister-out
           if-no-files-found: warn

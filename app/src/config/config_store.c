@@ -109,7 +109,7 @@ static int cfg_read_bool(size_t len, settings_read_cb read_cb, void *cb_arg, boo
 
 static int cfg_read_u32(size_t len, settings_read_cb read_cb, void *cb_arg, uint32_t *out)
 {
-	unsigned long parsed;
+	unsigned long long parsed;
 	uint32_t raw = 0U;
 	char text[12];
 	char *endptr;
@@ -134,7 +134,7 @@ static int cfg_read_u32(size_t len, settings_read_cb read_cb, void *cb_arg, uint
 	}
 
 	errno = 0;
-	parsed = strtoul(text, &endptr, 10);
+	parsed = strtoull(text, &endptr, 10);
 	if ((endptr == text) || (*endptr != '\0') || (errno == ERANGE) || (parsed > UINT32_MAX)) {
 		return -EINVAL;
 	}
@@ -149,6 +149,13 @@ static int cfg_write_bool(char *val, int val_len_max, bool src)
 
 	if (val_len_max < (int)sizeof(raw)) {
 		return -ENOMEM;
+	}
+
+	static bool cfg_name_is_canonical_or_legacy(const char *name, const char *canonical,
+						    const char *legacy)
+	{
+		return settings_name_steq(name, canonical, NULL) ||
+		       settings_name_steq(name, legacy, NULL);
 	}
 
 	memcpy(val, &raw, sizeof(raw));
@@ -231,13 +238,13 @@ static int altruist_config_settings_set(const char *name, size_t len,
 		rc = cfg_read_bool(len, read_cb, cb_arg, &g_cfg.send2csv);
 		goto out;
 	}
-	if (settings_name_steq(name, CFG_KEY_SENDING_INTERVAL_MS, NULL) ||
-	    settings_name_steq(name, CFG_KEY_SENDING_INTERVAL_MS_LEGACY, NULL)) {
+	if (cfg_name_is_canonical_or_legacy(name, CFG_KEY_SENDING_INTERVAL_MS,
+					    CFG_KEY_SENDING_INTERVAL_MS_LEGACY)) {
 		rc = cfg_read_u32(len, read_cb, cb_arg, &g_cfg.sending_interval_ms);
 		goto out;
 	}
-	if (settings_name_steq(name, CFG_KEY_DATALOG_SENDING_INTERVAL_MS, NULL) ||
-	    settings_name_steq(name, CFG_KEY_DATALOG_SENDING_INTERVAL_MS_LEGACY, NULL)) {
+	if (cfg_name_is_canonical_or_legacy(name, CFG_KEY_DATALOG_SENDING_INTERVAL_MS,
+					    CFG_KEY_DATALOG_SENDING_INTERVAL_MS_LEGACY)) {
 		rc = cfg_read_u32(len, read_cb, cb_arg,
 				  &g_cfg.datalog_sending_interval_ms);
 		goto out;

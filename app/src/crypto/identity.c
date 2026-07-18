@@ -333,8 +333,8 @@ int altruist_identity_init(void)
 
 	rc = settings_subsys_init();
 	if ((rc != 0) && (rc != -EALREADY)) {
-		printk("altruist_identity: Settings subsystem initialization failed with error code %d. "
-		       "Continuing; storage backend hooks will determine availability.\n", rc);
+		printk("altruist_identity: Settings subsystem unavailable (error %d); attempting storage operations, which may report specific error codes.\n",
+		       rc);
 	}
 
 	rc = altruist_identity_storage_load(state.private_key, state.public_key);

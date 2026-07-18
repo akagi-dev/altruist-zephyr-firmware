@@ -7,3 +7,6 @@
 
 # Twister test output directories
 /twister-out*
+
+# MkDocs build output
+/site/

@@ -39,13 +39,21 @@ This repository now contains a Zephyr `west.yml` workspace manifest pinned to Ze
    west twister -T tests/smoke/native_sim
    ```
 
+5. Build product variants:
+
+   ```sh
+   west build -b esp32c3_devkitm app -- -DEXTRA_CONF_FILE=prj_urban_c3.conf
+   west build -b esp32c6_devkitc app -- -DEXTRA_CONF_FILE=prj_urban_c6.conf
+   west build -b esp32c6_devkitc app -- -DEXTRA_CONF_FILE=prj_insight_c6.conf
+   ```
+
 ## Work package status
 
 | WP | Title | Phase | Status |
 |---:|---|---|---|
 | 01 | West workspace and app bootstrap | 0 | Done |
 | 02 | CI foundation (Zephyr SDK + Twister) | 0 | Planned |
-| 03 | Board and variant profiles | 0 | Planned |
+| 03 | Board and variant profiles | 0 | Done |
 | 04 | Settings/config subsystem | 1 | Planned |
 | 05 | WiFi manager and provisioning baseline | 1 | Planned |
 | 06 | Identity/keystore ED25519 | 1 | Planned |

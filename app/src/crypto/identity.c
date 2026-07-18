@@ -216,7 +216,11 @@ static int identity_settings_load_cb(const char *key, size_t len, settings_read_
 	return 0;
 }
 
-/* Weak linkage allows tests to override settings-backed storage with in-memory stubs. */
+/*
+ * Weak linkage allows tests to provide strong symbol overrides for these storage
+ * hooks, so unit tests can validate identity lifecycle without a Zephyr Settings
+ * backend and without touching persistent flash state.
+ */
 int __weak altruist_identity_storage_load(uint8_t private_key[ALTRUIST_IDENTITY_ED25519_PRIVATE_KEY_SIZE],
 					  uint8_t public_key[ALTRUIST_IDENTITY_ED25519_PUBLIC_KEY_SIZE])
 {
@@ -250,7 +254,7 @@ int __weak altruist_identity_storage_load(uint8_t private_key[ALTRUIST_IDENTITY_
 	return 0;
 }
 
-/* Weak linkage allows tests to override settings-backed storage with in-memory stubs. */
+/* See altruist_identity_storage_load() note about weak test overrides. */
 int __weak altruist_identity_storage_save(
 	const uint8_t private_key[ALTRUIST_IDENTITY_ED25519_PRIVATE_KEY_SIZE],
 	const uint8_t public_key[ALTRUIST_IDENTITY_ED25519_PUBLIC_KEY_SIZE])
@@ -271,7 +275,7 @@ int __weak altruist_identity_storage_save(
 				 ALTRUIST_IDENTITY_ED25519_PUBLIC_KEY_SIZE);
 }
 
-/* Weak linkage allows tests to override settings-backed storage with in-memory stubs. */
+/* See altruist_identity_storage_load() note about weak test overrides. */
 int __weak altruist_identity_storage_reset(void)
 {
 	int rc_private = settings_delete(IDENTITY_SETTINGS_PRIVATE_KEY);
@@ -368,7 +372,7 @@ int altruist_identity_init(void)
 
 	rc = settings_subsys_init();
 	if ((rc != 0) && (rc != -EALREADY)) {
-		printk("identity: settings_subsys_init failed: %d\n", rc);
+		printk("altruist_identity: settings_subsys_init failed: %d\n", rc);
 		k_mutex_unlock(&identity_lock);
 		return rc;
 	}

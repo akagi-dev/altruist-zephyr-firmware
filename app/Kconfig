@@ -6,6 +6,13 @@ config ALTRUIST_BOOT_MESSAGE
 	help
 	  Message printed during boot.
 
+config ALTRUIST_IDENTITY
+	bool "Enable Altruist device identity/keystore"
+	default y
+	select SETTINGS
+	help
+	  Enables ED25519 device identity management using Zephyr settings storage.
+
 source "Kconfig.variants"
 
 endmenu

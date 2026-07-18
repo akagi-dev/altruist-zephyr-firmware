@@ -41,6 +41,7 @@ Implement key generation, persistent storage, and signing API.
 - Builds for relevant board/profile targets.
 - Required tests added and passing (Twister/native_sim where possible).
 - No regressions in previously completed dependency packages.
+- Key reset behavior is documented and testable: deleting identity settings forces regeneration on next init.
 
 ## Suggested tests
 - Twister: `native_sim` for pure logic/state machines/parsers.

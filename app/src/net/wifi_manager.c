@@ -98,7 +98,7 @@ static void wifi_net_event_callback(struct net_mgmt_event_callback *cb,
 
 	ARG_UNUSED(iface);
 
-	if (mgmt_event == NET_EVENT_WIFI_CONNECT_RESULT && cb != NULL && cb->info != NULL &&
+	if (mgmt_event == NET_EVENT_WIFI_CONNECT_RESULT && cb->info != NULL &&
 	    cb->info_length >= sizeof(*status)) {
 		status = cb->info;
 		if (status->status != 0) {

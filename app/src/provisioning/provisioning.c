@@ -1,6 +1,6 @@
 #include <altruist/provisioning.h>
 
-static bool provisioning_active;
+static bool provisioning_active = false;
 
 int altruist_provisioning_start_ap_mode(void)
 {

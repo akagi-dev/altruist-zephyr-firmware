@@ -1,46 +1,10 @@
 # Altruist Zephyr Firmware
 
-This repository contains the Altruist Zephyr workspace application skeleton.
-It follows the upstream `zephyrproject-rtos/example-application` workspace
-layout and conventions.
+**Status:** Work in progress
 
-## Getting Started
+This repository contains the Zephyr-based firmware workspace for the Altruist environmental monitoring project.
 
-Before getting started, prepare a standard Zephyr development environment using
-Zephyr's official getting-started guide.
-
-### Initialize workspace
-
-```sh
-# initialize workspace from this manifest repo
-west init -m https://github.com/akagi-dev/altruist-zephyr-firmware --mr main my-workspace
-cd my-workspace
-west update
-west zephyr-export
-```
-
-### Build
-
-```sh
-cd altruist-zephyr-firmware
-west build -b esp32c6_devkitc/esp32c6/hpcore app
-```
-
-### Twister smoke tests
-
-```sh
-west twister -T tests/smoke/native_sim --integration
-```
-
-### Variant builds
-
-```sh
-west build -b esp32c3_devkitm app -- -DEXTRA_CONF_FILE=prj_urban_c3.conf
-west build -b esp32c6_devkitc app -- -DEXTRA_CONF_FILE=prj_urban_c6.conf
-west build -b esp32c6_devkitc app -- -DEXTRA_CONF_FILE=prj_insight_c6.conf
-```
-
-## Work package status
+## Work package plan
 
 | WP | Title | Phase | Status |
 |---:|---|---|---|
@@ -70,6 +34,20 @@ west build -b esp32c6_devkitc app -- -DEXTRA_CONF_FILE=prj_insight_c6.conf
 | 24 | SD card logging and retention | 5 | Planned |
 | 25 | Insight display, fonts, QR, screens | 6 | Planned |
 | 26 | Insight aggregation and analytics integration | 6 | Planned |
+
+## Getting started
+
+Requires a standard Zephyr development environment.
+
+```sh
+# Initialize workspace
+west init -m https://github.com/akagi-dev/altruist-zephyr-firmware --mr main my-workspace
+cd my-workspace/altruist-zephyr-firmware
+west update
+
+# Build for ESP32-C6
+west build -b esp32c6_devkitc/esp32c6/hpcore app
+```
 
 ## License
 

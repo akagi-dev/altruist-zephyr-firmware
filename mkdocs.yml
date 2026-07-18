@@ -2,4 +2,4 @@ site_name: Altruist Zephyr Firmware
 docs_dir: docs
 site_dir: site
 theme:
-  name: readthedocs
+  name: mkdocs

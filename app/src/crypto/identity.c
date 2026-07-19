@@ -110,8 +110,13 @@ static int identity_generate_persistent_key(uint8_t public_key[ALTRUIST_IDENTITY
 				       &exported_length);
 	if ((status != PSA_SUCCESS) ||
 	    (exported_length != ALTRUIST_IDENTITY_ED25519_PUBLIC_KEY_SIZE)) {
+		int reset_rc;
+
 		LOG_ERR("failed to export generated public key (status=%d)", (int)status);
-		(void)identity_persistent_key_reset();
+		reset_rc = identity_persistent_key_reset();
+		if (reset_rc != 0) {
+			LOG_ERR("failed to roll back generated identity key (rc=%d)", reset_rc);
+		}
 		rc = -EIO;
 	} else {
 		rc = 0;

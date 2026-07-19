@@ -12,6 +12,12 @@ static bool stored_credentials_valid;
 static bool settings_ready;
 K_MUTEX_DEFINE(wifi_credentials_lock);
 
+static void wifi_credentials_sanitize(struct wifi_manager_credentials *credentials)
+{
+	credentials->ssid[sizeof(credentials->ssid) - 1U] = '\0';
+	credentials->psk[sizeof(credentials->psk) - 1U] = '\0';
+}
+
 static int wifi_credentials_settings_set(const char *name, size_t len_rd, settings_read_cb read_cb,
 					 void *cb_arg)
 {
@@ -35,8 +41,7 @@ static int wifi_credentials_settings_set(const char *name, size_t len_rd, settin
 		return -EINVAL;
 	}
 
-	credentials.ssid[sizeof(credentials.ssid) - 1U] = '\0';
-	credentials.psk[sizeof(credentials.psk) - 1U] = '\0';
+	wifi_credentials_sanitize(&credentials);
 
 	if (credentials.ssid[0] == '\0') {
 		memset(&stored_credentials, 0, sizeof(stored_credentials));
@@ -104,24 +109,32 @@ bool altruist_config_get_wifi_credentials(struct wifi_manager_credentials *out)
 int altruist_config_set_wifi_credentials(const struct wifi_manager_credentials *credentials)
 {
 	int rc;
+	struct wifi_manager_credentials sanitized_credentials;
 
 	if (credentials == NULL) {
 		return -EINVAL;
 	}
 
-	if (strnlen(credentials->ssid, sizeof(credentials->ssid)) == 0U) {
+	if (credentials->ssid[sizeof(credentials->ssid) - 1U] != '\0' ||
+	    credentials->psk[sizeof(credentials->psk) - 1U] != '\0') {
+		return -EINVAL;
+	}
+
+	sanitized_credentials = *credentials;
+	wifi_credentials_sanitize(&sanitized_credentials);
+
+	if (strnlen(sanitized_credentials.ssid, sizeof(sanitized_credentials.ssid)) == 0U) {
 		return -EINVAL;
 	}
 
 	k_mutex_lock(&wifi_credentials_lock, K_FOREVER);
 	rc = wifi_credentials_storage_init_locked();
 	if (rc == 0) {
-		rc = settings_save_one("altruist/wifi/credentials", credentials, sizeof(*credentials));
+		rc = settings_save_one("altruist/wifi/credentials", &sanitized_credentials,
+				       sizeof(sanitized_credentials));
 	}
 	if (rc == 0) {
-		stored_credentials = *credentials;
-		stored_credentials.ssid[sizeof(stored_credentials.ssid) - 1U] = '\0';
-		stored_credentials.psk[sizeof(stored_credentials.psk) - 1U] = '\0';
+		stored_credentials = sanitized_credentials;
 		stored_credentials_valid = true;
 	}
 	k_mutex_unlock(&wifi_credentials_lock);

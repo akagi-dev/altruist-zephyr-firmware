@@ -42,15 +42,14 @@ config ALTRUIST_WIFI_MANAGER_TEST_SEAMS
 	help
 	  Exposes deterministic time/event hooks used by unit tests.
 
-config ALTRUIST_WIFI_CREDENTIALS_SECURE_STORAGE
+config ALTRUIST_WIFI_CREDENTIALS_PERSISTENT_STORAGE
 	bool "Enable persistent WiFi credential storage"
 	depends on ALTRUIST_WIFI_MANAGER
 	select SETTINGS
 	default y
 	help
 	  Stores WiFi credentials in Zephyr Settings for persistence across reboot.
-	  Backing storage should be configured with an encrypted/protected backend
-	  for deployments that require secure storage at rest.
+	  For secure storage at rest, use an encrypted/protected settings backend.
 
 endmenu
 

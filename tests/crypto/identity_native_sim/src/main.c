@@ -274,11 +274,11 @@ ZTEST(identity_sign_verify, test_polkadot_seeded_pair)
 			  sizeof(expected_public_key),
 			  "Derived public key does not match expected value");
 
-	/* Cleanup */
+	/* Cleanup - PSA key is no longer needed for signing since we use seed directly */
 	psa_destroy_key(key_id);
 	psa_reset_key_attributes(&attributes);
 
-	/* Sign the message and verify */
+	/* Sign the message and verify using the seed (not the PSA key) */
 	zassert_ok(altruist_identity_sign_detached(seed, sizeof(seed),
 						   message, sizeof(message),
 						   signature, sizeof(signature)),

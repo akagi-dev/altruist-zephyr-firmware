@@ -14,6 +14,8 @@
 #include <psa/crypto.h>
 
 #define IDENTITY_PERSISTENT_KEY_ID (PSA_KEY_ID_USER_MIN + 0x0006)
+/* PSA Crypto uses the Ed25519 curve size (255) for key-bit attributes. */
+#define IDENTITY_ED25519_KEY_BITS 255
 
 struct identity_state {
 	bool initialized;
@@ -41,7 +43,7 @@ static int identity_generate_keypair(uint8_t *private_key, uint8_t *public_key)
 						  PSA_KEY_USAGE_EXPORT);
 	psa_set_key_algorithm(&attributes, PSA_ALG_PURE_EDDSA);
 	psa_set_key_type(&attributes, PSA_KEY_TYPE_ECC_KEY_PAIR(PSA_ECC_FAMILY_TWISTED_EDWARDS));
-	psa_set_key_bits(&attributes, 255);
+	psa_set_key_bits(&attributes, IDENTITY_ED25519_KEY_BITS);
 
 	/* Generate the key pair */
 	status = psa_generate_key(&attributes, &key_id);
@@ -146,7 +148,7 @@ int __weak altruist_identity_storage_save(
 	psa_set_key_usage_flags(&attributes, PSA_KEY_USAGE_SIGN_MESSAGE | PSA_KEY_USAGE_EXPORT);
 	psa_set_key_algorithm(&attributes, PSA_ALG_PURE_EDDSA);
 	psa_set_key_type(&attributes, PSA_KEY_TYPE_ECC_KEY_PAIR(PSA_ECC_FAMILY_TWISTED_EDWARDS));
-	psa_set_key_bits(&attributes, 255);
+	psa_set_key_bits(&attributes, IDENTITY_ED25519_KEY_BITS);
 	psa_set_key_lifetime(&attributes, PSA_KEY_LIFETIME_PERSISTENT);
 	psa_set_key_id(&attributes, key_id);
 
@@ -218,7 +220,7 @@ int altruist_identity_sign_detached(const uint8_t *private_key, size_t private_k
 	psa_set_key_usage_flags(&attributes, PSA_KEY_USAGE_SIGN_MESSAGE);
 	psa_set_key_algorithm(&attributes, PSA_ALG_PURE_EDDSA);
 	psa_set_key_type(&attributes, PSA_KEY_TYPE_ECC_KEY_PAIR(PSA_ECC_FAMILY_TWISTED_EDWARDS));
-	psa_set_key_bits(&attributes, 255);
+	psa_set_key_bits(&attributes, IDENTITY_ED25519_KEY_BITS);
 
 	/* Import the private key */
 	status = psa_import_key(&attributes, private_key, private_key_len, &key_id);
@@ -268,7 +270,7 @@ int altruist_identity_verify_detached(const uint8_t *public_key, size_t public_k
 	psa_set_key_usage_flags(&attributes, PSA_KEY_USAGE_VERIFY_MESSAGE);
 	psa_set_key_algorithm(&attributes, PSA_ALG_PURE_EDDSA);
 	psa_set_key_type(&attributes, PSA_KEY_TYPE_ECC_PUBLIC_KEY(PSA_ECC_FAMILY_TWISTED_EDWARDS));
-	psa_set_key_bits(&attributes, 255);
+	psa_set_key_bits(&attributes, IDENTITY_ED25519_KEY_BITS);
 
 	/* Import the public key */
 	status = psa_import_key(&attributes, public_key, public_key_len, &key_id);

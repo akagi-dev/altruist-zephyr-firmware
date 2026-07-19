@@ -13,6 +13,9 @@ static bool settings_ready;
 K_MUTEX_DEFINE(wifi_credentials_lock);
 K_MUTEX_DEFINE(wifi_credentials_init_lock);
 
+#define WIFI_CREDENTIALS_SETTINGS_SUBTREE "altruist/wifi"
+#define WIFI_CREDENTIALS_SETTINGS_KEY WIFI_CREDENTIALS_SETTINGS_SUBTREE "/credentials"
+
 static void wifi_credentials_clear_locked(void)
 {
 	memset(&stored_credentials, 0, sizeof(stored_credentials));
@@ -74,7 +77,7 @@ static int wifi_credentials_settings_set(const char *name, size_t len_rd, settin
 }
 
 static struct settings_handler wifi_credentials_settings = {
-	.name = "altruist/wifi",
+	.name = WIFI_CREDENTIALS_SETTINGS_SUBTREE,
 	.h_set = wifi_credentials_settings_set,
 };
 
@@ -101,7 +104,7 @@ static int wifi_credentials_storage_init(void)
 		return rc;
 	}
 
-	rc = settings_load_subtree("altruist/wifi");
+	rc = settings_load_subtree(WIFI_CREDENTIALS_SETTINGS_SUBTREE);
 	if (rc != 0) {
 		k_mutex_unlock(&wifi_credentials_init_lock);
 		return rc;
@@ -139,7 +142,6 @@ bool altruist_config_get_wifi_credentials(struct wifi_manager_credentials *out)
 int altruist_config_set_wifi_credentials(const struct wifi_manager_credentials *credentials)
 {
 	int rc;
-	struct wifi_manager_credentials saved_credentials;
 
 	if (credentials == NULL) {
 		return -EINVAL;
@@ -154,18 +156,19 @@ int altruist_config_set_wifi_credentials(const struct wifi_manager_credentials *
 		return -EINVAL;
 	}
 
-	saved_credentials = *credentials;
-
 	rc = wifi_credentials_storage_init();
 	if (rc != 0) {
 		return rc;
 	}
 
+	/*
+	 * Credentials are persisted through Zephyr settings. Use an encrypted or
+	 * otherwise protected settings backend to avoid plaintext PSK storage.
+	 */
 	k_mutex_lock(&wifi_credentials_lock, K_FOREVER);
-	rc = settings_save_one("altruist/wifi/credentials", &saved_credentials,
-			       sizeof(saved_credentials));
+	rc = settings_save_one(WIFI_CREDENTIALS_SETTINGS_KEY, credentials, sizeof(*credentials));
 	if (rc == 0) {
-		stored_credentials = saved_credentials;
+		stored_credentials = *credentials;
 		stored_credentials_valid = true;
 	}
 	k_mutex_unlock(&wifi_credentials_lock);
@@ -183,7 +186,7 @@ int altruist_config_clear_wifi_credentials(void)
 	}
 
 	k_mutex_lock(&wifi_credentials_lock, K_FOREVER);
-	rc = settings_delete("altruist/wifi/credentials");
+	rc = settings_delete(WIFI_CREDENTIALS_SETTINGS_KEY);
 	if (rc == 0) {
 		wifi_credentials_clear_locked();
 	}

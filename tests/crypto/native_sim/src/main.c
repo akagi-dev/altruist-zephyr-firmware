@@ -12,6 +12,7 @@
 #define TEST_IDENTITY_KEY_ID (PSA_KEY_ID_USER_MIN + 0x0060)
 
 static int stored_save_calls;
+static bool stored_key_valid;
 
 int altruist_identity_storage_load(uint8_t private_key[ALTRUIST_IDENTITY_ED25519_PRIVATE_KEY_SIZE],
 				   uint8_t public_key[ALTRUIST_IDENTITY_ED25519_PUBLIC_KEY_SIZE])
@@ -107,6 +108,7 @@ int altruist_identity_storage_save(
 	}
 
 	stored_save_calls++;
+	stored_key_valid = true;
 
 	return 0;
 }
@@ -124,6 +126,7 @@ int altruist_identity_storage_reset(void)
 	if ((status != PSA_SUCCESS) && (status != PSA_ERROR_DOES_NOT_EXIST)) {
 		return -EIO;
 	}
+	stored_key_valid = false;
 
 	return 0;
 }
@@ -138,6 +141,7 @@ static void reset_test_storage(void)
 	}
 
 	stored_save_calls = 0;
+	stored_key_valid = false;
 }
 
 ZTEST(identity_sign_verify, test_rfc8032_vector)
@@ -401,6 +405,7 @@ ZTEST(identity_sign_verify, test_persistence_and_reset_lifecycle)
 
 	zassert_ok(altruist_identity_init());
 	zassert_equal(stored_save_calls, 1, "key should be generated once");
+	zassert_true(stored_key_valid, "key should be persisted after first init");
 	zassert_ok(altruist_identity_get_public_key(public_key_first, sizeof(public_key_first)));
 
 	altruist_identity_test_reset_state();
@@ -421,6 +426,7 @@ ZTEST(identity_sign_verify, test_persistence_and_reset_lifecycle)
 
 	zassert_ok(altruist_identity_reset());
 	zassert_equal(stored_save_calls, 2, "reset should regenerate and persist a new key");
+	zassert_true(stored_key_valid, "key should be persisted after reset");
 	zassert_ok(altruist_identity_get_public_key(public_key_after_reset, sizeof(public_key_after_reset)));
 	zassert_true(memcmp(public_key_first, public_key_after_reset, sizeof(public_key_first)) != 0,
 		     "reset should force identity regeneration");

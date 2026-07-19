@@ -18,6 +18,7 @@ LOG_MODULE_REGISTER(altruist_identity, CONFIG_LOG_DEFAULT_LEVEL);
 #define IDENTITY_PERSISTENT_KEY_ID (PSA_KEY_ID_USER_MIN + 0x0006)
 /* PSA Crypto expects 255 for Ed25519 key-bit attributes (curve parameter size). */
 #define IDENTITY_ED25519_KEY_BITS 255
+#define IDENTITY_KEY_TYPE PSA_KEY_TYPE_ECC_KEY_PAIR(PSA_ECC_FAMILY_TWISTED_EDWARDS)
 
 struct identity_state {
 	bool initialized;
@@ -44,7 +45,7 @@ static int identity_generate_keypair(uint8_t *private_key, uint8_t *public_key)
 	psa_set_key_usage_flags(&attributes, PSA_KEY_USAGE_SIGN_MESSAGE | PSA_KEY_USAGE_VERIFY_MESSAGE |
 						  PSA_KEY_USAGE_EXPORT);
 	psa_set_key_algorithm(&attributes, PSA_ALG_PURE_EDDSA);
-	psa_set_key_type(&attributes, PSA_KEY_TYPE_ECC_KEY_PAIR(PSA_ECC_FAMILY_TWISTED_EDWARDS));
+	psa_set_key_type(&attributes, IDENTITY_KEY_TYPE);
 	psa_set_key_bits(&attributes, IDENTITY_ED25519_KEY_BITS);
 
 	/* Generate the key pair */
@@ -147,9 +148,10 @@ int __weak altruist_identity_storage_save(
 		return -EINVAL;
 	}
 
-	psa_set_key_usage_flags(&attributes, PSA_KEY_USAGE_SIGN_MESSAGE | PSA_KEY_USAGE_EXPORT);
+	psa_set_key_usage_flags(&attributes, PSA_KEY_USAGE_SIGN_MESSAGE | PSA_KEY_USAGE_VERIFY_MESSAGE |
+						  PSA_KEY_USAGE_EXPORT);
 	psa_set_key_algorithm(&attributes, PSA_ALG_PURE_EDDSA);
-	psa_set_key_type(&attributes, PSA_KEY_TYPE_ECC_KEY_PAIR(PSA_ECC_FAMILY_TWISTED_EDWARDS));
+	psa_set_key_type(&attributes, IDENTITY_KEY_TYPE);
 	psa_set_key_bits(&attributes, IDENTITY_ED25519_KEY_BITS);
 	psa_set_key_lifetime(&attributes, PSA_KEY_LIFETIME_PERSISTENT);
 	psa_set_key_id(&attributes, key_id);
@@ -225,7 +227,7 @@ int altruist_identity_sign_detached(const uint8_t *private_key, size_t private_k
 	/* Configure key attributes for Ed25519 */
 	psa_set_key_usage_flags(&attributes, PSA_KEY_USAGE_SIGN_MESSAGE);
 	psa_set_key_algorithm(&attributes, PSA_ALG_PURE_EDDSA);
-	psa_set_key_type(&attributes, PSA_KEY_TYPE_ECC_KEY_PAIR(PSA_ECC_FAMILY_TWISTED_EDWARDS));
+	psa_set_key_type(&attributes, IDENTITY_KEY_TYPE);
 	psa_set_key_bits(&attributes, IDENTITY_ED25519_KEY_BITS);
 
 	/* Import the private key */

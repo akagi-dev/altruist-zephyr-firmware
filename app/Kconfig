@@ -48,7 +48,7 @@ config ALTRUIST_WIFI_CREDENTIALS_PERSISTENT_STORAGE
 	select SETTINGS
 	default y
 	help
-	  Stores Wi-Fi credentials in Zephyr Settings for persistence across reboot.
+	  Stores Wi-Fi credentials in Zephyr Settings for persistence across reboots.
 	  For secure storage at rest, ensure an encrypted/protected settings
 	  backend is configured.
 

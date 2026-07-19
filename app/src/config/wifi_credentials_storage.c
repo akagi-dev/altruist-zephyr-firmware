@@ -13,9 +13,15 @@ static bool settings_ready;
 K_MUTEX_DEFINE(wifi_credentials_lock);
 K_MUTEX_DEFINE(wifi_credentials_init_lock);
 
+static void wifi_credentials_clear_locked(void)
+{
+	memset(&stored_credentials, 0, sizeof(stored_credentials));
+	stored_credentials_valid = false;
+}
+
 static bool wifi_credentials_is_null_terminated(const char *value, size_t value_len)
 {
-	if (value == NULL || value_len == 0U) {
+	if (value == NULL || value_len == 0) {
 		return false;
 	}
 
@@ -48,16 +54,14 @@ static int wifi_credentials_settings_set(const char *name, size_t len_rd, settin
 	if (!wifi_credentials_is_null_terminated(credentials.ssid, sizeof(credentials.ssid)) ||
 	    !wifi_credentials_is_null_terminated(credentials.psk, sizeof(credentials.psk))) {
 		k_mutex_lock(&wifi_credentials_lock, K_FOREVER);
-		memset(&stored_credentials, 0, sizeof(stored_credentials));
-		stored_credentials_valid = false;
+		wifi_credentials_clear_locked();
 		k_mutex_unlock(&wifi_credentials_lock);
 		return -EINVAL;
 	}
 
 	if (credentials.ssid[0] == '\0') {
 		k_mutex_lock(&wifi_credentials_lock, K_FOREVER);
-		memset(&stored_credentials, 0, sizeof(stored_credentials));
-		stored_credentials_valid = false;
+		wifi_credentials_clear_locked();
 		k_mutex_unlock(&wifi_credentials_lock);
 		return 0;
 	}
@@ -181,8 +185,7 @@ int altruist_config_clear_wifi_credentials(void)
 	k_mutex_lock(&wifi_credentials_lock, K_FOREVER);
 	rc = settings_delete("altruist/wifi/credentials");
 	if (rc == 0) {
-		memset(&stored_credentials, 0, sizeof(stored_credentials));
-		stored_credentials_valid = false;
+		wifi_credentials_clear_locked();
 	}
 	k_mutex_unlock(&wifi_credentials_lock);
 

@@ -12,21 +12,13 @@ static bool stored_credentials_valid;
 static bool settings_ready;
 K_MUTEX_DEFINE(wifi_credentials_lock);
 
-static void wifi_credentials_ensure_terminated(char *value, size_t value_len)
+static bool wifi_credentials_is_null_terminated(const char *value, size_t value_len)
 {
 	if (value == NULL || value_len == 0U) {
-		return;
+		return false;
 	}
 
-	if (memchr(value, '\0', value_len) == NULL) {
-		value[value_len - 1U] = '\0';
-	}
-}
-
-static void wifi_credentials_sanitize(struct wifi_manager_credentials *credentials)
-{
-	wifi_credentials_ensure_terminated(credentials->ssid, sizeof(credentials->ssid));
-	wifi_credentials_ensure_terminated(credentials->psk, sizeof(credentials->psk));
+	return memchr(value, '\0', value_len) != NULL;
 }
 
 static int wifi_credentials_settings_set(const char *name, size_t len_rd, settings_read_cb read_cb,
@@ -52,7 +44,12 @@ static int wifi_credentials_settings_set(const char *name, size_t len_rd, settin
 		return -EINVAL;
 	}
 
-	wifi_credentials_sanitize(&credentials);
+	if (!wifi_credentials_is_null_terminated(credentials.ssid, sizeof(credentials.ssid)) ||
+	    !wifi_credentials_is_null_terminated(credentials.psk, sizeof(credentials.psk))) {
+		memset(&stored_credentials, 0, sizeof(stored_credentials));
+		stored_credentials_valid = false;
+		return -EINVAL;
+	}
 
 	if (credentials.ssid[0] == '\0') {
 		memset(&stored_credentials, 0, sizeof(stored_credentials));
@@ -120,27 +117,31 @@ bool altruist_config_get_wifi_credentials(struct wifi_manager_credentials *out)
 int altruist_config_set_wifi_credentials(const struct wifi_manager_credentials *credentials)
 {
 	int rc;
-	struct wifi_manager_credentials sanitized_credentials;
+	struct wifi_manager_credentials saved_credentials;
 
 	if (credentials == NULL) {
 		return -EINVAL;
 	}
 
-	sanitized_credentials = *credentials;
-	wifi_credentials_sanitize(&sanitized_credentials);
+	if (!wifi_credentials_is_null_terminated(credentials->ssid, sizeof(credentials->ssid)) ||
+	    !wifi_credentials_is_null_terminated(credentials->psk, sizeof(credentials->psk))) {
+		return -EINVAL;
+	}
 
-	if (sanitized_credentials.ssid[0] == '\0') {
+	saved_credentials = *credentials;
+
+	if (saved_credentials.ssid[0] == '\0') {
 		return -EINVAL;
 	}
 
 	k_mutex_lock(&wifi_credentials_lock, K_FOREVER);
 	rc = wifi_credentials_storage_init_locked();
 	if (rc == 0) {
-		rc = settings_save_one("altruist/wifi/credentials", &sanitized_credentials,
-				       sizeof(sanitized_credentials));
+		rc = settings_save_one("altruist/wifi/credentials", &saved_credentials,
+				       sizeof(saved_credentials));
 	}
 	if (rc == 0) {
-		stored_credentials = sanitized_credentials;
+		stored_credentials = saved_credentials;
 		stored_credentials_valid = true;
 	}
 	k_mutex_unlock(&wifi_credentials_lock);

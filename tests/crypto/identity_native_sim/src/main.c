@@ -187,12 +187,11 @@ ZTEST(identity_sign_verify, test_polkadot_sign_verify_empty_message)
 		0xd2, 0x5b, 0xf5, 0xf0, 0x59, 0x5b, 0xbe, 0x24,
 		0x65, 0x51, 0x41, 0x43, 0x8e, 0x7a, 0x10, 0x0b,
 	};
-	const uint8_t *message = (const uint8_t *)""; /* Empty message */
 	uint8_t signature[ALTRUIST_IDENTITY_ED25519_SIGNATURE_SIZE];
 
-	/* Sign the empty message */
+	/* Sign the empty message (NULL with length 0) */
 	zassert_ok(altruist_identity_sign_detached(private_key, sizeof(private_key),
-						   message, 0,
+						   NULL, 0,
 						   signature, sizeof(signature)),
 		   "Failed to sign message");
 
@@ -202,7 +201,7 @@ ZTEST(identity_sign_verify, test_polkadot_sign_verify_empty_message)
 
 	/* Verify the signature */
 	zassert_ok(altruist_identity_verify_detached(public_key, sizeof(public_key),
-						     message, 0,
+						     NULL, 0,
 						     signature, sizeof(signature)),
 		   "Signature verification failed");
 }

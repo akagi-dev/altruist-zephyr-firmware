@@ -42,7 +42,7 @@ static int identity_load_public_key(uint8_t public_key[ALTRUIST_IDENTITY_ED25519
 	psa_key_id_t key_id = 0;
 	psa_status_t status;
 	size_t public_key_len;
-	int rc;
+	int rc = 0;
 
 	if (public_key == NULL) {
 		return -EINVAL;
@@ -62,8 +62,6 @@ static int identity_load_public_key(uint8_t public_key[ALTRUIST_IDENTITY_ED25519
 	if ((status != PSA_SUCCESS) ||
 	    (public_key_len != ALTRUIST_IDENTITY_ED25519_PUBLIC_KEY_SIZE)) {
 		rc = -EIO;
-	} else {
-		rc = 0;
 	}
 
 	status = psa_close_key(key_id);

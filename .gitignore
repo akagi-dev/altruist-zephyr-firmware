@@ -10,3 +10,6 @@
 
 # MkDocs build output
 /site/
+
+# Build directories
+/build/

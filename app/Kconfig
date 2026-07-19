@@ -14,7 +14,7 @@ config ALTRUIST_BOOT_MESSAGE
 	  Message printed during boot.
 
 config ALTRUIST_IDENTITY
-	bool "Enable Altruist device identity/keystore"
+	bool "Enable Altruist cryptographic identity"
 	default y
 	select SETTINGS
 	select CSPRNG_NEEDED

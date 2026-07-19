@@ -25,10 +25,7 @@ Public API:
 
 ## Persistence architecture
 
-Default storage backend uses Zephyr Settings keys:
-
-- `altruist/identity/private_key`
-- `altruist/identity/public_key`
+Default storage backend uses PSA persistent key storage with a fixed key ID.
 
 The module exposes weak storage hooks (`load/save/reset`) so tests can override persistence behavior and future production backends can be introduced without changing API consumers.
 
@@ -41,23 +38,6 @@ The module exposes weak storage hooks (`load/save/reset`) so tests can override 
 
 ### Current solution highlights
 
-- Private key is generated on-device and persisted for reboot continuity.
-- Storage access is abstracted via weak hooks to keep migration/hardening paths open.
+- Private key is generated on-device and persisted in PSA-managed secure storage.
+- Identity lifecycle uses weak storage hooks to keep test overrides and backend evolution straightforward.
 - Reset semantics are explicit and test-covered.
-
-### Current limitation
-
-- Default implementation stores raw private key bytes in Settings.
-- If Settings backend lacks encryption/access controls, physical extraction of flash/filesystem images can expose key material.
-
-### Future hardening options
-
-1. **PSA persistent key handle flow**
-   - Store key in PSA-managed secure storage using fixed key ID.
-   - Persist only public key and/or metadata handle.
-2. **Encrypted key blob at rest**
-   - Encrypt persisted private key with hardware-unique/root secret.
-3. **Hardware-backed key storage**
-   - Prefer secure element / TEE / HSM-style sign-by-handle flows.
-4. **Profile-based security modes**
-   - Keep raw-settings mode for development/native_sim, default to hardened mode in production profiles.

@@ -10,6 +10,7 @@
 
 #include <string.h>
 
+/* TODO(akru): use constants for struct field defaults */
 void altruist_config_apply_defaults(struct altruist_config *cfg)
 {
 	if (cfg == NULL) {
@@ -20,16 +21,16 @@ void altruist_config_apply_defaults(struct altruist_config *cfg)
 
 	cfg->schema_version = ALTRUIST_CONFIG_SCHEMA_VERSION;
 
-	strncpy(cfg->current_lang, "en", sizeof(cfg->current_lang) - 1);
+	strncpy(cfg->current_lang, "en", 3);
 
-	strncpy(cfg->wlanssid, "Not Set", sizeof(cfg->wlanssid) - 1);
+	strncpy(cfg->wlanssid, "NONE", 5);
 	cfg->wlanpwd[0] = '\0';
 	cfg->wlannopwd = false;
 
-	strncpy(cfg->fs_ssid, "Altruist", sizeof(cfg->fs_ssid) - 1);
+	strncpy(cfg->fs_ssid, "Altruist", 10);
 	cfg->fs_pwd[0] = '\0';
 
-	strncpy(cfg->rws_owner, "Not Set", sizeof(cfg->rws_owner) - 1);
+	strncpy(cfg->rws_owner, "NONE", 5);
 	cfg->robonomics_public_node[0] = '\0';
 	cfg->robonomics_connectivity_host[0] = '\0';
 	cfg->robonomics_connectivity_hosts[0] = '\0';

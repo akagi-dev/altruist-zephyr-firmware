@@ -4,7 +4,7 @@
 
 #include <altruist/config.h>
 
-#include <zephyr/settings/settings_runtime.h>
+#include <zephyr/settings/settings.h>
 #include <zephyr/ztest.h>
 
 ZTEST(config_settings, test_defaults_are_applied)
@@ -17,7 +17,7 @@ ZTEST(config_settings, test_defaults_are_applied)
 	cfg = altruist_config_get();
 	zassert_equal(cfg->schema_version, ALTRUIST_CONFIG_SCHEMA_VERSION, "schema version default");
 	zassert_equal(strcmp(cfg->current_lang, "en"), 0, "lang default");
-	zassert_equal(strcmp(cfg->wlanssid, "Not Set"), 0, "ssid default");
+	zassert_equal(strcmp(cfg->wlanssid, "NONE"), 0, "ssid default");
 	zassert_false(cfg->send2robonomics, "send2robonomics default");
 }
 
@@ -70,7 +70,7 @@ ZTEST(config_settings, test_reset_to_defaults)
 
 	cfg = altruist_config_get();
 	zassert_false(cfg->send2csv, "send2csv should reset");
-	zassert_equal(strcmp(cfg->wlanssid, "Not Set"), 0, "ssid reset");
+	zassert_equal(strcmp(cfg->wlanssid, "NONE"), 0, "ssid reset");
 }
 
 ZTEST_SUITE(config_settings, NULL, NULL, NULL, NULL, NULL);

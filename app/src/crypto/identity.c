@@ -14,7 +14,7 @@
 #include <psa/crypto.h>
 
 #define IDENTITY_PERSISTENT_KEY_ID (PSA_KEY_ID_USER_MIN + 0x0006)
-/* PSA Crypto uses the Ed25519 curve size (255) for key-bit attributes. */
+/* PSA Crypto expects 255 for Ed25519 key-bit attributes (curve parameter size). */
 #define IDENTITY_ED25519_KEY_BITS 255
 
 struct identity_state {
@@ -154,7 +154,7 @@ int __weak altruist_identity_storage_save(
 
 	status = psa_destroy_key(key_id);
 	if ((status != PSA_SUCCESS) && (status != PSA_ERROR_DOES_NOT_EXIST)) {
-		printk("altruist_identity: failed to replace persistent key, destroy status=%d\n",
+		printk("altruist_identity: failed to destroy existing persistent key before import, status=%d\n",
 		       (int)status);
 		return -EIO;
 	}

@@ -19,6 +19,7 @@ LOG_MODULE_REGISTER(altruist_identity, CONFIG_LOG_DEFAULT_LEVEL);
 /* PSA Crypto expects 255 for Ed25519 key-bit attributes (curve parameter size). */
 #define IDENTITY_ED25519_KEY_BITS 255
 #define IDENTITY_KEY_TYPE PSA_KEY_TYPE_ECC_KEY_PAIR(PSA_ECC_FAMILY_TWISTED_EDWARDS)
+#define IDENTITY_PUBLIC_KEY_TYPE PSA_KEY_TYPE_ECC_PUBLIC_KEY(PSA_ECC_FAMILY_TWISTED_EDWARDS)
 
 struct identity_state {
 	bool initialized;
@@ -281,7 +282,7 @@ int altruist_identity_verify_detached(const uint8_t *public_key, size_t public_k
 	/* Configure key attributes for Ed25519 public key */
 	psa_set_key_usage_flags(&attributes, PSA_KEY_USAGE_VERIFY_MESSAGE);
 	psa_set_key_algorithm(&attributes, PSA_ALG_PURE_EDDSA);
-	psa_set_key_type(&attributes, PSA_KEY_TYPE_ECC_PUBLIC_KEY(PSA_ECC_FAMILY_TWISTED_EDWARDS));
+	psa_set_key_type(&attributes, IDENTITY_PUBLIC_KEY_TYPE);
 	psa_set_key_bits(&attributes, IDENTITY_ED25519_KEY_BITS);
 
 	/* Import the public key */

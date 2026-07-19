@@ -404,7 +404,7 @@ ZTEST(identity_sign_verify, test_persistence_and_reset_lifecycle)
 	altruist_identity_test_reset_state();
 
 	zassert_ok(altruist_identity_init());
-	zassert_equal(stored_save_calls, 1, "key should be generated once");
+	zassert_equal(stored_save_calls, 1, "key should be generated and persisted once");
 	zassert_true(stored_key_valid, "key should be persisted after first init");
 	zassert_ok(altruist_identity_get_public_key(public_key_first, sizeof(public_key_first)));
 

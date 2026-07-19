@@ -1,11 +1,10 @@
 # Altruist Zephyr Firmware
 
-Planning repository for porting Altruist environmental sensor station firmware from Arduino/PlatformIO (`airalab/altruist-firmware`, branch `esp32`) to Zephyr OS.
+Altruist Environmental Sensor firmware porting from Arduino/PlatformIO to **Zephyr RTOS**.
 
-## Documentation
+## Quick Access 
 
-- [Source architecture baseline](ARCHITECTURE.md)
-- [Target Zephyr architecture](ZEPHYR_ARCHITECTURE.md)
-- [Developer identity architecture](development/identity.md)
-- [Master implementation plan](IMPLEMENTATION_PLAN.md)
-- [Agent-ready work packages](tasks/)
+- [General Architecture Overview](architecture/overview.md)
+- [Architecture on Zephyr RTOS](architecture/zephyr/architecture.md)
+- [Master Implementation Plan](architecture/zephyr/implementation-plan.md)
+  * [Work Packages](architecture/zephyr/tasks/)

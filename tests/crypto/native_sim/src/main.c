@@ -397,6 +397,7 @@ ZTEST(identity_sign_verify, test_persistence_and_reset_lifecycle)
 	uint8_t public_key_first[ALTRUIST_IDENTITY_ED25519_PUBLIC_KEY_SIZE];
 	uint8_t public_key_second[ALTRUIST_IDENTITY_ED25519_PUBLIC_KEY_SIZE];
 	uint8_t public_key_after_reset[ALTRUIST_IDENTITY_ED25519_PUBLIC_KEY_SIZE];
+	uint8_t public_key_after_reset_reboot[ALTRUIST_IDENTITY_ED25519_PUBLIC_KEY_SIZE];
 	uint8_t signature_a[ALTRUIST_IDENTITY_ED25519_SIGNATURE_SIZE];
 	uint8_t signature_b[ALTRUIST_IDENTITY_ED25519_SIGNATURE_SIZE];
 
@@ -435,6 +436,14 @@ ZTEST(identity_sign_verify, test_persistence_and_reset_lifecycle)
 					  signature_a, sizeof(signature_a)));
 	zassert_ok(altruist_identity_verify(test_message, message_len,
 					    signature_a, sizeof(signature_a)));
+
+	altruist_identity_test_reset_state();
+	zassert_ok(altruist_identity_init());
+	zassert_ok(altruist_identity_get_public_key(public_key_after_reset_reboot,
+						    sizeof(public_key_after_reset_reboot)));
+	zassert_mem_equal(public_key_after_reset, public_key_after_reset_reboot,
+			  sizeof(public_key_after_reset),
+			  "regenerated key should persist across reboot");
 }
 
 ZTEST_SUITE(identity_sign_verify, NULL, NULL, NULL, NULL, NULL);

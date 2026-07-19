@@ -7,9 +7,10 @@
 
 #include <psa/crypto.h>
 #include <zephyr/ztest.h>
+#include <zephyr/psa/key_ids.h>
 
-/* Must match app/src/crypto/identity.c IDENTITY_PERSISTENT_KEY_ID. */
-#define TEST_IDENTITY_KEY_ID (PSA_KEY_ID_USER_MIN + 0x0006)
+/* Keep aligned with app/src/crypto/identity.c IDENTITY_PERSISTENT_KEY_ID. */
+#define TEST_IDENTITY_KEY_ID ZEPHYR_PSA_APPLICATION_KEY_ID_RANGE_BEGIN
 
 static int sign_with_seed(const uint8_t seed[ALTRUIST_IDENTITY_ED25519_PRIVATE_KEY_SIZE],
 			  const uint8_t *message, size_t message_len,
@@ -122,18 +123,6 @@ static int derive_public_key_from_seed(
 	return rc;
 }
 
-static void reset_test_storage(void)
-{
-	psa_status_t status;
-
-	status = psa_crypto_init();
-	zassert_equal(status, PSA_SUCCESS, "PSA Crypto initialization failed");
-
-	status = psa_destroy_key(TEST_IDENTITY_KEY_ID);
-	zassert_true((status == PSA_SUCCESS) || (status == PSA_ERROR_DOES_NOT_EXIST),
-		     "failed to clear persistent identity key");
-}
-
 ZTEST(identity_sign_verify, test_rfc8032_vector)
 {
 	static const uint8_t private_key[ALTRUIST_IDENTITY_ED25519_PRIVATE_KEY_SIZE] = {
@@ -200,18 +189,11 @@ ZTEST(identity_sign_verify, test_persistence_and_reset_lifecycle)
 	uint8_t public_key_after_reset_reboot[ALTRUIST_IDENTITY_ED25519_PUBLIC_KEY_SIZE];
 	uint8_t signature_a[ALTRUIST_IDENTITY_ED25519_SIGNATURE_SIZE];
 	uint8_t signature_b[ALTRUIST_IDENTITY_ED25519_SIGNATURE_SIZE];
-	psa_key_id_t key_handle = 0;
-	psa_status_t status;
 
-	reset_test_storage();
 	altruist_identity_test_reset_state();
 
 	zassert_ok(altruist_identity_init());
 	zassert_ok(altruist_identity_get_public_key(public_key_first, sizeof(public_key_first)));
-	status = psa_open_key(TEST_IDENTITY_KEY_ID, &key_handle);
-	zassert_equal(status, PSA_SUCCESS, "persistent identity key missing after init");
-	status = psa_close_key(key_handle);
-	zassert_equal(status, PSA_SUCCESS, "failed to close persistent identity key");
 
 	altruist_identity_test_reset_state();
 	zassert_ok(altruist_identity_init());

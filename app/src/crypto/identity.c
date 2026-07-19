@@ -8,13 +8,13 @@
 
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>
+#include <zephyr/psa/key_ids.h>
 
 #include <psa/crypto.h>
 
 LOG_MODULE_REGISTER(altruist_identity, CONFIG_LOG_DEFAULT_LEVEL);
 
-/* Internal persistent key slot for device identity. */
-#define IDENTITY_PERSISTENT_KEY_ID (PSA_KEY_ID_USER_MIN + 0x0006)
+#define IDENTITY_PERSISTENT_KEY_ID ZEPHYR_PSA_APPLICATION_KEY_ID_RANGE_BEGIN 
 /* PSA Crypto expects 255 for Ed25519 key-bit attributes (curve parameter size). */
 #define IDENTITY_ED25519_KEY_BITS 255
 #define IDENTITY_KEY_TYPE PSA_KEY_TYPE_ECC_KEY_PAIR(PSA_ECC_FAMILY_TWISTED_EDWARDS)
@@ -26,6 +26,18 @@ struct identity_state {
 
 static struct identity_state state;
 K_MUTEX_DEFINE(identity_lock);
+
+static void fill_key_attributes(psa_key_attributes_t *key_attributes)
+{
+    *key_attributes = psa_key_attributes_init();
+    psa_set_key_lifetime(key_attributes, PSA_KEY_LIFETIME_PERSISTENT);
+	psa_set_key_usage_flags(key_attributes,
+            PSA_KEY_USAGE_SIGN_MESSAGE | PSA_KEY_USAGE_VERIFY_MESSAGE | PSA_KEY_USAGE_EXPORT);
+	psa_set_key_algorithm(key_attributes, PSA_ALG_PURE_EDDSA);
+	psa_set_key_type(key_attributes, IDENTITY_KEY_TYPE);
+	psa_set_key_bits(key_attributes, IDENTITY_ED25519_KEY_BITS);
+	psa_set_key_id(key_attributes, IDENTITY_PERSISTENT_KEY_ID);
+}
 
 static int identity_persistent_key_reset(void)
 {
@@ -49,25 +61,11 @@ static int identity_load_public_key(uint8_t public_key[ALTRUIST_IDENTITY_ED25519
 		return -EINVAL;
 	}
 
-	status = psa_open_key(IDENTITY_PERSISTENT_KEY_ID, &key_id);
-	if (status == PSA_ERROR_DOES_NOT_EXIST) {
-		return -ENOENT;
-	}
-	if (status != PSA_SUCCESS) {
-		return -EIO;
-	}
-
 	status = psa_export_public_key(key_id, public_key,
 				       ALTRUIST_IDENTITY_ED25519_PUBLIC_KEY_SIZE,
 				       &public_key_len);
 	if ((status != PSA_SUCCESS) ||
 	    (public_key_len != ALTRUIST_IDENTITY_ED25519_PUBLIC_KEY_SIZE)) {
-		rc = -EIO;
-	}
-
-	status = psa_close_key(key_id);
-	if (status != PSA_SUCCESS) {
-		LOG_ERR("failed to close persistent identity key (status=%d)", (int)status);
 		rc = -EIO;
 	}
 
@@ -92,14 +90,7 @@ static int identity_generate_persistent_key(uint8_t public_key[ALTRUIST_IDENTITY
 		return rc;
 	}
 
-	psa_set_key_usage_flags(&attributes, PSA_KEY_USAGE_SIGN_MESSAGE | PSA_KEY_USAGE_VERIFY_MESSAGE |
-						  PSA_KEY_USAGE_EXPORT);
-	psa_set_key_algorithm(&attributes, PSA_ALG_PURE_EDDSA);
-	psa_set_key_type(&attributes, IDENTITY_KEY_TYPE);
-	psa_set_key_bits(&attributes, IDENTITY_ED25519_KEY_BITS);
-	psa_set_key_lifetime(&attributes, PSA_KEY_LIFETIME_PERSISTENT);
-	psa_set_key_id(&attributes, IDENTITY_PERSISTENT_KEY_ID);
-
+    fill_key_attributes(&attributes);
 	status = psa_generate_key(&attributes, &key_id);
 	psa_reset_key_attributes(&attributes);
 	if (status != PSA_SUCCESS) {
@@ -122,12 +113,6 @@ static int identity_generate_persistent_key(uint8_t public_key[ALTRUIST_IDENTITY
 		rc = -EIO;
 	} else {
 		rc = 0;
-	}
-
-	status = psa_close_key(key_id);
-	if (status != PSA_SUCCESS) {
-		LOG_ERR("failed to close generated identity key (status=%d)", (int)status);
-		rc = -EIO;
 	}
 
 	return rc;
@@ -206,24 +191,13 @@ int altruist_identity_sign(const uint8_t *message, size_t message_len,
 		return -EACCES;
 	}
 
-	status = psa_open_key(IDENTITY_PERSISTENT_KEY_ID, &key_id);
-	if (status != PSA_SUCCESS) {
-		rc = (status == PSA_ERROR_DOES_NOT_EXIST) ? -ENOENT : -EIO;
+	status = psa_sign_message(key_id, PSA_ALG_PURE_EDDSA, message, message_len,
+					signature, signature_len, &signature_length);
+	if ((status != PSA_SUCCESS) ||
+		(signature_length != ALTRUIST_IDENTITY_ED25519_SIGNATURE_SIZE)) {
+		rc = -EIO;
 	} else {
-		status = psa_sign_message(key_id, PSA_ALG_PURE_EDDSA, message, message_len,
-					  signature, signature_len, &signature_length);
-		if ((status != PSA_SUCCESS) ||
-		    (signature_length != ALTRUIST_IDENTITY_ED25519_SIGNATURE_SIZE)) {
-			rc = -EIO;
-		} else {
-			rc = 0;
-		}
-		status = psa_close_key(key_id);
-		if (status != PSA_SUCCESS) {
-			LOG_ERR("failed to close persistent identity signing key (status=%d)",
-				(int)status);
-			rc = -EIO;
-		}
+		rc = 0;
 	}
 
 	if (rc != 0) {
@@ -251,25 +225,14 @@ int altruist_identity_verify(const uint8_t *message, size_t message_len,
 		return -EACCES;
 	}
 
-	status = psa_open_key(IDENTITY_PERSISTENT_KEY_ID, &key_id);
-	if (status != PSA_SUCCESS) {
-		rc = (status == PSA_ERROR_DOES_NOT_EXIST) ? -ENOENT : -EIO;
+	status = psa_verify_message(key_id, PSA_ALG_PURE_EDDSA, message, message_len,
+					signature, signature_len);
+	if (status == PSA_SUCCESS) {
+		rc = 0;
+	} else if (status == PSA_ERROR_INVALID_SIGNATURE) {
+		rc = -EINVAL;
 	} else {
-		status = psa_verify_message(key_id, PSA_ALG_PURE_EDDSA, message, message_len,
-					    signature, signature_len);
-		if (status == PSA_SUCCESS) {
-			rc = 0;
-		} else if (status == PSA_ERROR_INVALID_SIGNATURE) {
-			rc = -EINVAL;
-		} else {
-			rc = -EIO;
-		}
-		status = psa_close_key(key_id);
-		if (status != PSA_SUCCESS) {
-			LOG_ERR("failed to close persistent identity verification key (status=%d)",
-				(int)status);
-			rc = -EIO;
-		}
+		rc = -EIO;
 	}
 
 	if (rc != 0) {

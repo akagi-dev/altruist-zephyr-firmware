@@ -1,0 +1,11 @@
+tests:
+  altruist.identity:
+    filter: CONFIG_SECURE_STORAGE and not CONFIG_SECURE_STORAGE_ITS_STORE_IMPLEMENTATION_NONE
+    extra_args: EXTRA_CONF_FILE=overlay-secure_storage.conf
+    tags:
+      - crypto
+      - identity
+    platform_allow:
+      - native_sim/native/64
+    integration_platforms:
+      - native_sim/native/64

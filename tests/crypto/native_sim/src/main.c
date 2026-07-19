@@ -394,6 +394,7 @@ ZTEST(identity_sign_verify, test_persistence_and_reset_lifecycle)
 {
 	const uint8_t *test_message = (const uint8_t *)"altruist-identity-persistence";
 	size_t message_len = strlen((const char *)test_message);
+	int save_calls_before_reset;
 	uint8_t public_key_first[ALTRUIST_IDENTITY_ED25519_PUBLIC_KEY_SIZE];
 	uint8_t public_key_second[ALTRUIST_IDENTITY_ED25519_PUBLIC_KEY_SIZE];
 	uint8_t public_key_after_reset[ALTRUIST_IDENTITY_ED25519_PUBLIC_KEY_SIZE];
@@ -426,9 +427,11 @@ ZTEST(identity_sign_verify, test_persistence_and_reset_lifecycle)
 	zassert_ok(altruist_identity_verify(test_message, message_len,
 					    signature_a, sizeof(signature_a)));
 
+	save_calls_before_reset = stored_save_calls;
 	zassert_ok(altruist_identity_reset());
 	zassert_true(stored_key_valid, "key should be persisted after reset");
-	zassert_equal(stored_save_calls, 2, "save calls should be 2 total: 1 from init, 1 from reset");
+	zassert_equal(stored_save_calls, save_calls_before_reset + 1,
+		      "reset should add exactly one persistence save call");
 	zassert_ok(altruist_identity_get_public_key(public_key_after_reset, sizeof(public_key_after_reset)));
 	zassert_true(memcmp(public_key_first, public_key_after_reset, sizeof(public_key_first)) != 0,
 		     "reset should force identity regeneration");

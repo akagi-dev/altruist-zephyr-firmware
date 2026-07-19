@@ -14,7 +14,7 @@ Public API:
 - `altruist_identity_init()`: load persisted identity or generate on first boot.
 - `altruist_identity_sign()` and `altruist_identity_verify()`: Ed25519 sign/verify helpers for report pipelines.
 - `altruist_identity_get_public_key()`: access current device public key.
-- `altruist_identity_reset()`: remove persisted identity and force regeneration on next init.
+- `altruist_identity_reset()`: remove persisted identity, regenerate a new keypair, and keep identity initialized.
 - Detached helpers (`*_detached`) for deterministic vector testing.
 
 ## Crypto implementation

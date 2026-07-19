@@ -10,6 +10,7 @@ menu "WiFi and provisioning"
 
 config ALTRUIST_WIFI_MANAGER
 	bool "Enable Altruist WiFi manager"
+	depends on NETWORKING && NET_MGMT && NET_MGMT_EVENT && WIFI
 	default n
 	help
 	  Enables WiFi station lifecycle handling, reconnect policy and

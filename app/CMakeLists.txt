@@ -14,4 +14,8 @@ if(CONFIG_ALTRUIST_WIFI_MANAGER)
     src/net/wifi_manager.c
     src/provisioning/provisioning.c
   )
+
+  if(CONFIG_ALTRUIST_WIFI_CREDENTIALS_SECURE_STORAGE)
+    target_sources(app PRIVATE src/config/wifi_credentials_storage.c)
+  endif()
 endif()

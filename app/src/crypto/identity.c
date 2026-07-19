@@ -430,7 +430,6 @@ int altruist_identity_reset(void)
 		(void)memset(state.private_key, 0, sizeof(state.private_key));
 		(void)memset(state.public_key, 0, sizeof(state.public_key));
 		state.initialized = false;
-		LOG_ERR("identity reset failed (rc=%d)", rc);
 	}
 
 	k_mutex_unlock(&identity_lock);

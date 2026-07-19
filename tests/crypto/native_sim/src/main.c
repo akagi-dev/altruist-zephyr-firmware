@@ -403,6 +403,7 @@ ZTEST(identity_sign_verify, test_persistence_and_reset_lifecycle)
 	reset_test_storage();
 	altruist_identity_test_reset_state();
 
+	zassert_false(stored_key_valid, "key should not be persisted before init");
 	zassert_ok(altruist_identity_init());
 	zassert_true(stored_key_valid, "key should be persisted after first init");
 	zassert_equal(stored_save_calls, 1, "key should be generated and persisted once");

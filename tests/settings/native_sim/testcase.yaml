@@ -1,7 +1,6 @@
 tests:
-  altruist.wp04.config.native_sim:
+  altruist.settings.native_sim:
     tags:
-      - wp04
       - config
     platform_allow:
       - native_sim/native/64

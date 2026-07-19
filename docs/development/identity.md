@@ -14,8 +14,7 @@ Public API:
 - `altruist_identity_init()`: load persisted identity or generate on first boot.
 - `altruist_identity_sign()` and `altruist_identity_verify()`: Ed25519 sign/verify helpers for report pipelines.
 - `altruist_identity_get_public_key()`: access current device public key.
-- `altruist_identity_reset()`: remove persisted identity and force regeneration on next init.
-- Detached helpers (`*_detached`) for deterministic vector testing.
+- `altruist_identity_reset()`: remove persisted identity, regenerate a new keypair, and keep identity initialized.
 
 ## Crypto implementation
 
@@ -25,12 +24,8 @@ Public API:
 
 ## Persistence architecture
 
-Default storage backend uses Zephyr Settings keys:
-
-- `altruist/identity/private_key`
-- `altruist/identity/public_key`
-
-The module exposes weak storage hooks (`load/save/reset`) so tests can override persistence behavior and future production backends can be introduced without changing API consumers.
+Default storage backend uses PSA persistent key storage with a fixed key ID.
+The private key is never exported from persistent storage by the identity module.
 
 ## Startup integration
 
@@ -41,23 +36,6 @@ The module exposes weak storage hooks (`load/save/reset`) so tests can override 
 
 ### Current solution highlights
 
-- Private key is generated on-device and persisted for reboot continuity.
-- Storage access is abstracted via weak hooks to keep migration/hardening paths open.
+- Private key is generated on-device and persisted in PSA-managed secure storage.
+- Sign/verify operations use the persistent PSA key directly.
 - Reset semantics are explicit and test-covered.
-
-### Current limitation
-
-- Default implementation stores raw private key bytes in Settings.
-- If Settings backend lacks encryption/access controls, physical extraction of flash/filesystem images can expose key material.
-
-### Future hardening options
-
-1. **PSA persistent key handle flow**
-   - Store key in PSA-managed secure storage using fixed key ID.
-   - Persist only public key and/or metadata handle.
-2. **Encrypted key blob at rest**
-   - Encrypt persisted private key with hardware-unique/root secret.
-3. **Hardware-backed key storage**
-   - Prefer secure element / TEE / HSM-style sign-by-handle flows.
-4. **Profile-based security modes**
-   - Keep raw-settings mode for development/native_sim, default to hardened mode in production profiles.

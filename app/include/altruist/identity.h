@@ -16,15 +16,8 @@ int altruist_identity_sign(const uint8_t *message, size_t message_len,
 			   uint8_t *signature, size_t signature_len);
 int altruist_identity_verify(const uint8_t *message, size_t message_len,
 			     const uint8_t *signature, size_t signature_len);
-/* Resets persisted identity; the next altruist_identity_init() regenerates a new keypair. */
+/* Resets persisted identity, regenerates/persists a new keypair, and keeps identity initialized. */
 int altruist_identity_reset(void);
-
-int altruist_identity_sign_detached(const uint8_t *private_key, size_t private_key_len,
-				    const uint8_t *message, size_t message_len,
-				    uint8_t *signature, size_t signature_len);
-int altruist_identity_verify_detached(const uint8_t *public_key, size_t public_key_len,
-				      const uint8_t *message, size_t message_len,
-				      const uint8_t *signature, size_t signature_len);
 
 #ifdef CONFIG_ZTEST
 void altruist_identity_test_reset_state(void);

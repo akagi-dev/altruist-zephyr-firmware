@@ -13,7 +13,6 @@
 
 LOG_MODULE_REGISTER(altruist_identity, CONFIG_LOG_DEFAULT_LEVEL);
 
-#define IDENTITY_PERSISTENT_KEY_ID (PSA_KEY_ID_USER_MIN + 0x0006)
 /* PSA Crypto expects 255 for Ed25519 key-bit attributes (curve parameter size). */
 #define IDENTITY_ED25519_KEY_BITS 255
 #define IDENTITY_KEY_TYPE PSA_KEY_TYPE_ECC_KEY_PAIR(PSA_ECC_FAMILY_TWISTED_EDWARDS)
@@ -28,7 +27,7 @@ K_MUTEX_DEFINE(identity_lock);
 
 static int identity_persistent_key_reset(void)
 {
-	psa_status_t status = psa_destroy_key(IDENTITY_PERSISTENT_KEY_ID);
+	psa_status_t status = psa_destroy_key(ALTRUIST_IDENTITY_PERSISTENT_KEY_ID);
 
 	if ((status != PSA_SUCCESS) && (status != PSA_ERROR_DOES_NOT_EXIST)) {
 		return -EIO;
@@ -48,7 +47,7 @@ static int identity_load_public_key(uint8_t public_key[ALTRUIST_IDENTITY_ED25519
 		return -EINVAL;
 	}
 
-	status = psa_open_key(IDENTITY_PERSISTENT_KEY_ID, &key_id);
+	status = psa_open_key(ALTRUIST_IDENTITY_PERSISTENT_KEY_ID, &key_id);
 	if (status == PSA_ERROR_DOES_NOT_EXIST) {
 		return -ENOENT;
 	}
@@ -76,7 +75,7 @@ static int identity_load_public_key(uint8_t public_key[ALTRUIST_IDENTITY_ED25519
 static int identity_generate_persistent_key(uint8_t public_key[ALTRUIST_IDENTITY_ED25519_PUBLIC_KEY_SIZE])
 {
 	psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
-	psa_key_id_t key_id = IDENTITY_PERSISTENT_KEY_ID;
+	psa_key_id_t key_id = ALTRUIST_IDENTITY_PERSISTENT_KEY_ID;
 	psa_status_t status;
 	size_t exported_length;
 	int rc;
@@ -97,7 +96,7 @@ static int identity_generate_persistent_key(uint8_t public_key[ALTRUIST_IDENTITY
 	psa_set_key_type(&attributes, IDENTITY_KEY_TYPE);
 	psa_set_key_bits(&attributes, IDENTITY_ED25519_KEY_BITS);
 	psa_set_key_lifetime(&attributes, PSA_KEY_LIFETIME_PERSISTENT);
-	psa_set_key_id(&attributes, IDENTITY_PERSISTENT_KEY_ID);
+	psa_set_key_id(&attributes, ALTRUIST_IDENTITY_PERSISTENT_KEY_ID);
 
 	status = psa_generate_key(&attributes, &key_id);
 	psa_reset_key_attributes(&attributes);
@@ -200,7 +199,7 @@ int altruist_identity_sign(const uint8_t *message, size_t message_len,
 		return -EACCES;
 	}
 
-	status = psa_open_key(IDENTITY_PERSISTENT_KEY_ID, &key_id);
+	status = psa_open_key(ALTRUIST_IDENTITY_PERSISTENT_KEY_ID, &key_id);
 	if (status != PSA_SUCCESS) {
 		rc = (status == PSA_ERROR_DOES_NOT_EXIST) ? -ENOENT : -EIO;
 	} else {
@@ -245,7 +244,7 @@ int altruist_identity_verify(const uint8_t *message, size_t message_len,
 		return -EACCES;
 	}
 
-	status = psa_open_key(IDENTITY_PERSISTENT_KEY_ID, &key_id);
+	status = psa_open_key(ALTRUIST_IDENTITY_PERSISTENT_KEY_ID, &key_id);
 	if (status != PSA_SUCCESS) {
 		rc = (status == PSA_ERROR_DOES_NOT_EXIST) ? -ENOENT : -EIO;
 	} else {

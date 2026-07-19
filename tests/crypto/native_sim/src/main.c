@@ -8,9 +8,6 @@
 #include <psa/crypto.h>
 #include <zephyr/ztest.h>
 
-/* Keep aligned with app/src/crypto/identity.c IDENTITY_PERSISTENT_KEY_ID. */
-#define TEST_IDENTITY_KEY_ID (PSA_KEY_ID_USER_MIN + 0x0006)
-
 static int sign_with_seed(const uint8_t seed[ALTRUIST_IDENTITY_ED25519_PRIVATE_KEY_SIZE],
 			  const uint8_t *message, size_t message_len,
 			  uint8_t signature[ALTRUIST_IDENTITY_ED25519_SIGNATURE_SIZE])
@@ -129,7 +126,7 @@ static void reset_test_storage(void)
 	status = psa_crypto_init();
 	zassert_equal(status, PSA_SUCCESS, "PSA Crypto initialization failed");
 
-	status = psa_destroy_key(TEST_IDENTITY_KEY_ID);
+	status = psa_destroy_key(ALTRUIST_IDENTITY_PERSISTENT_KEY_ID);
 	zassert_true((status == PSA_SUCCESS) || (status == PSA_ERROR_DOES_NOT_EXIST),
 		     "failed to clear persistent identity key");
 }
@@ -208,7 +205,7 @@ ZTEST(identity_sign_verify, test_persistence_and_reset_lifecycle)
 
 	zassert_ok(altruist_identity_init());
 	zassert_ok(altruist_identity_get_public_key(public_key_first, sizeof(public_key_first)));
-	status = psa_open_key(TEST_IDENTITY_KEY_ID, &key_handle);
+	status = psa_open_key(ALTRUIST_IDENTITY_PERSISTENT_KEY_ID, &key_handle);
 	zassert_equal(status, PSA_SUCCESS, "persistent identity key missing after init");
 	status = psa_close_key(key_handle);
 	zassert_equal(status, PSA_SUCCESS, "failed to close persistent identity key");

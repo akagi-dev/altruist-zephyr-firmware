@@ -36,11 +36,6 @@ static int identity_generate_keypair(uint8_t *private_key, uint8_t *public_key)
 	psa_key_id_t key_id = 0;
 	psa_status_t status;
 	size_t exported_length;
-	int rc = 0;
-
-	if ((private_key == NULL) || (public_key == NULL)) {
-		return -EINVAL;
-	}
 
 	/* Configure key attributes for Ed25519 */
 	psa_set_key_usage_flags(&attributes, PSA_KEY_USAGE_SIGN_MESSAGE | PSA_KEY_USAGE_VERIFY_MESSAGE |
@@ -81,7 +76,7 @@ static int identity_generate_keypair(uint8_t *private_key, uint8_t *public_key)
 	psa_destroy_key(key_id);
 	psa_reset_key_attributes(&attributes);
 
-	return rc;
+	return 0;
 }
 
 /*

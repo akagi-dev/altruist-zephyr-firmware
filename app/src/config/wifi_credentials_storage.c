@@ -11,6 +11,7 @@ static struct wifi_manager_credentials stored_credentials;
 static bool stored_credentials_valid;
 static bool settings_ready;
 K_MUTEX_DEFINE(wifi_credentials_lock);
+K_MUTEX_DEFINE(wifi_credentials_init_lock);
 
 static bool wifi_credentials_is_null_terminated(const char *value, size_t value_len)
 {
@@ -46,19 +47,25 @@ static int wifi_credentials_settings_set(const char *name, size_t len_rd, settin
 
 	if (!wifi_credentials_is_null_terminated(credentials.ssid, sizeof(credentials.ssid)) ||
 	    !wifi_credentials_is_null_terminated(credentials.psk, sizeof(credentials.psk))) {
+		k_mutex_lock(&wifi_credentials_lock, K_FOREVER);
 		memset(&stored_credentials, 0, sizeof(stored_credentials));
 		stored_credentials_valid = false;
+		k_mutex_unlock(&wifi_credentials_lock);
 		return -EINVAL;
 	}
 
 	if (credentials.ssid[0] == '\0') {
+		k_mutex_lock(&wifi_credentials_lock, K_FOREVER);
 		memset(&stored_credentials, 0, sizeof(stored_credentials));
 		stored_credentials_valid = false;
+		k_mutex_unlock(&wifi_credentials_lock);
 		return 0;
 	}
 
+	k_mutex_lock(&wifi_credentials_lock, K_FOREVER);
 	stored_credentials = credentials;
 	stored_credentials_valid = true;
+	k_mutex_unlock(&wifi_credentials_lock);
 	return 0;
 }
 
@@ -71,26 +78,33 @@ static int wifi_credentials_storage_init(void)
 {
 	int rc;
 
+	k_mutex_lock(&wifi_credentials_init_lock, K_FOREVER);
+
 	if (settings_ready) {
+		k_mutex_unlock(&wifi_credentials_init_lock);
 		return 0;
 	}
 
 	rc = settings_subsys_init();
 	if (rc != 0) {
+		k_mutex_unlock(&wifi_credentials_init_lock);
 		return rc;
 	}
 
 	rc = settings_register(&wifi_credentials_settings);
 	if (rc != 0) {
+		k_mutex_unlock(&wifi_credentials_init_lock);
 		return rc;
 	}
 
 	rc = settings_load_subtree("altruist/wifi");
 	if (rc != 0) {
+		k_mutex_unlock(&wifi_credentials_init_lock);
 		return rc;
 	}
 
 	settings_ready = true;
+	k_mutex_unlock(&wifi_credentials_init_lock);
 	return 0;
 }
 
@@ -102,9 +116,13 @@ bool altruist_config_get_wifi_credentials(struct wifi_manager_credentials *out)
 		return false;
 	}
 
-	k_mutex_lock(&wifi_credentials_lock, K_FOREVER);
 	rc = wifi_credentials_storage_init();
-	if (rc != 0 || !stored_credentials_valid) {
+	if (rc != 0) {
+		return false;
+	}
+
+	k_mutex_lock(&wifi_credentials_lock, K_FOREVER);
+	if (!stored_credentials_valid) {
 		k_mutex_unlock(&wifi_credentials_lock);
 		return false;
 	}
@@ -134,12 +152,14 @@ int altruist_config_set_wifi_credentials(const struct wifi_manager_credentials *
 
 	saved_credentials = *credentials;
 
-	k_mutex_lock(&wifi_credentials_lock, K_FOREVER);
 	rc = wifi_credentials_storage_init();
-	if (rc == 0) {
-		rc = settings_save_one("altruist/wifi/credentials", &saved_credentials,
-				       sizeof(saved_credentials));
+	if (rc != 0) {
+		return rc;
 	}
+
+	k_mutex_lock(&wifi_credentials_lock, K_FOREVER);
+	rc = settings_save_one("altruist/wifi/credentials", &saved_credentials,
+			       sizeof(saved_credentials));
 	if (rc == 0) {
 		stored_credentials = saved_credentials;
 		stored_credentials_valid = true;
@@ -153,11 +173,13 @@ int altruist_config_clear_wifi_credentials(void)
 {
 	int rc;
 
-	k_mutex_lock(&wifi_credentials_lock, K_FOREVER);
 	rc = wifi_credentials_storage_init();
-	if (rc == 0) {
-		rc = settings_delete("altruist/wifi/credentials");
+	if (rc != 0) {
+		return rc;
 	}
+
+	k_mutex_lock(&wifi_credentials_lock, K_FOREVER);
+	rc = settings_delete("altruist/wifi/credentials");
 	if (rc == 0) {
 		memset(&stored_credentials, 0, sizeof(stored_credentials));
 		stored_credentials_valid = false;

@@ -14,6 +14,10 @@ K_MUTEX_DEFINE(wifi_credentials_lock);
 
 static void wifi_credentials_ensure_terminated(char *value, size_t value_len)
 {
+	if (value == NULL || value_len == 0U) {
+		return;
+	}
+
 	if (memchr(value, '\0', value_len) == NULL) {
 		value[value_len - 1U] = '\0';
 	}
@@ -125,7 +129,7 @@ int altruist_config_set_wifi_credentials(const struct wifi_manager_credentials *
 	sanitized_credentials = *credentials;
 	wifi_credentials_sanitize(&sanitized_credentials);
 
-	if (strlen(sanitized_credentials.ssid) == 0U) {
+	if (sanitized_credentials.ssid[0] == '\0') {
 		return -EINVAL;
 	}
 

@@ -8,7 +8,7 @@
 #include <psa/crypto.h>
 #include <zephyr/ztest.h>
 
-/* Match production identity key ID so lifecycle tests exercise the same PSA slot. */
+/* PSA persistent key slot used by identity lifecycle tests. */
 #define TEST_IDENTITY_KEY_ID (PSA_KEY_ID_USER_MIN + 0x0006)
 
 static int sign_with_seed(const uint8_t seed[ALTRUIST_IDENTITY_ED25519_PRIVATE_KEY_SIZE],

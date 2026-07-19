@@ -9,20 +9,51 @@
 #include <psa/crypto.h>
 #include <zephyr/ztest.h>
 
-static bool stored_key_valid;
-static uint8_t stored_private_key[ALTRUIST_IDENTITY_ED25519_PRIVATE_KEY_SIZE];
-static uint8_t stored_public_key[ALTRUIST_IDENTITY_ED25519_PUBLIC_KEY_SIZE];
+#define TEST_IDENTITY_KEY_ID (PSA_KEY_ID_USER_MIN + 0x0060)
+
 static int stored_save_calls;
 
 int altruist_identity_storage_load(uint8_t private_key[ALTRUIST_IDENTITY_ED25519_PRIVATE_KEY_SIZE],
 				   uint8_t public_key[ALTRUIST_IDENTITY_ED25519_PUBLIC_KEY_SIZE])
 {
-	if (!stored_key_valid) {
-		return -ENOENT;
+	psa_key_id_t key_id = TEST_IDENTITY_KEY_ID;
+	psa_status_t status;
+	size_t private_key_len;
+	size_t public_key_len;
+
+	status = psa_crypto_init();
+	if (status != PSA_SUCCESS) {
+		return -EIO;
 	}
 
-	memcpy(private_key, stored_private_key, sizeof(stored_private_key));
-	memcpy(public_key, stored_public_key, sizeof(stored_public_key));
+	status = psa_open_key(key_id, &key_id);
+	if (status == PSA_ERROR_DOES_NOT_EXIST) {
+		return -ENOENT;
+	}
+	if (status != PSA_SUCCESS) {
+		return -EIO;
+	}
+
+	status = psa_export_key(key_id, private_key, ALTRUIST_IDENTITY_ED25519_PRIVATE_KEY_SIZE,
+				&private_key_len);
+	if ((status != PSA_SUCCESS) ||
+	    (private_key_len != ALTRUIST_IDENTITY_ED25519_PRIVATE_KEY_SIZE)) {
+		(void)psa_close_key(key_id);
+		return -EIO;
+	}
+
+	status = psa_export_public_key(key_id, public_key, ALTRUIST_IDENTITY_ED25519_PUBLIC_KEY_SIZE,
+				       &public_key_len);
+	if ((status != PSA_SUCCESS) ||
+	    (public_key_len != ALTRUIST_IDENTITY_ED25519_PUBLIC_KEY_SIZE)) {
+		(void)psa_close_key(key_id);
+		return -EIO;
+	}
+
+	status = psa_close_key(key_id);
+	if (status != PSA_SUCCESS) {
+		return -EIO;
+	}
 
 	return 0;
 }
@@ -31,9 +62,37 @@ int altruist_identity_storage_save(
 	const uint8_t private_key[ALTRUIST_IDENTITY_ED25519_PRIVATE_KEY_SIZE],
 	const uint8_t public_key[ALTRUIST_IDENTITY_ED25519_PUBLIC_KEY_SIZE])
 {
-	memcpy(stored_private_key, private_key, sizeof(stored_private_key));
-	memcpy(stored_public_key, public_key, sizeof(stored_public_key));
-	stored_key_valid = true;
+	psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
+	psa_key_id_t key_id = TEST_IDENTITY_KEY_ID;
+	psa_status_t status;
+
+	(void)public_key;
+
+	status = psa_crypto_init();
+	if (status != PSA_SUCCESS) {
+		return -EIO;
+	}
+
+	psa_set_key_usage_flags(&attributes, PSA_KEY_USAGE_SIGN_MESSAGE | PSA_KEY_USAGE_EXPORT);
+	psa_set_key_algorithm(&attributes, PSA_ALG_PURE_EDDSA);
+	psa_set_key_type(&attributes, PSA_KEY_TYPE_ECC_KEY_PAIR(PSA_ECC_FAMILY_TWISTED_EDWARDS));
+	psa_set_key_bits(&attributes, 255);
+	psa_set_key_lifetime(&attributes, PSA_KEY_LIFETIME_PERSISTENT);
+	psa_set_key_id(&attributes, key_id);
+
+	status = psa_destroy_key(key_id);
+	if ((status != PSA_SUCCESS) && (status != PSA_ERROR_DOES_NOT_EXIST)) {
+		psa_reset_key_attributes(&attributes);
+		return -EIO;
+	}
+
+	status = psa_import_key(&attributes, private_key,
+				ALTRUIST_IDENTITY_ED25519_PRIVATE_KEY_SIZE, &key_id);
+	psa_reset_key_attributes(&attributes);
+	if (status != PSA_SUCCESS) {
+		return -EIO;
+	}
+
 	stored_save_calls++;
 
 	return 0;
@@ -41,17 +100,30 @@ int altruist_identity_storage_save(
 
 int altruist_identity_storage_reset(void)
 {
-	(void)memset(stored_private_key, 0, sizeof(stored_private_key));
-	(void)memset(stored_public_key, 0, sizeof(stored_public_key));
-	stored_key_valid = false;
+	psa_status_t status;
+
+	status = psa_crypto_init();
+	if (status != PSA_SUCCESS) {
+		return -EIO;
+	}
+
+	status = psa_destroy_key(TEST_IDENTITY_KEY_ID);
+	if ((status != PSA_SUCCESS) && (status != PSA_ERROR_DOES_NOT_EXIST)) {
+		return -EIO;
+	}
+
 	return 0;
 }
 
 static void reset_test_storage(void)
 {
-	(void)memset(stored_private_key, 0, sizeof(stored_private_key));
-	(void)memset(stored_public_key, 0, sizeof(stored_public_key));
-	stored_key_valid = false;
+	psa_status_t status;
+
+	status = psa_crypto_init();
+	if (status == PSA_SUCCESS) {
+		(void)psa_destroy_key(TEST_IDENTITY_KEY_ID);
+	}
+
 	stored_save_calls = 0;
 }
 

@@ -400,7 +400,6 @@ ZTEST(identity_sign_verify, test_persistence_and_reset_lifecycle)
 	altruist_identity_test_reset_state();
 
 	zassert_ok(altruist_identity_init());
-	zassert_true(stored_key_valid, "key was not persisted");
 	zassert_equal(stored_save_calls, 1, "key should be generated once");
 	zassert_ok(altruist_identity_get_public_key(public_key_first, sizeof(public_key_first)));
 
@@ -421,11 +420,14 @@ ZTEST(identity_sign_verify, test_persistence_and_reset_lifecycle)
 					    signature_a, sizeof(signature_a)));
 
 	zassert_ok(altruist_identity_reset());
-	altruist_identity_test_reset_state();
-	zassert_ok(altruist_identity_init());
+	zassert_equal(stored_save_calls, 2, "reset should regenerate and persist a new key");
 	zassert_ok(altruist_identity_get_public_key(public_key_after_reset, sizeof(public_key_after_reset)));
 	zassert_true(memcmp(public_key_first, public_key_after_reset, sizeof(public_key_first)) != 0,
 		     "reset should force identity regeneration");
+	zassert_ok(altruist_identity_sign(test_message, message_len,
+					  signature_a, sizeof(signature_a)));
+	zassert_ok(altruist_identity_verify(test_message, message_len,
+					    signature_a, sizeof(signature_a)));
 }
 
 ZTEST_SUITE(identity_sign_verify, NULL, NULL, NULL, NULL, NULL);

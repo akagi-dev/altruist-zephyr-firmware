@@ -1,4 +1,4 @@
-# Zephyr Developer Documentation: Device Identity Architecture
+# Device Identity
 
 This page documents the WP-06 identity implementation architecture for developers working on signing/reporting paths and security hardening.
 

@@ -7,6 +7,12 @@ target_include_directories(app PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include)
 
 target_sources(app PRIVATE src/main.c)
 
+if(CONFIG_ALTRUIST_CONFIG)
+  target_sources(app PRIVATE
+    src/config/config_defaults.c
+    src/config/config_store.c
+  )
+endif()
 if(EXISTS ${CMAKE_CURRENT_LIST_DIR}/src/crypto/CMakeLists.txt)
   add_subdirectory(src/crypto)
 endif()

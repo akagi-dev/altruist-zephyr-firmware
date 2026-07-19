@@ -33,7 +33,7 @@ jobs:
         run: west zephyr-export
 
       - name: Twister tests
-        run: west twister -T tests/smoke/native_sim -T tests/crypto/identity_native_sim -v --inline-logs -O twister-out
+        run: west twister -T tests -s altruist.wp01.smoke.native_sim -s altruist.wp04.config.native_sim -s altruist.wp06.identity.native_sim -v --inline-logs -O twister-out
 
       - name: Upload Twister artifacts
         if: always()

@@ -6,12 +6,9 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include <psa/crypto_types.h>
-
 #define ALTRUIST_IDENTITY_ED25519_PRIVATE_KEY_SIZE 32U
 #define ALTRUIST_IDENTITY_ED25519_PUBLIC_KEY_SIZE 32U
 #define ALTRUIST_IDENTITY_ED25519_SIGNATURE_SIZE 64U
-#define ALTRUIST_IDENTITY_PERSISTENT_KEY_ID (PSA_KEY_ID_USER_MIN + 0x0006)
 
 int altruist_identity_init(void);
 int altruist_identity_get_public_key(uint8_t *public_key, size_t public_key_len);

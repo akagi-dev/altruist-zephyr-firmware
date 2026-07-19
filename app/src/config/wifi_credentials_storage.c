@@ -37,7 +37,7 @@ static int wifi_credentials_settings_set(const char *name, size_t len_rd, settin
 
 	len = read_cb(cb_arg, &credentials, sizeof(credentials));
 	if (len < 0) {
-		return (int)len;
+		return -EIO;
 	}
 
 	if ((size_t)len != sizeof(credentials)) {
@@ -67,7 +67,7 @@ static struct settings_handler wifi_credentials_settings = {
 	.h_set = wifi_credentials_settings_set,
 };
 
-static int wifi_credentials_storage_init_locked(void)
+static int wifi_credentials_storage_init(void)
 {
 	int rc;
 
@@ -103,7 +103,7 @@ bool altruist_config_get_wifi_credentials(struct wifi_manager_credentials *out)
 	}
 
 	k_mutex_lock(&wifi_credentials_lock, K_FOREVER);
-	rc = wifi_credentials_storage_init_locked();
+	rc = wifi_credentials_storage_init();
 	if (rc != 0 || !stored_credentials_valid) {
 		k_mutex_unlock(&wifi_credentials_lock);
 		return false;
@@ -128,14 +128,14 @@ int altruist_config_set_wifi_credentials(const struct wifi_manager_credentials *
 		return -EINVAL;
 	}
 
-	saved_credentials = *credentials;
-
-	if (saved_credentials.ssid[0] == '\0') {
+	if (credentials->ssid[0] == '\0') {
 		return -EINVAL;
 	}
 
+	saved_credentials = *credentials;
+
 	k_mutex_lock(&wifi_credentials_lock, K_FOREVER);
-	rc = wifi_credentials_storage_init_locked();
+	rc = wifi_credentials_storage_init();
 	if (rc == 0) {
 		rc = settings_save_one("altruist/wifi/credentials", &saved_credentials,
 				       sizeof(saved_credentials));
@@ -154,7 +154,7 @@ int altruist_config_clear_wifi_credentials(void)
 	int rc;
 
 	k_mutex_lock(&wifi_credentials_lock, K_FOREVER);
-	rc = wifi_credentials_storage_init_locked();
+	rc = wifi_credentials_storage_init();
 	if (rc == 0) {
 		rc = settings_delete("altruist/wifi/credentials");
 	}

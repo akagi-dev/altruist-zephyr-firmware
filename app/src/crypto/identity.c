@@ -418,7 +418,14 @@ int altruist_identity_reset(void)
 		rc = identity_generate_keypair(state.private_key, state.public_key);
 		if (rc == 0) {
 			rc = altruist_identity_storage_save(state.private_key, state.public_key);
+			if (rc != 0) {
+				LOG_ERR("identity reset failed to persist regenerated key (rc=%d)", rc);
+			}
+		} else {
+			LOG_ERR("identity reset failed to generate new keypair (rc=%d)", rc);
 		}
+	} else {
+		LOG_ERR("identity reset failed to clear persisted key (rc=%d)", rc);
 	}
 	if (rc == 0) {
 		state.initialized = true;

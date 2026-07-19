@@ -15,7 +15,6 @@ Public API:
 - `altruist_identity_sign()` and `altruist_identity_verify()`: Ed25519 sign/verify helpers for report pipelines.
 - `altruist_identity_get_public_key()`: access current device public key.
 - `altruist_identity_reset()`: remove persisted identity, regenerate a new keypair, and keep identity initialized.
-- Detached helpers (`*_detached`) for deterministic vector testing.
 
 ## Crypto implementation
 
@@ -26,8 +25,7 @@ Public API:
 ## Persistence architecture
 
 Default storage backend uses PSA persistent key storage with a fixed key ID.
-
-The module exposes weak storage hooks (`load/save/reset`) so tests can override persistence behavior and future production backends can be introduced without changing API consumers.
+The private key is never exported from persistent storage by the identity module.
 
 ## Startup integration
 
@@ -39,5 +37,5 @@ The module exposes weak storage hooks (`load/save/reset`) so tests can override 
 ### Current solution highlights
 
 - Private key is generated on-device and persisted in PSA-managed secure storage.
-- Identity lifecycle uses weak storage hooks to keep test overrides and backend evolution straightforward.
+- Sign/verify operations use the persistent PSA key directly.
 - Reset semantics are explicit and test-covered.

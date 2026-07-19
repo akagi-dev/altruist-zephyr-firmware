@@ -154,6 +154,8 @@ int __weak altruist_identity_storage_save(
 
 	status = psa_destroy_key(key_id);
 	if ((status != PSA_SUCCESS) && (status != PSA_ERROR_DOES_NOT_EXIST)) {
+		printk("altruist_identity: failed to replace persistent key, destroy status=%d\n",
+		       (int)status);
 		return -EIO;
 	}
 
@@ -169,11 +171,14 @@ int __weak altruist_identity_storage_save(
 				       &derived_public_key_len);
 	if ((status != PSA_SUCCESS) ||
 	    (derived_public_key_len != ALTRUIST_IDENTITY_ED25519_PUBLIC_KEY_SIZE)) {
+		printk("altruist_identity: failed to derive public key from imported key, status=%d\n",
+		       (int)status);
 		(void)psa_destroy_key(key_id);
 		return -EIO;
 	}
 
 	if (memcmp(derived_public_key, public_key, sizeof(derived_public_key)) != 0) {
+		printk("altruist_identity: imported private key does not match provided public key\n");
 		(void)psa_destroy_key(key_id);
 		return -EINVAL;
 	}

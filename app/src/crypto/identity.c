@@ -88,7 +88,7 @@ static int identity_generate_keypair(uint8_t *private_key, uint8_t *public_key)
 int __weak altruist_identity_storage_load(uint8_t private_key[ALTRUIST_IDENTITY_ED25519_PRIVATE_KEY_SIZE],
 					  uint8_t public_key[ALTRUIST_IDENTITY_ED25519_PUBLIC_KEY_SIZE])
 {
-	psa_key_id_t key_handle = 0;
+	psa_key_id_t key_id = 0;
 	psa_status_t status;
 	size_t private_key_len;
 	size_t public_key_len;
@@ -97,7 +97,7 @@ int __weak altruist_identity_storage_load(uint8_t private_key[ALTRUIST_IDENTITY_
 		return -EINVAL;
 	}
 
-	status = psa_open_key(IDENTITY_PERSISTENT_KEY_ID, &key_handle);
+	status = psa_open_key(IDENTITY_PERSISTENT_KEY_ID, &key_id);
 	if (status == PSA_ERROR_DOES_NOT_EXIST) {
 		return -ENOENT;
 	}
@@ -105,24 +105,24 @@ int __weak altruist_identity_storage_load(uint8_t private_key[ALTRUIST_IDENTITY_
 		return -EIO;
 	}
 
-	status = psa_export_key(key_handle, private_key, ALTRUIST_IDENTITY_ED25519_PRIVATE_KEY_SIZE,
+	status = psa_export_key(key_id, private_key, ALTRUIST_IDENTITY_ED25519_PRIVATE_KEY_SIZE,
 				&private_key_len);
 	if ((status != PSA_SUCCESS) ||
 	    (private_key_len != ALTRUIST_IDENTITY_ED25519_PRIVATE_KEY_SIZE)) {
-		(void)psa_close_key(key_handle);
+		(void)psa_close_key(key_id);
 		return -EIO;
 	}
 
-	status = psa_export_public_key(key_handle, public_key,
+	status = psa_export_public_key(key_id, public_key,
 				       ALTRUIST_IDENTITY_ED25519_PUBLIC_KEY_SIZE,
 				       &public_key_len);
 	if ((status != PSA_SUCCESS) ||
 	    (public_key_len != ALTRUIST_IDENTITY_ED25519_PUBLIC_KEY_SIZE)) {
-		(void)psa_close_key(key_handle);
+		(void)psa_close_key(key_id);
 		return -EIO;
 	}
 
-	status = psa_close_key(key_handle);
+	status = psa_close_key(key_id);
 	if (status != PSA_SUCCESS) {
 		return -EIO;
 	}
@@ -154,7 +154,6 @@ int __weak altruist_identity_storage_save(
 
 	status = psa_destroy_key(key_id);
 	if ((status != PSA_SUCCESS) && (status != PSA_ERROR_DOES_NOT_EXIST)) {
-		psa_reset_key_attributes(&attributes);
 		return -EIO;
 	}
 
@@ -165,7 +164,8 @@ int __weak altruist_identity_storage_save(
 		return -EIO;
 	}
 
-	status = psa_export_public_key(key_id, derived_public_key, sizeof(derived_public_key),
+	status = psa_export_public_key(key_id, derived_public_key,
+				       ALTRUIST_IDENTITY_ED25519_PUBLIC_KEY_SIZE,
 				       &derived_public_key_len);
 	if ((status != PSA_SUCCESS) ||
 	    (derived_public_key_len != ALTRUIST_IDENTITY_ED25519_PUBLIC_KEY_SIZE)) {

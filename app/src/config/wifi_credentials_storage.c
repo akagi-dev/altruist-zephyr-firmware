@@ -12,10 +12,17 @@ static bool stored_credentials_valid;
 static bool settings_ready;
 K_MUTEX_DEFINE(wifi_credentials_lock);
 
+static void wifi_credentials_ensure_terminated(char *value, size_t value_len)
+{
+	if (memchr(value, '\0', value_len) == NULL) {
+		value[value_len - 1U] = '\0';
+	}
+}
+
 static void wifi_credentials_sanitize(struct wifi_manager_credentials *credentials)
 {
-	credentials->ssid[sizeof(credentials->ssid) - 1U] = '\0';
-	credentials->psk[sizeof(credentials->psk) - 1U] = '\0';
+	wifi_credentials_ensure_terminated(credentials->ssid, sizeof(credentials->ssid));
+	wifi_credentials_ensure_terminated(credentials->psk, sizeof(credentials->psk));
 }
 
 static int wifi_credentials_settings_set(const char *name, size_t len_rd, settings_read_cb read_cb,
@@ -115,15 +122,10 @@ int altruist_config_set_wifi_credentials(const struct wifi_manager_credentials *
 		return -EINVAL;
 	}
 
-	if (credentials->ssid[sizeof(credentials->ssid) - 1U] != '\0' ||
-	    credentials->psk[sizeof(credentials->psk) - 1U] != '\0') {
-		return -EINVAL;
-	}
-
 	sanitized_credentials = *credentials;
 	wifi_credentials_sanitize(&sanitized_credentials);
 
-	if (strnlen(sanitized_credentials.ssid, sizeof(sanitized_credentials.ssid)) == 0U) {
+	if (strlen(sanitized_credentials.ssid) == 0U) {
 		return -EINVAL;
 	}
 
